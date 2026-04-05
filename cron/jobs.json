@@ -139,7 +139,38 @@
       "last_error": null,
       "deliver": "telegram",
       "origin": null
+    },
+    {
+      "id": "fd754832626a",
+      "name": "Hermes git backup",
+      "prompt": "Commit and push any changes in the ~/.hermes directory to GitHub. Steps:\n1. cd ~/.hermes\n2. Run `git status --porcelain` to check if there are changes\n3. If there are changes:\n   - Run `git diff` to see what actually changed\n   - Analyze the diff and craft a DESCRIPTIVE commit message that explains WHAT changed and WHY it matters. Group related changes logically. Use conventional commits style when possible (e.g., \"feat: add email monitoring skill\", \"fix: correct Zapier MCP indentation in config\", \"chore: update daily digest sources\")\n   - Run `git add -A`\n   - Run `git commit -m \"your descriptive message here\"`\n   - Run `git push origin master`\n   - Summarize what was committed (list the key changes in your final response)\n4. If no changes, report that everything is already committed and up to date",
+      "skills": [],
+      "skill": null,
+      "model": null,
+      "provider": null,
+      "base_url": null,
+      "schedule": {
+        "kind": "interval",
+        "minutes": 10,
+        "display": "every 10m"
+      },
+      "schedule_display": "every 10m",
+      "repeat": {
+        "times": 1456,
+        "completed": 0
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-04-05T00:51:53.377883+00:00",
+      "next_run_at": "2026-04-05T01:14:12.712338+00:00",
+      "last_run_at": null,
+      "last_status": null,
+      "last_error": null,
+      "deliver": "local",
+      "origin": null
     }
   ],
-  "updated_at": "2026-04-04T23:40:12.614391+00:00"
+  "updated_at": "2026-04-05T01:04:12.718891+00:00"
 }

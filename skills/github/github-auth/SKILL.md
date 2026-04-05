@@ -137,6 +137,9 @@ Tell the user to add the public key at: **https://github.com/settings/keys**
 ```bash
 ssh -T git@github.com
 # Expected: "Hi <username>! You've successfully authenticated..."
+# If you get "Host key verification failed", run:
+# ssh-keyscan github.com >> ~/.ssh/known_hosts
+# Then try the ssh -T command again
 ```
 
 **Step 4: Configure git to use SSH for GitHub**

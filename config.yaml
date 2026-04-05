@@ -1,5 +1,5 @@
 model:
-  default: nvidia/nemotron-3-super-120b-a12b:free
+  default: qwen/qwen3.6-plus:free
   provider: openrouter
   base_url: https://openrouter.ai/api/v1
   api_mode: chat_completions
@@ -207,6 +207,7 @@ memory:
   user_profile_enabled: true
   memory_char_limit: 2200
   user_char_limit: 1375
+  provider: ''
   nudge_interval: 10
   flush_min_turns: 6
 delegation:

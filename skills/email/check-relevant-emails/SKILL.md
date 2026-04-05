@@ -35,6 +35,10 @@ Also flag:
 
 Ignore: newsletters, promotions, social notifications, automated receipts, bulk mail.
 
+## Silence on Empty
+
+If no relevant, previously-unseen emails or calendar items are found, do NOT report anything. Stay silent. Only send a message if there's something that needs attention. The sole exception: if the check itself fails (Gmail unreachable, timeout, MCP error), report the error so Demetrius knows the monitoring is broken.
+
 ## Deduplication / State Tracking
 
 After each run, persist state so the next run never re-reports the same email.
