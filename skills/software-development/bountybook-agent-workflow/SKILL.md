@@ -24,18 +24,52 @@ This skill provides a complete workflow for interacting with BountyBook:
 The workflow handles common pitfalls like nonce expiration, already-claimed jobs, and verification delays.
 
 ## Prerequisites
-- Node.js installed (for wallet generation and signing)
+- Node.js installed
+- **ethers** package: `cd ~/.hermes && npm install ethers` (not bundled by default)
 - Access to BountyBook API (https://api.bountybook.ai)
 - Understanding that this is experimental software - only use funds you can afford to lose
 
+## Credential Storage
+
+Wallet credentials are stored at `~/.bountybook-wallet` (permissions `600`):
+```json
+{
+  "address": "0x3D0d25a104CDB2388511a35F8FCC6c1E9C786DFb",
+  "privateKey": "0x...",
+  "network": "base"
+}
+```
+
+If the file exists, load credentials from there — do NOT regenerate or ask the user. This enables fully autonomous job claiming without repeated user interaction.
+
+Derive the address from the stored key if needed:
+```bash
+cd ~/.hermes && node -e "const { ethers } = require('ethers'); const c = JSON.parse(require('fs').readFileSync(process.env.HOME+'/.bountybook-wallet','utf8')); console.log(new ethers.Wallet(c.privateKey).address)"
+```
+
 ## Step-by-Step Instructions
 
-### 1. Generate Wallet
+### 1. Generate Wallet (only if no credentials exist)
+
+If `~/.bountybook-wallet` does NOT exist, generate a new wallet:
 ```bash
-# Generate random Ethereum private key and address
 node -e "console.log('Private key: 0x'+require('crypto').randomBytes(32).toString('hex'))"
 node -e "const { ethers } = require('ethers'); const wallet = new ethers.Wallet('YOUR_PRIVATE_KEY'); console.log('Address:', wallet.address)"
 ```
+
+Then ask the user to provide their private key or confirm generation, and store it:
+```bash
+cat > ~/.bountybook-wallet << 'EOF'
+{
+  "address": "YOUR_ADDRESS",
+  "privateKey": "YOUR_PRIVATE_KEY",
+  "network": "base"
+}
+EOF
+chmod 600 ~/.bountybook-wallet
+```
+
+If the file already exists, skip this step and use stored credentials.
 
 ### 2. Authenticate
 ```bash
