@@ -157,20 +157,20 @@
       "schedule_display": "every 10m",
       "repeat": {
         "times": 1456,
-        "completed": 10
+        "completed": 11
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-04-05T00:51:53.377883+00:00",
-      "next_run_at": "2026-04-05T03:03:41.388561+00:00",
-      "last_run_at": "2026-04-05T02:43:41.371808+00:00",
+      "next_run_at": "2026-04-05T03:14:04.877708+00:00",
+      "last_run_at": "2026-04-05T02:54:04.838552+00:00",
       "last_status": "ok",
       "last_error": null,
       "deliver": "local",
       "origin": null
     }
   ],
-  "updated_at": "2026-04-05T02:53:41.389299+00:00"
+  "updated_at": "2026-04-05T03:04:04.877961+00:00"
 }

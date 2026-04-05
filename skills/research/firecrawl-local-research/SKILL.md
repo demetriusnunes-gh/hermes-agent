@@ -10,11 +10,21 @@ metadata:
 
 # Firecrawl Local Research
 
+## IMPORTANT: FIRST CHOICE FOR WEB RESEARCH
+
+When Demetrius asks you to research something on the web, look up information, find news, read articles, or scrape any web content — **use Firecrawl FIRST, before browser tools**. Always. This is the default web research tool.
+
+Only fall back to `browser_navigate` + `browser_snapshot` / `browser_vision` when:
+- Firecrawl is down/unreachable
+- The page requires interactive login or form submission
+- You need to click through navigation menus
+- Firecrawl returns empty/garbage content AND the page is clearly scrapeable
+
 Use the self-hosted Firecrawl instance (running in Docker on port 3002) to scrape web pages and convert them to clean markdown for research tasks. No API key needed.
 
 ## When to Use
 
-- Research topics across multiple sources (Brazil sites, international, niche blogs)
+- Research topics across multiple sources (Brazil sites, international, niche blogs) — **DEFAULT CHOICE**
 - When browser tools fail due to bot detection
 - When you need clean text extraction from complex web pages
 - Parallel scraping for speed
