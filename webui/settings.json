@@ -1,0 +1,8 @@
+{
+  "default_model": "qwen/qwen3.6-plus",
+  "default_workspace": "/root/.hermes/webui/workspace",
+  "send_key": "enter",
+  "show_token_usage": true,
+  "show_cli_sessions": true,
+  "password_hash": null
+}
