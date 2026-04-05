@@ -42,6 +42,10 @@ Thumbs.db
 !memories/MEMORY.md
 !memories/USER.md
 !skills/
+# Runtime artifacts
+.skills_prompt_snapshot.json
+cron/output/
+
 # Accidental root-level Node.js artefacts
 node_modules/
 package.json
