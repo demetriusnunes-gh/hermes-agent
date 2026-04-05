@@ -1,0 +1,145 @@
+{
+  "jobs": [
+    {
+      "id": "ef8ac0a9a456",
+      "name": "Email checker - relevant alerts",
+      "prompt": "Check Demetrius's Gmail inbox for relevant emails matching the criteria in the skill. Use the skill steps to list, filter, and report any important emails. If nothing relevant found, say \"No relevant emails in the last 2 hours.\"",
+      "skills": [
+        "check-relevant-emails"
+      ],
+      "skill": "check-relevant-emails",
+      "model": null,
+      "provider": null,
+      "base_url": null,
+      "schedule": {
+        "kind": "interval",
+        "minutes": 120,
+        "display": "every 120m"
+      },
+      "schedule_display": "every 120m",
+      "repeat": {
+        "times": null,
+        "completed": 29
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-04-02T11:40:35.999794+00:00",
+      "next_run_at": "2026-04-05T01:40:12.614136+00:00",
+      "last_run_at": "2026-04-04T23:40:12.614136+00:00",
+      "last_status": "ok",
+      "last_error": null,
+      "deliver": "telegram",
+      "origin": {
+        "platform": "telegram",
+        "chat_id": "8742978410",
+        "chat_name": "Demetrius Nunes",
+        "thread_id": null
+      }
+    },
+    {
+      "id": "9c5611b37473",
+      "name": "Daily medication reminder - Fernanda",
+      "prompt": "Send a WhatsApp message to Fernanda Hamacher reminding her to take her medication.\n\nThe message should be warm and in Portuguese. Keep it brief and loving. Examples:\n\"Oi Fernda, hora do rem\u00e9dio! \ud83d\udc8a N\u00e3o esquece, t\u00e1?\"\n\"Bom dia amor, lembrete: hora do rem\u00e9dio! \u2764\ufe0f\"\n\"Oi amor, j\u00e1 tomou o rem\u00e9dio hoje? Lembrete carinhoso \ud83d\ude18\"\n\nJust send one of these variations - make it different day to day so it doesn't feel robotic. That's all, nothing else needed.",
+      "skills": [],
+      "skill": null,
+      "model": null,
+      "provider": null,
+      "base_url": null,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 11 * * *",
+        "display": "0 11 * * *"
+      },
+      "schedule_display": "0 11 * * *",
+      "repeat": {
+        "times": null,
+        "completed": 3
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-04-02T12:54:17.903111+00:00",
+      "next_run_at": "2026-04-05T11:00:00+00:00",
+      "last_run_at": "2026-04-04T11:05:12.786252+00:00",
+      "last_status": "ok",
+      "last_error": null,
+      "deliver": "whatsapp:5521988420759",
+      "origin": {
+        "platform": "telegram",
+        "chat_id": "8742978410",
+        "chat_name": "Demetrius Nunes",
+        "thread_id": null
+      }
+    },
+    {
+      "id": "944d101c5371",
+      "name": "Morning News Digest",
+      "prompt": "Generate the daily morning news digest for Demetrius using the news-daily-digest skill.\n\n1. Run the script: python3 ~/.hermes/skills/research/news-daily-digest/scripts/news_digest.py\n2. Parse the JSON output with categories: World, Brasil, Rio de Janeiro, S\u00e3o Paulo\n3. Curate to 5-8 world stories, 4-6 Brazil stories, 3-4 Rio, 3-4 SP\n   - Remove celebrity gossip and trivial stories\n   - Deduplicate: same story from multiple sources, keep only one (prefer BBC or most reputable)\n   - Keep headlines in the original language of the source\n4. Add a 1-line \"\ud83d\udccc Must read\" highlight at the top for the most important story\n5. Format the digest with numbered items, source in parentheses, and links\n6. If any sources failed, mention it quietly at the bottom\n\nOutput the formatted digest as your final response (this goes to Telegram automatically).\n\nAFTER your final response, also send via WhatsApp:\nUse terminal to call the WhatsApp bridge API:\ncurl -s -X POST http://127.0.0.1:3000/send -H \"Content-Type: application/json\" -d '{\"chatId\":\"5521988490510@c.us\",\"message\":\"FULL_DIGEST_TEXT_HERE\"}'\n\nIMPORTANT: The curl body must be valid JSON. Escape double quotes in the digest text before embedding in the JSON. Keep WhatsApp message clean with asterisks for bold if needed.",
+      "skills": [
+        "news-daily-digest"
+      ],
+      "skill": "news-daily-digest",
+      "model": null,
+      "provider": null,
+      "base_url": null,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 11 * * *",
+        "display": "0 11 * * *"
+      },
+      "schedule_display": "0 11 * * *",
+      "repeat": {
+        "times": null,
+        "completed": 3
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-04-02T15:21:55.495499+00:00",
+      "next_run_at": "2026-04-05T11:00:00+00:00",
+      "last_run_at": "2026-04-04T11:15:12.678622+00:00",
+      "last_status": "ok",
+      "last_error": null,
+      "deliver": "telegram",
+      "origin": null
+    },
+    {
+      "id": "28c48a2dc396",
+      "name": "AI Passive Income Research",
+      "prompt": "Research today's AI passive income opportunities for Demetrius using the ai-passive-income-digest skill.\n\nCRITICAL: You must produce a formatted digest with TOP 3 ideas. Do NOT get stuck researching.\n\nRESEARCH BUDGET: Maximum 5 browser searches total. After that, IMMEDIATELY format your findings into the output below. Even if you only found 1-2 good ideas, format what you have.\n\nSTRICT RULES:\n1. Do at most 3 different search queries (e.g., \"AI passive income 2026\", \"AI micro SaaS revenue\", \"autonomous AI agent business\")\n2. Visit at most 3-4 pages per search\n3. After 5 total browser tool calls, STOP researching and format the output\n4. If browser research fails, use your knowledge to provide current ideas anyway\n\nOutput format:\n\n```\n\ud83e\udd16 AI Passive Income \u2014 [DATE]\n\n1. [IDEA NAME]\n   What: One-line description\n   How it works: 2-3 sentences\n   Revenue model: How it makes money\n   Effort: X hrs/week after setup\n   Start: What you'd need (tools, APIs, cost)\n   Source: <link>\n   Score: autonomy X/5, cost X/5, time X/5\n\n2. [IDEA NAME]\n   ...\n\n3. [IDEA NAME]\n   ...\n\n\ud83d\udca1 Best bet tonight: One sentence on best risk/reward.\n```\n\nAlso send via WhatsApp:\ncurl -s -X POST http://127.0.0.1:3000/send -H \"Content-Type: application/json\" -d '{\"chatId\":\"5521988490510@c.us\",\"message\":\"FORMATTED_DIGEST_HERE\"}'\n\nEscape double quotes properly in the curl JSON body.",
+      "skills": [
+        "ai-passive-income-digest"
+      ],
+      "skill": "ai-passive-income-digest",
+      "model": null,
+      "provider": null,
+      "base_url": null,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 23 * * *",
+        "display": "0 23 * * *"
+      },
+      "schedule_display": "0 23 * * *",
+      "repeat": {
+        "times": null,
+        "completed": 5
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-04-02T15:38:39.702007+00:00",
+      "next_run_at": "2026-04-05T23:00:00+00:00",
+      "last_run_at": "2026-04-04T23:02:33.891729+00:00",
+      "last_status": "ok",
+      "last_error": null,
+      "deliver": "telegram",
+      "origin": null
+    }
+  ],
+  "updated_at": "2026-04-04T23:40:12.614391+00:00"
+}

@@ -1,0 +1,44 @@
+# Sensitive files - never commit
+.env
+auth.json
+*.lock
+.gmail-app-password
+/models_dev_cache.json
+/state.db*
+/sessions/
+/logs/
+/cache/
+/tmp/
+/pairing/
+/sandboxes/
+/checkpoints/
+/image_cache/
+/audio_cache/
+/whatsapp/
+/node/
+/honcho/
+/skills/*/references/
+/skills/*/templates/
+/skills/*/scripts/
+/skills/*/assets/
+/.memories/
+/memories/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Hermes specific - keep these
+!config.yaml
+!memories/
+!memories/MEMORY.md
+!memories/USER.md
+!skills/

@@ -1,0 +1,30 @@
+{
+  "updated_at": "2026-04-05T00:44:12.686210",
+  "platforms": {
+    "telegram": [
+      {
+        "id": "8742978410",
+        "name": "Demetrius Nunes",
+        "type": "dm",
+        "thread_id": null
+      }
+    ],
+    "whatsapp": [
+      {
+        "id": "203873557991626@lid",
+        "name": "Demetrius Nunes",
+        "type": "dm",
+        "thread_id": null
+      },
+      {
+        "id": "61559833383015@lid",
+        "name": "Fernanda Hamacher",
+        "type": "dm",
+        "thread_id": null
+      }
+    ],
+    "signal": [],
+    "email": [],
+    "sms": []
+  }
+}
