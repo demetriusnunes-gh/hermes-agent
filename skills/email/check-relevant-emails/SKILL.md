@@ -24,7 +24,7 @@ Flag and report emails matching ANY of these:
 
 1. **Wife** — Fernanda Hamacher (`fhamacher@gmail.com`, name: "Fernanda Hamacher")
 2. **Kids' school** — Anything from or about "Eleva"
-3. **Government** — `.gov.br` sender domains, or subjects containing: intimação, notificação, comunicado, declaração, imposto, receita, INSS, detran, prefeitura, governo, multa, CNH, IPTU, IOF, IR
+3. **Government** — `.gov.br` sender domains, or subjects containing: intimação, notificação, comunicado, declaração, imposto, receita, INSS, detran, prefeitura, governo, multa, CNH, IPTU, IOF, IR. ⚠️ **Pitfall**: The keyword `"ir"` causes false positives on common Portuguese words like "partir", "sorrir", "vir" etc. When `"ir"` is the only government match, cross-check that the sender is NOT a promotional/commercial domain (airlines, retailers, newsletters) before flagging.
 
 Also flag:
 - **Purchases & orders** — receipts, shipping updates, delivery confirmations, payment issues from any retailer, service, or marketplace (Amazon, iFood, Uber, stores, subscriptions, etc.)
