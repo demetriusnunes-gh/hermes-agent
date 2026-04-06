@@ -337,3 +337,16 @@ If IMAP fails, report: "⚠️ Email check skipped — Gmail unreachable."
 - If MCP server is unreachable, report the error so Demetrius knows the check failed
 - Calendar search returns up to 25 matching events max
 - After fetching emails, always filter by the relevance criteria before expanding to full reads
+
+## False Positive Prevention
+
+**Government keyword `"ir"`**: Matches common Portuguese words like "partir", "sorrir", "vir", "dirigir", etc. When `"ir"` is the sole government keyword match, cross-check that the sender is NOT a known promotional/commercial domain (airlines, retailers, newsletters) before flagging. Example false positive: Azul Airlines email "última chance de voar a partir de R$ 144,90" matched "ir" in "partir".
+
+**Promotional sender whitelist override**: Even if content/subject matches a relevance criteria, skip emails from known promotional senders (noreply@voeazul, noreply@retailers, etc.) unless the sender domain matches a specific priority contact.
+
+## Calendar Fallback
+
+When `npx mcporter call zapier.google_calendar_find_events` fails with "Unknown MCP server 'zapier'" (common in headless/cron), there's currently no IMAP equivalent for Google Calendar. In this case:
+- Skip the calendar check silently
+- Only report errors if **both** Gmail IMAP and calendar checks fail
+- Consider using Google Calendar API directly if calendar becomes critical
