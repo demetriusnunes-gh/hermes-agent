@@ -56,3 +56,4 @@ webui/sessions/
 node_modules/
 package.json
 package-lock.json
+.update_check
