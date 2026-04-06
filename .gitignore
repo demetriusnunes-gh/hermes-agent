@@ -50,6 +50,7 @@ cron/output/
 channel_directory.json
 cron/jobs.json
 state/
+webui/sessions/
 
 # Accidental root-level Node.js artefacts
 node_modules/
