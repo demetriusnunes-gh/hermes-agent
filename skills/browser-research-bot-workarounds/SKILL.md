@@ -36,9 +36,10 @@ Research the web effectively while working around aggressive bot detection. The 
 
 ## Research Strategy
 
-1. **Start with HN Algolia** for tech/SaaS/AI trends:
-   - `https://hn.algolia.com/?q=QUERY&sort=byDate&dateRange=pastMonth`
-   - Check comments on interesting stories by visiting the item page
+1. **Start with HN Algolia API** for tech/SaaS/AI trends (most reliable):
+   - Use the API endpoint: `https://hn.algolia.com/api/v1/search?query=QUERY&tags=story&numericFilters=created_at_i>TIMESTAMP`
+   - For last 30 days: `numericFilters=created_at_i>$(date -d '30 days ago' +%s)`
+   - Check comments on interesting stories by visiting the item page directly
    
 2. **Use Bing** for general web searches:
    - `https://www.bing.com/search?q=QUERY&qft=sortbydate%3d1`

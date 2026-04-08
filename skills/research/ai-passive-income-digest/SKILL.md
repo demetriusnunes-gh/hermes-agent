@@ -24,31 +24,47 @@ Researches new and trending ideas for AI-powered microbusinesses that run autono
 
 ## Steps
 
-### 1. Research (BROWSER-BASED)
+### 1. Research (BROWSER-BASED WITH BOT DETECTION WORKAROUNDS)
 
-Use the browser to search for CURRENT (last 30 days) ideas and opportunities. Browse multiple sources:
+Use the browser to search for CURRENT (last 30 days) ideas and opportunities. Focus on sources that work reliably with automated browsing:
 
-```
-# Browser searches to perform:
-- "autonomous AI agent business ideas 2026"
-- "AI micro SaaS passive income"
-- "self-running AI business models"
-- "AI agent agency revenue"
-- "automated AI services that make money"
-- "AI wrapper passive income"
-```
+**Effective Research Strategy:**
+1. **Start with Hacker News Algolia search** - `https://hn.algolia.com/api/v1/search?query=YOUR_QUERY&tags=story&numericFilters=created_at_i>TIMESTAMP` - this works without CAPTCHA
+2. **Visit promising URLs directly** - once you find interesting stories from HN, navigate to the actual URLs
+3. **Use Bing search** for general queries - `https://www.bing.com/search?q=YOUR_QUERY` - may give partial results
+4. **Check Brazilian news sites directly** - G1, Folha, UOL, BBC Brasil work when accessed via direct URLs
+5. **Use site-restricted Bing search** for blocked sources - `site:indiehackers.com QUERY` via Bing
 
-**IMPORTANT: Bot Detection Reality**
-Most sources block automated browsing. Work around this:
-- **Works**: Hacker News Algolia search (hn.algolia.com), Hacker News main page (news.ycombinator.com) and direct story pages, Bing search (partial results, may need multiple queries), Brazilian news sites (G1, Folha, BBC Brasil)
-- **Blocked (CAPTCHA)**: Google Search, Reddit, Product Hunt, Indie Hackers, DuckDuckGo (even lite), Brave Search
-- **Strategy**: Start with HN Algolia searches for tech/business trends. Then visit the actual URLs of interesting stories directly. Use Bing for general searches. If a link from HN looks promising, open it directly.
+**What Works (No CAPTCHA):**
+- Hacker News: news.ycombinator.com and direct story pages
+- HN Algolia search: hn.algolia.com - best for tech/SaaS/AI trends
+- Bing: bing.com/search - partial results, use for general searches
+- Brazilian news sites: G1, Folha, UOL, Poder360, BBC Brasil - work with direct navigation
+- Direct URLs to known articles: Most news sites work if you navigate directly
+- Wikipedia, GitHub: No blocks
 
-Visit as many accessible sources as possible. Quality > quantity of sources.
+**What Blocks (CAPTCHA/Bot Detection):**
+- Google Search → `/sorry/index` redirect
+- Reddit → JS challenge page
+- DuckDuckGo → CAPTCHA (even lite)
+- Product Hunt → Cloudflare "Just a moment..."
+- Indie Hackers → Cloudflare challenge
+- Brave Search → Captcha page
+- Stack Overflow → May block
 
-**Focus on:** Real case studies, people who actually launched and are making money, concrete numbers, step-by-step guides.
+**Research Tips:**
+- Don't waste time retrying blocked sites - switch to alternatives immediately
+- For tech/AI trends, HN Algolia is consistently reliable
+- Always check page title for blocking indicators ("moment", "challenge", "captcha", "sorry")
+- Visit as many accessible sources as possible - quality > quantity of sources
+- Focus on: Real case studies, people who actually launched and are making money, concrete numbers, step-by-step guides
 
-**Also check:** Product Hunt's daily top AI products (may be blocked, try direct URL) — any gaps in the market. And search `site:indiehackers.com` via Bing to workaround the block.
+**Browser searches to perform (prioritized):**
+- "autonomous AI agent business ideas 2026" (via HN Algolia)
+- "AI micro SaaS" (via HN Algolia)
+- "self-running AI business" (via HN Algolia)
+- "AI agent revenue" (via HN Algolia)
+- "automated AI services" (via HN Algolia)
 
 ### 2. Filter & Prioritize
 

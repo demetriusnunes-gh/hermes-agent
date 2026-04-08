@@ -109,3 +109,7 @@ This means:
 3. **Use the bridge HTTP API directly for immediate testing** — More reliable than relying on the cron runner to handle gateway state.
 4. **Bridge port is usually 3000** — Check config.yaml `whatsapp.extra.bridge_port` if it differs.
 5. **No markdown in WhatsApp messages** — WhatsApp doesn't support rich formatting via the bridge API. Keep messages plain text.
+6. **Special characters in JSON payloads** — When sending messages via curl, special characters (especially newlines) in URLs or text can trigger false-positive security scans. Always use proper shell escaping:
+   - Use `shell_quote` tool to properly escape JSON payloads for shell commands
+   - Or construct payloads in a separate file and reference it with `-d @filename`
+   - Test with simple messages first to isolate escaping issues
