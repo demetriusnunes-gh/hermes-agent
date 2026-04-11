@@ -158,7 +158,8 @@ docker compose restart api
 ## Pitfalls
 
 - **Timeout on Brazilian sites**: Some Brazilian news sites are slow or aggressive. Use `--max-time 30` on curl to avoid hanging forever. If a single URL times out, skip it and try alternatives.
-- **403/404 on some sites**: Not all sites are scrapeable. Try the mobile version with `"mobile":true` as a workaround.
-- **Extracted content too short**: Try removing `"onlyMainContent":true` or add `"waitFor":3000` for JS-heavy pages.
+- **403/404 on some sites**: Not all sites are scrapeable. Try the mobile version with `\"mobile\":true` as a workaround.
+- **Extracted content too short**: Try removing `\"onlyMainContent\":true` or add `\"waitFor\":3000` for JS-heavy pages.
 - **Parallel limit**: Don't run more than 5-7 parallel scrapes at once — the single Playwright service can get overwhelmed.
 - **execute_code sandbox isolation**: The Firecrawl API runs on the host Docker network. If calling from `execute_code` (which runs in an isolated sandbox), use `host.docker.internal` instead of `localhost`, or use `terminal()` to make curl calls.
+- **Anti-scraping sites**: Some sites like YouTube have strong anti-scraping measures that block both Firecrawl and browser tools. For video platforms, consider using specialized tools like `yt-dlp` when standard scraping approaches fail.
