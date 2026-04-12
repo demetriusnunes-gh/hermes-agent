@@ -1,16 +1,27 @@
 ---
 name: check-relevant-emails
-description: Scan Gmail inbox for important emails from wife, kids school, and government using Zapier MCP. Also checks Google Calendar. Alerts only on relevant messages. Reports sender, subject, date, and brief summary.
-version: 2.1.0
+description: Scan Gmail inbox and Google Calendar for important items using Google Workspace gws/google_api.py only. Alerts only on relevant messages and events, with deduplication state.
+version: 3.0.0
 author: Demetrius Nunes
 metadata:
   hermes:
-    tags: [Email, Gmail, Calendar, MCP, Monitoring, Personal]
+    tags: [Email, Gmail, Calendar, Google-Workspace, gws, Monitoring, Personal]
 ---
 
 # Check Relevant Emails & Calendar
 
-Scans Demetrius's Gmail inbox and Google Calendar via Zapier MCP, reporting only items that need attention or match priority criteria.
+Scans Demetrius's Gmail inbox and Google Calendar using the Google Workspace skill only.
+
+Primary access method:
+- `~/.hermes/skills/productivity/google-workspace/scripts/google_api.py`
+- backed by `gws_bridge.py` → `gws`
+- authenticated via `~/.hermes/google_token.json`
+
+Do not use:
+- Zapier MCP
+- IMAP / app passwords
+- himalaya
+- any other email access path
 
 ## When to Use
 
@@ -22,44 +33,78 @@ Scans Demetrius's Gmail inbox and Google Calendar via Zapier MCP, reporting only
 
 Flag and report emails matching ANY of these:
 
-1. **Wife** — Fernanda Hamacher (`fhamacher@gmail.com`, name: "Fernanda Hamacher")
-2. **Kids' school** — Anything from or about "Eleva"
-3. **Government** — `.gov.br` sender domains, or subjects containing: intimação, notificação, comunicado, declaração, imposto, receita, INSS, detran, prefeitura, governo, multa, CNH, IPTU, IOF, IR. ⚠️ **Pitfall**: The keyword `"ir"` causes false positives on common Portuguese words like "partir", "sorrir", "vir" etc. When `"ir"` is the only government match, cross-check that the sender is NOT a promotional/commercial domain (airlines, retailers, newsletters) before flagging.
+1. Wife — Fernanda Hamacher (`fhamacher@gmail.com`, name: "Fernanda Hamacher")
+2. Kids' school — anything from or about "Eleva"
+3. Government — `.gov.br` sender domains, or subjects containing: intimação, notificação, comunicado, declaração, imposto, receita, INSS, detran, prefeitura, governo, multa, CNH, IPTU, IOF, IR
+   - Pitfall: the keyword `ir` causes false positives on common Portuguese words like "partir", "sorrir", "vir" etc. When `ir` is the only government match, cross-check that the sender is not a promotional/commercial domain before flagging.
+4. Also flag:
+   - purchases & orders — receipts, shipping updates, delivery confirmations, payment issues
+   - recruiter / job outreach — LinkedIn recruiters, job opportunities, hiring messages, headhunter emails
+   - financial statements & bills — bank statements, credit card invoices, bills, insurance, investments
+   - urgent/action-required subjects — "urgent", "ASAP", "action required", "precisa responder", "responda"
+   - from direct family or close contacts if identified
 
-Also flag:
-- **Purchases & orders** — receipts, shipping updates, delivery confirmations, payment issues from any retailer, service, or marketplace (Amazon, iFood, Uber, stores, subscriptions, etc.)
-- **Recruiter / job outreach** — LinkedIn recruiters, job opportunities, hiring messages, headhunter emails
-- **Financial statements & bills** — bank statements, credit card invoices, bills, financial reports, insurance, investments
-- Urgent/action-required subjects ("urgent", "ASAP", "action required", "precisa responder", "responda")
-- From direct family or close contacts if identified
-
-Ignore: newsletters, promotions, social notifications, automated receipts, bulk mail.
+Ignore:
+- newsletters
+- promotions
+- social notifications
+- bulk mail
+- low-signal automated marketing mail
 
 ## Silence on Empty
 
-If no relevant, previously-unseen emails or calendar items are found, do NOT report anything. Stay silent. Only send a message if there's something that needs attention. The sole exception: if the check itself fails (Gmail unreachable, timeout, MCP error), report the error so Demetrius knows the monitoring is broken.
+If no relevant, previously-unseen emails or calendar items are found, do NOT report anything. Stay silent.
+
+Only send a message if:
+- something relevant needs attention, or
+- the check itself fails (auth error, gws error, token refresh failure, etc.)
+
+If nothing relevant is found, output exactly:
+
+```text
+[SILENT]
+```
 
 ## Deduplication / State Tracking
 
-After each run, persist state so the next run never re-reports the same email.
-
 State file: `~/.hermes/state/email-check-state.json`
+
+Example:
 
 ```json
 {
-  "last_run_at": "2026-04-02T11:42:00-03:00",
-  "notified_ids": ["132670", "132669", "132667"],
+  "last_run_at": "2026-04-12T19:42:00-03:00",
+  "notified_ids": ["19d81d6ee589f1a1", "19d80cbb7d819df1"],
   "notified_hashes": ["sha:abc123", "sha:def456"]
 }
 ```
 
-- **`notified_ids`**: Zapier/Gmail message IDs of emails already reported
-- **`notified_hashes`**: SHA-256 of `"{sender_email}|{subject}|{date_iso}"` — catches duplicates even if ID changes (e.g. thread re-indexing)
-- Only report emails that are NOT in either list
-- Append new notified IDs/hashes after each run
-- Keep last 1000 entries max to avoid file bloat (rotate oldest first)
+Rules:
+- `notified_ids`: Gmail message IDs already reported
+- `notified_hashes`: SHA-256 of `"{sender_email}|{subject}|{date_iso}"`
+- only report emails not present in either list
+- append newly reported IDs/hashes after reporting
+- keep last 1000 entries max in each list
 
-On startup of the check, load the file. If missing, start fresh. After reporting, write the updated state.
+## Required Setup
+
+Before use, verify Google Workspace auth:
+
+```bash
+HERMES_HOME="${HERMES_HOME:-$HOME/.hermes}"
+GWORKSPACE_SKILL_DIR="$HERMES_HOME/skills/productivity/google-workspace"
+PYTHON_BIN="${HERMES_PYTHON:-python3}"
+if [ -x "$HERMES_HOME/hermes-agent/venv/bin/python" ]; then
+  "$HERMES_HOME/hermes-agent/venv/bin/python" -m ensurepip --upgrade >/dev/null 2>&1 || true
+  PYTHON_BIN="$HERMES_HOME/hermes-agent/venv/bin/python"
+fi
+GSETUP="$PYTHON_BIN $GWORKSPACE_SKILL_DIR/scripts/setup.py"
+GAPI="$PYTHON_BIN $GWORKSPACE_SKILL_DIR/scripts/google_api.py"
+
+$GSETUP --check
+```
+
+If auth is missing or invalid, fix Google Workspace auth first. Do not fall back to any other email transport.
 
 ## Steps
 
@@ -79,118 +124,93 @@ notify_ids = set(state.get("notified_ids", []))
 notify_hashes = set(state.get("notified_hashes", []))
 ```
 
-### 2. Retry & Error Handling for MCP Calls
+### 2. Fetch Recent Inbox Messages with Google Workspace
 
-Zapier MCP calls can timeout or fail transiently. Use this retry pattern for **every** `npx mcporter call`:
-
-**Bash retry wrapper:**
-```bash
-run_with_retry() {
-    local max_attempts=3
-    local delay=10
-    local cmd="$1"
-    for attempt in $(seq 1 $max_attempts); do
-        echo "Attempt $attempt/$max_attempts..."
-        result=$(eval "$cmd" 2>&1)
-        exit_code=$?
-        if [ $exit_code -eq 0 ] && echo "$result" | python3 -c "import sys,json; json.loads(sys.stdin.read())" 2>/dev/null; then
-            echo "$result"
-            return 0
-        fi
-        # Check for transient errors: timeout, connection refused, 5xx, empty response
-        if echo "$result" | grep -qi "timeout\|connection refused\|5[0-9][0-9]\|ECONNRESET\|ERR_MCP_TIMEOUT\|timed out"; then
-            echo "Transient error on attempt $attempt: retrying in ${delay}s"
-            sleep $delay
-            delay=$((delay * 2))  # exponential backoff: 10s, 20s, 40s
-        else
-            echo "$result"  # Non-transient error — return as-is
-            return 1
-        fi
-    done
-    echo "all $max_attempts attempts failed"
-    return 1
-}
-
-# Usage:
-# run_with_retry 'npx mcporter call zapier.gmail_find_email ... --output json'
-```
-## Troubleshooting
-
-### "Unknown MCP server 'zapier'" error
-
-This happens when the Zapier MCP server is not properly configured. There are two scenarios:
-
-1. **Truncated token in `/root/config/mcporter.json`** - The file contains a truncated token (`ZWZhND...c9`) causing MCP calls to fail. **Do NOT use `--http-url`** as it triggers an OAuth browser flow that times out in headless/cron contexts.
-
-2. **Missing or expired token in `~/.hermes/config.yaml`** - Check that `mcp_servers.zapier.url` contains a valid token.
-
-**Solution for cron/headless environments:** Use the Gmail IMAP fallback (see below) instead of trying to fix the MCP connection, as the IMAP approach is more reliable for automated checks.
-
-### Token expiration
-
-Symptoms: `{"error": {"code": -31997, "message": "Invalid OAuth token - please re-authenticate"}}`
-
-**Fix**: Go to the Zapier MCP dashboard and re-generate the token, then update `mcp_servers.zapier.url` in `~/.hermes/config.yaml`.
-
-**Note for cron jobs:** Even with a valid token, the native MCP call may fail in headless environments. The IMAP fallback is recommended for automated email checks.
-
-**Successful IMAP Implementation**: The Gmail IMAP fallback has been tested and works reliably in cron/headless environments. It provides full header access, respects the deduplication state file, and does not require interactive approvals. When MCP fails, the IMAP approach should be used as the primary method for automated email checks.
-
-### Token expiration
-
-Symptoms: `{"error": {"code": -31997, "message": "Invalid OAuth token - please re-authenticate"}}`
-
-**Fix**: Go to the Zapier MCP dashboard and re-generate the token, then update `mcp_servers.zapier.url` in `~/.hermes/config.yaml`.
+Use Gmail search syntax through the wrapper:
 
 ```bash
-npx mcporter call zapier.gmail_find_email instructions="find recent emails in my inbox" output_hint="show sender name, sender email, subject, date, and first 100 characters of the body" query="in:inbox newer_than:2h" --output json 2>&1
+$GAPI gmail search "in:inbox newer_than:2h" --max 50
 ```
 
-If the 2h window returns nothing, expand to `newer_than:1d` for a daily summary.
-
-Parse the JSON results. The `generatedJqFilter` will return structured objects with sender, subject, date, and snippet.
-
-### 2. Filter Relevant Emails
-
-For each returned email, check against the relevance criteria above. Read full content only if needed by calling:
+If you need a wider window for manual checks or low-volume periods:
 
 ```bash
-npx mcporter call zapier.gmail_find_email instructions="read the full content of this email from [SENDER] with subject [SUBJECT]" output_hint="show the entire email body and any action items" query="from:[SENDER_EMAIL] subject:[SUBJECT_KEYWORDS]" --output json 2>&1
+$GAPI gmail search "in:inbox newer_than:1d" --max 100
 ```
 
-### 3. Fetch Upcoming Calendar Events
+The search result returns message summaries with fields like:
+- `id`
+- `from`
+- `subject`
+- `date`
+
+### 3. Read Full Email Only When Needed
+
+For candidates that might be relevant, fetch the full message by ID:
 
 ```bash
-npx mcporter call zapier.google_calendar_find_events instructions="show my upcoming events for today and tomorrow" output_hint="show event title, start time, end time, location if available, and attendees for each event" --output json 2>&1
+$GAPI gmail get MESSAGE_ID
 ```
 
-For a weekly summary, use:
+Use the full message only when sender + subject are insufficient to decide relevance or summarize action items.
+
+### 4. Fetch Upcoming Calendar Events
+
+Use Google Workspace, not Zapier:
+
 ```bash
-npx mcporter call zapier.google_calendar_find_events instructions="show my upcoming events for the next 7 days" output_hint="show event title, start time, end time, and calendar name for each event" --output json 2>&1
+$GAPI calendar list --max 25
 ```
 
-Flag calendar items that overlap with relevance criteria (e.g., school events, school meetings like "Eleva").
+Or a tighter time range when needed:
 
-### 4. Report
+```bash
+$GAPI calendar list --start 2026-04-12T00:00:00-03:00 --end 2026-04-13T23:59:59-03:00 --max 25
+```
+
+Flag events that overlap with the relevance criteria, especially school-related events such as Eleva meetings or parent events.
+
+### 5. Filter Relevant Emails
+
+For each message, evaluate:
+- sender email / display name
+- subject
+- snippet/body if needed
+- date
+
+Suggested heuristics:
+- wife: sender contains `fhamacher@gmail.com` or `Fernanda`
+- school: sender/subject/body contains `eleva`
+- government: sender domain ends with `.gov.br`, or strong government keywords in subject/body
+- purchases/orders: order, pedido, enviado, shipped, delivery, payment, receipt, invoice, nota fiscal
+- recruiter/job: recruiter, hiring, position, opportunity, headhunter, LinkedIn, career
+- financial: fatura, extrato, statement, invoice, cartão, bank, banco, insurance, investment
+- urgent: urgent, urgente, ASAP, action required, precisa responder, responda
+
+False-positive prevention:
+- if `ir` is the only government keyword match, reject promotional/commercial senders
+- skip newsletters/promotions unless sender is a true priority contact
+
+### 6. Report
 
 For each relevant email found, report:
-- **Sender:** email/name
-- **Subject:** full subject line
-- **Date:** when received
-- **Why it matters:** 1-line reason
-- **Summary:** 1-2 lines of content if needed
+- Sender
+- Subject
+- Date
+- Why it matters
+- 1-2 line summary if needed
 
-For calendar, report upcoming events:
-- **Event:** title
-- **When:** start and end time
-- **Notes:** location, attendees, or relevant details
+For relevant calendar events, report:
+- Event
+- When
+- Notes
 
 Format:
 
-```
+```text
 📧 Relevant emails (last 2h):
 
-1. Fernanda (fhamacher@gmail.com)
+1. Fernanda Hamacher (fhamacher@gmail.com)
    Subject: Dinner Friday?
    11:42 AM — Just checking about dinner plans
    → Needs a reply
@@ -198,17 +218,18 @@ Format:
 2. Eleva - Comunicação
    Subject: Reunião de pais - 15/04
    10:15 AM — Parent meeting on April 15th at 7pm
-   → Calendar event, mark it
+   → Calendar-worthy school event
 
 📅 Upcoming events:
 
-1. Geninho vem almoçar aqui
-   Today 8:00 AM - 9:00 AM — Family calendar
+1. Reunião Eleva
+   Tomorrow 7:00 PM - 8:00 PM
+   → School-related event
 ```
 
-### 5. Save State After Report
+If no relevant new items exist, output `[SILENT]`.
 
-After reporting, create/update the state file at `~/.hermes/state/email-check-state.json`:
+### 7. Save State After Report
 
 ```python
 import json
@@ -218,7 +239,6 @@ from pathlib import Path
 STATE_FILE = Path("~/.hermes/state/email-check-state.json").expanduser()
 STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
 
-# Append newly notified IDs/hashes
 for new_id in newly_notified_ids:
     if new_id not in state["notified_ids"]:
         state["notified_ids"].append(new_id)
@@ -227,126 +247,41 @@ for new_hash in newly_notified_hashes:
         state["notified_hashes"].append(new_hash)
 
 state["last_run_at"] = datetime.now(timezone.utc).isoformat()
-
-# Rotate to keep file small (max 1000 entries each)
 state["notified_ids"] = state["notified_ids"][-1000:]
 state["notified_hashes"] = state["notified_hashes"][-1000:]
 
 STATE_FILE.write_text(json.dumps(state, indent=2))
 ```
 
-Only report/notify items that are NOT in either `notified_ids` or `notified_hashes`. This prevents re-notifying about the same email across cron runs.
+## Operational Rules
 
-## Zapier MCP Access Methods
+1. Use Google Workspace only.
+2. Never switch to Zapier MCP, IMAP, himalaya, or app-password based flows.
+3. Check auth first with `setup.py --check`.
+4. Use Gmail search syntax for efficient narrowing before reading full messages.
+5. Be conservative about relevance.
+6. Keep the check quiet on empty.
+7. Report failures if the Google Workspace check itself breaks.
 
-### Primary: mcporter native call (Not recommended for cron/headless)
+## Troubleshooting
 
-**Warning**: Due to persistent token/truncation issues in headless/cron environments, the native MCP call (`npx mcporter call zapier.*`) is unreliable for automated email checks. It frequently fails with "Unknown MCP server 'zapier'" errors.
+### `NOT_AUTHENTICATED`
+Re-run Google Workspace setup and re-consent.
 
-**Do NOT use** `npx mcporter call --http-url "$ZAPIER_URL"` — this triggers an OAuth browser flow that times out after 60s in headless/cron contexts.
+### `REFRESH_FAILED`
+Token was revoked or expired in a non-refreshable way. Re-authenticate.
 
-### Token expiration
+### `gws: command not found`
+Install `@googleworkspace/cli` or otherwise restore `gws`.
 
-Symptoms:
-```json
-{"error": {"code": -31997, "message": "Invalid OAuth token - please re-authenticate"}}
-```
+### Partial scopes
+Re-run Google Workspace auth and grant the required scopes.
 
-**Fix**: Go to the Zapier MCP dashboard and re-generate the token, then update `mcp_servers.zapier.url` in `~/.hermes/config.yaml`.
+### Gmail search returns too little
+Broaden the query window from `newer_than:2h` to `newer_than:1d`, then still dedupe before reporting.
 
-**Note**: Even with a valid token, native MCP calls may fail in headless environments.
+## Notes
 
-## Fallback: Gmail IMAP (Recommended for automated checks)
-
-The Gmail IMAP fallback has been tested and proven reliable for cron/headless email checks. It works without MCP dependencies, token issues, or interactive approvals.
-
-Use Gmail IMAP directly as the primary method for automated email checks:
-
-```python
-import imaplib
-import email
-from email.header import decode_header
-import json
-import os
-import re
-import hashlib
-from datetime import datetime, timezone, timedelta
-from pathlib import Path
-
-# Load state for deduplication
-STATE_FILE = Path(os.path.expanduser("~/.hermes/state/email-check-state.json"))
-if STATE_FILE.exists():
-    state = json.loads(STATE_FILE.read_text())
-else:
-    state = {"last_run_at": None, "notified_ids": [], "notified_hashes": []}
-
-notify_ids = set(state.get("notified_ids", []))
-notify_hashes = set(state.get("notified_hashes", []))
-
-# Connect using app password stored at ~/.gmail-app-password
-app_pw = os.path.expanduser('~/.gmail-app-password')
-if not os.path.exists(app_pw):
-    print("⚠️ Gmail app password not found at ~/.gmail-app-password")
-    exit(1)
-
-app_pw = open(app_pw).read().strip()
-try:
-    mail = imaplib.IMAP4_SSL('imap.gmail.com')
-    mail.login('demetriusnunes@gmail.com', app_pw)
-    mail.select('INBOX')
-except Exception as e:
-    print(f"⚠️ Gmail connection failed: {e}")
-    exit(1)
-
-# Search recent emails (last 24 hours to be safe, then filter by time)
-since_date = (datetime.now(timezone.utc) - timedelta(hours=24)).strftime('%d-%b-%Y')
-status, messages = mail.search(None, f'(SINCE "{since_date}")')
-
-if status != 'OK':
-    print("⚠️ Failed to search emails")
-    mail.logout()
-    exit(1)
-
-two_hours_ago = datetime.now(timezone.utc) - timedelta(hours=2)
-
-# [Continue with relevance checking, processing, and reporting logic...]
-# See the full implementation in the skill's execution notes for details.
-
-# After processing, update state file with new notifications and timestamp
-# (Refer to the "Save State After Report" section below for the exact implementation)
-```
-
-Advantages of IMAP fallback:
-- No MCP dependency or token issues
-- Works headless/cron without approval prompts
-- Full header access, can also fetch body snippets with `BODY.PEEK[TEXT]`
-- Dedup with state file works the same way
-- Proven reliable in automated/cron environments
-
-**Important**: Always use `BODY.PEEK` (not `BODY`) to avoid marking emails as read.
-
-If IMAP fails, report: "⚠️ Email check skipped — Gmail unreachable."
-
-## Tips
-
-- Zapier MCP may take 10-30s per call — set generous timeouts (60s minimum, 90s preferred)
-- Use `--output json` for structured results
-- `output_hint` is REQUIRED — it controls the jq filter that shapes the returned data
-- The `query` parameter uses Gmail search syntax (e.g., `in:inbox newer_than:2h`, `from:fernanda`, `subject:Eleva`)
-- Be conservative: only flag what truly needs attention
-- If MCP server is unreachable, report the error so Demetrius knows the check failed
-- Calendar search returns up to 25 matching events max
-- After fetching emails, always filter by the relevance criteria before expanding to full reads
-
-## False Positive Prevention
-
-**Government keyword `"ir"`**: Matches common Portuguese words like "partir", "sorrir", "vir", "dirigir", etc. When `"ir"` is the sole government keyword match, cross-check that the sender is NOT a known promotional/commercial domain (airlines, retailers, newsletters) before flagging. Example false positive: Azul Airlines email "última chance de voar a partir de R$ 144,90" matched "ir" in "partir".
-
-**Promotional sender whitelist override**: Even if content/subject matches a relevance criteria, skip emails from known promotional senders (noreply@voeazul, noreply@retailers, etc.) unless the sender domain matches a specific priority contact.
-
-## Calendar Fallback
-
-When `npx mcporter call zapier.google_calendar_find_events` fails with "Unknown MCP server 'zapier'" (common in headless/cron), there's currently no IMAP equivalent for Google Calendar. In this case:
-- Skip the calendar check silently
-- Only report errors if **both** Gmail IMAP and calendar checks fail
-- Consider using Google Calendar API directly if calendar becomes critical
+- This skill is intentionally standardized on Google Workspace only.
+- Calendar access should also use Google Workspace only.
+- The old Zapier MCP and IMAP approaches are deprecated for this workflow.
