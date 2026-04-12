@@ -107,7 +107,7 @@ Tell the user:
 
 > 1. Go to https://console.cloud.google.com/apis/credentials
 > 2. Create a project (or use an existing one)
-> 3. Enable the APIs you need (Gmail, Calendar, Drive, Sheets, Docs, People)
+> 3. Enable the APIs you need (Gmail, Calendar, Drive, Sheets, Docs, Slides, Tasks, People)
 > 4. Credentials → Create Credentials → OAuth 2.0 Client ID → Desktop app
 > 5. Download JSON and tell me the file path
 
@@ -221,6 +221,8 @@ All commands return JSON via `gws --format json`. Key output shapes:
 - **Calendar list/agenda**: Array of event objects (summary, start, end, location)
 - **Calendar create**: Confirmation with event ID and htmlLink
 - **Drive search**: Array of file objects (id, name, mimeType, webViewLink)
+- **Slides**: Use direct `gws_bridge.py` access (read/write supported by `gws`)
+- **Tasks**: Use direct `gws_bridge.py` access (task lists and tasks supported by `gws`)
 - **Sheets get/read**: 2D array of cell values
 - **Docs get**: Full document JSON (use `body.content` for text extraction)
 - **Contacts list**: Array of person objects with names, emails, phones
