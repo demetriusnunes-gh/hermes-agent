@@ -56,12 +56,27 @@ State file: `~/.hermes/state/email-check-state.json`
 - Uses app password from `~/.gmail-app-password` (one-time setup)
 - Connects to `imap.gmail.com` via IMAP4_SSL
 - Authenticates as `demetriusnunes@gmail.com`
+- For historical payment/subscription audits, search All Mail instead of Inbox so archived receipts are included
 
 ### Search Strategy
-1. Search for emails from last 24 hours (to ensure we don't miss anything)
-2. Filter client-side for emails from last 2 hours
-3. Process each email through relevance criteria
-4. Apply deduplication before reporting
+1. Select the correct mailbox first:
+   - For inbox monitoring: `mail.select('INBOX', readonly=True)`
+   - For historical/billing scans: prefer Gmail All Mail: `mail.select('"[Gmail]/Todos os e-mails"', readonly=True)` on Portuguese accounts (or the localized All Mail name returned by `mail.list()`)
+2. For broad time-window scans, use standard IMAP date search: `mail.search(None, 'SINCE', since_date)`
+3. For targeted Gmail-style queries, use Gmail raw search exactly like:
+   - `mail.search(None, 'X-GM-RAW', '"after:2026/03/13 from:googleplay-noreply@google.com"')`
+4. Filter client-side after retrieval for final relevance / merchant / subscription logic
+5. Apply deduplication before reporting
+
+### Gmail IMAP Query Pitfalls
+- `mail.search()` only works after a successful `select()`; otherwise Gmail returns: `command SEARCH illegal in state AUTH`.
+- `X-GM-RAW` is powerful but fragile. Wrap the entire raw Gmail query in one quoted string passed as a single criterion.
+- Queries containing nested quotes, accented characters, or complex boolean expressions may fail with `SEARCH command error: BAD [Could not parse command]`.
+- When that happens, simplify aggressively:
+  - prefer sender-only or sender+date queries first
+  - then inspect/filter subjects and bodies client-side in Python
+  - avoid relying on accented literals like `cobrança` inside IMAP search
+- If you need the localized Gmail folder name, inspect it with `mail.list()` first instead of assuming English names.
 
 ### Relevance Checking
 - Wife: Direct email/name match
@@ -118,5 +133,7 @@ After processing:
 - More reliable than Zapier MCP for automated/cron use
 - Does not require interactive approvals or browser flows
 - Provides full header access and optional body snippet extraction
+- For billing/subscription audits, fetch full messages with `RFC822` and extract `text/plain` / `text/html` parts client-side; raw partial fetches can surface MIME/base64 noise and produce poor snippets
+- Always prefer `readonly=True` plus `BODY.PEEK` semantics to avoid marking messages as read
 - Respects quiet hours - only outputs when relevant emails found
 - Handles connection failures gracefully
