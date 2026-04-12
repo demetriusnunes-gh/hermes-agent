@@ -15,7 +15,7 @@ When cron jobs for email checking are unreliable, the fix in this environment is
 Do not use:
 - Zapier MCP
 - IMAP / app passwords
-- himalaya
+
 
 ## Problem Pattern
 

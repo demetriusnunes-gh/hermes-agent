@@ -12,16 +12,15 @@ metadata:
 
 This skill is deprecated in this environment.
 
-Reason: the previous instructions relied on IMAP, Gmail app passwords, and Himalaya-era assumptions. Local email access is now standardized on OAuth-based Google Workspace tooling, and the app-password file should not be recreated.
+Reason: the previous instructions relied on IMAP, Gmail app passwords, and older mail-client assumptions. Local email access is now standardized on OAuth-based Google Workspace tooling, and the app-password file should not be recreated.
 
 ## Current Rule
 
 Do not use this skill's old workflow.
 
 Do not use:
-- himalaya
-- `~/.config/himalaya/config.toml`
-- `~/.gmail-app-password`
+- legacy CLI mail-client configs
+- legacy app-password files
 - IMAP/app-password attachment download flows
 
 ## What To Do Instead

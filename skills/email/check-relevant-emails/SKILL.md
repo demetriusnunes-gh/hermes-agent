@@ -20,7 +20,6 @@ Primary access method:
 Do not use:
 - Zapier MCP
 - IMAP / app passwords
-- himalaya
 - any other email access path
 
 ## When to Use
@@ -256,7 +255,7 @@ STATE_FILE.write_text(json.dumps(state, indent=2))
 ## Operational Rules
 
 1. Use Google Workspace only.
-2. Never switch to Zapier MCP, IMAP, himalaya, or app-password based flows.
+2. Never switch to Zapier MCP, IMAP, or app-password based flows.
 3. Check auth first with `setup.py --check`.
 4. Use Gmail search syntax for efficient narrowing before reading full messages.
 5. Be conservative about relevance.

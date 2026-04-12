@@ -247,7 +247,7 @@ curl -s http://127.0.0.1:3000/health
 
 ## Step 5: Google Workspace Setup
 
-Use the OAuth-based Google Workspace workflow for Gmail and Calendar. Do not set up Himalaya, IMAP, or Gmail app-password files on this VPS.
+Use the OAuth-based Google Workspace workflow for Gmail and Calendar. Do not set up legacy IMAP/app-password mail clients on this VPS.
 
 ### 5.1 Install Google Workspace CLI
 

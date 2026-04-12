@@ -1,6 +1,6 @@
 ---
 name: check-relevant-emails-imap-fallback
-description: Deprecated. Relevant email checking now uses Google Workspace gws/google_api.py only; do not use IMAP, Zapier MCP, himalaya, or app passwords.
+description: Deprecated. Relevant email checking now uses Google Workspace gws/google_api.py only; do not use IMAP, Zapier MCP, or app passwords.
 version: 2.0.0
 author: Hermes Agent
 metadata:
@@ -26,7 +26,6 @@ Do not use:
 - IMAP
 - Gmail app passwords
 - Zapier MCP
-- himalaya
 - any other email access path
 
 ## Why This Skill Is Deprecated
