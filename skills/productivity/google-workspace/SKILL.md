@@ -70,6 +70,11 @@ if [ -x "$HERMES_HOME/hermes-agent/venv/bin/python" ]; then
   PYTHON_BIN="$HERMES_HOME/hermes-agent/venv/bin/python"
 fi
 GSETUP="$PYTHON_BIN $GWORKSPACE_SKILL_DIR/scripts/setup.py"
+
+# If the Hermes venv exists but is missing pip/deps, repair it first:
+if [ -x "$HERMES_HOME/hermes-agent/venv/bin/python" ]; then
+  "$HERMES_HOME/hermes-agent/venv/bin/python" -m ensurepip --upgrade >/dev/null 2>&1 || true
+fi
 ```
 
 ### Step 0: Check if already set up
@@ -239,6 +244,7 @@ Parse output with `jq` or read JSON directly.
 | `gws: command not found` | Install: `npm install -g @googleworkspace/cli` |
 | `HttpError 403` | Missing scope — `$GSETUP --revoke` then redo Steps 3-5 |
 | `HttpError 403: Access Not Configured` | Enable API in Google Cloud Console |
+| OAuth says app is in testing / only developer-approved testers can access | In Google Cloud Console → Google Auth Platform / OAuth consent screen, add the Google account as a Test user, or publish the app to Production if appropriate |
 | Advanced Protection blocks auth | Admin must allowlist the OAuth client ID |
 
 ## Revoking Access

@@ -3,6 +3,8 @@
 auth.json
 *.lock
 .gmail-app-password
+google_client_secret.json
+google_token.json
 /models_dev_cache.json
 /state.db*
 /sessions/

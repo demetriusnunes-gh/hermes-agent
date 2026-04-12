@@ -98,3 +98,13 @@ After pushing, you can verify by:
 - If you see "fatal: no submodule mapping found": Check .gitmodules file exists and is properly configured
 - If push fails due to non-fast-forward: Pull first, resolve any conflicts, then push again
 - If submodule shows wrong commit: Navigate to submodule, checkout correct commit, then update reference in main repo
+- If the parent repo is clean after commit but `git status` still shows `M submodule-name`: inspect inside the submodule with `git status --porcelain` — it may have uncommitted tracked-file changes rather than just a changed SHA.
+- If you can commit inside the submodule but cannot push that submodule's remote (e.g. permission denied to upstream): **do not leave the parent repo pointing at an unpublished submodule commit.** Create a local safety branch in the submodule (for example `git branch local/<topic> <commit>`), then reset the submodule back to the last published commit/branch tip before finalizing the parent repo.
+- After preserving unpublished submodule work on a local branch, re-check the parent repo with `git status --porcelain` to ensure it is truly clean before reporting success.
+
+## Additional experiential note
+A dirty submodule can come from two different situations that look similar in the parent repo:
+1. the recorded submodule SHA changed, or
+2. files inside the submodule changed without a published commit.
+
+Treat these differently. Case (1) can often be staged in the parent repo. Case (2) requires inspecting and resolving the submodule itself first.
