@@ -13,7 +13,7 @@ metadata:
   hermes:
     tags: [Google, Gmail, Calendar, Drive, Sheets, Docs, Contacts, Email, OAuth, gws]
     homepage: https://github.com/NousResearch/hermes-agent
-    related_skills: [himalaya]
+    related_skills: []
 ---
 
 # Google Workspace
@@ -90,7 +90,7 @@ If it prints `AUTHENTICATED`, skip to Usage — setup is already done.
 **Question 1: "What Google services do you need? Just email, or also
 Calendar/Drive/Sheets/Docs?"**
 
-- **Email only** → Use the `himalaya` skill instead — simpler setup.
+- **Email only** → Continue below. This environment still standardizes on Google Workspace OAuth.
 - **Calendar, Drive, Sheets, Docs (or email + these)** → Continue below.
 
 **Partial scopes**: Users can authorize only a subset of services. The setup

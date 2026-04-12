@@ -13,7 +13,7 @@ Relevant email contacts:
 - Government: .gov.br domains, official-sounding notices
 Email monitoring: checks every 120min, alerts via Telegram.
 §
-Environment: Hostinger VPS (Ubuntu 24.04). Hermes Gateway runs as systemd service 'hermes-gateway.service' with auto-restart. Node.js (v22) installed at /root/.hermes/node/bin. 8GB swap enabled at /swapfile. Log rotation configured for ~/.hermes/logs/. Email: Himalaya CLI configured for Gmail with App Password (stored in ~/.gmail-app-password). WhatsApp: Baileys bridge on port 3000, paired with +5521990718408. Telegram: Bot @roger_hermes1_bot configured.
+Email access is now via Google Workspace gws/google_api.py OAuth token; Gmail app password file has been removed and should not be used.
 §
 WEB RESEARCH default: Firecrawl local (Docker, port 3002) — use FIRST for any web research/research/look up/scrape tasks. POST http://localhost:3002/v1/scrape with {"url":"...", "formats":["markdown"], "onlyMainContent":true}. Only fall back to browser_navigate if Firecrawl is down, needs interactive login, or returns garbage.
 §

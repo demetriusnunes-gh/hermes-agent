@@ -1,16 +1,16 @@
 ---
 name: hermes-telegram-vps-setup
-description: Complete setup guide for running Hermes Agent on a VPS with Telegram integration, gateway reliability (systemd), security hardening (firewall, fail2ban, swap), WhatsApp pairing, and Gmail/himalaya setup.
+description: Complete setup guide for running Hermes Agent on a VPS with Telegram integration, gateway reliability (systemd), security hardening (firewall, fail2ban, swap), WhatsApp pairing, and Google Workspace email/calendar setup.
 version: 1.1.0
 metadata:
   hermes:
-    tags: [telegram, whatsapp, gmail, vps, security, gateway, systemd, firewall, fail2ban, himalaya]
+    tags: [telegram, whatsapp, gmail, google-workspace, vps, security, gateway, systemd, firewall, fail2ban]
     category: productivity
 ---
 
 # Hermes VPS Setup Guide
 
-Complete guide for deploying Hermes on a Linux VPS with Telegram, WhatsApp (Baileys), Gmail (himalaya), systemd reliability, and security hardening.
+Complete guide for deploying Hermes on a Linux VPS with Telegram, WhatsApp (Baileys), Google Workspace Gmail/Calendar, systemd reliability, and security hardening.
 
 ## Prerequisites
 
@@ -245,64 +245,63 @@ curl -s http://127.0.0.1:3000/health
 | Bridge already on port 3000 | The gateway is running it; kill before manual pairing |
 | "Logged out" / "Disconnected" | Session expired — delete `~/.hermes/whatsapp/session/` and re-pair |
 
-## Step 5: Gmail Setup (Himalaya CLI)
+## Step 5: Google Workspace Setup
 
-Two paths: **himayala** (IMAP/SMTP with App Password, for email only) or **Google Workspace** (full OAuth, for Calendar/Drive/Sheets). This covers himalaya.
+Use the OAuth-based Google Workspace workflow for Gmail and Calendar. Do not set up Himalaya, IMAP, or Gmail app-password files on this VPS.
 
-### 5.1 Generate a Gmail App Password
-
-1. Go to https://myaccount.google.com/apppasswords
-2. Select "Other (Custom name)" → name it `hermes`
-3. Copy the 16-character password
-
-### 5.2 Install himalaya
+### 5.1 Install Google Workspace CLI
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/pimalaya/himalaya/master/install.sh | PREFIX=~/.local sh
+npm install -g @googleworkspace/cli
+gws --version
 ```
 
-### 5.3 Store credentials (NO SPACES in App Password)
+### 5.2 Save Google OAuth client credentials
+
+Create OAuth Desktop App credentials in Google Cloud, then place the downloaded JSON at:
+
+```text
+~/.hermes/google_client_secret.json
+```
+
+### 5.3 Run setup
 
 ```bash
-echo -n 'yourappasswordnospaces' > ~/.gmail-app-password
-chmod 600 ~/.gmail-app-password
+HERMES_HOME="${HERMES_HOME:-$HOME/.hermes}"
+GWORKSPACE_SKILL_DIR="$HERMES_HOME/skills/productivity/google-workspace"
+PYTHON_BIN="${HERMES_PYTHON:-python3}"
+if [ -x "$HERMES_HOME/hermes-agent/venv/bin/python" ]; then
+  "$HERMES_HOME/hermes-agent/venv/bin/python" -m ensurepip --upgrade >/dev/null 2>&1 || true
+  PYTHON_BIN="$HERMES_HOME/hermes-agent/venv/bin/python"
+fi
+GSETUP="$PYTHON_BIN $GWORKSPACE_SKILL_DIR/scripts/setup.py"
+
+$GSETUP --check || true
+$GSETUP --client-secret ~/.hermes/google_client_secret.json
+$GSETUP --auth-url
 ```
 
-**IMPORTANT**: Remove all spaces from the App Password. Google shows them grouped (e.g., `ab cd ef gh ij kl mn op`) but the actual password has NO spaces.
-
-### 5.4 Configure himalaya
+Open the printed URL, approve access, then exchange the returned redirect URL/code:
 
 ```bash
-mkdir -p ~/.config/himalaya
-cat > ~/.config/himalaya/config.toml << 'EOF'
-[accounts.gmail]
-email = "your@gmail.com"
-display-name = "Your Name"
-default = true
-
-backend.type = "imap"
-backend.host = "imap.gmail.com"
-backend.port = 993
-backend.encryption.type = "tls"
-backend.login = "your@gmail.com"
-backend.auth.type = "password"
-backend.auth.cmd = "cat ~/.gmail-app-password"
-
-message.send.backend.type = "smtp"
-message.send.backend.host = "smtp.gmail.com"
-message.send.backend.port = 587
-message.send.backend.encryption.type = "start-tls"
-message.send.backend.login = "your@gmail.com"
-message.send.backend.auth.type = "password"
-message.send.backend.auth.cmd = "cat ~/.gmail-app-password"
-EOF
+$GSETUP --auth-code "PASTE_THE_REDIRECT_URL_OR_CODE_HERE"
 ```
 
-### 5.5 Verify
+### 5.4 Verify
 
 ```bash
-himalaya envelope list --page 1 --page-size 5
+$GSETUP --check
+PYTHON_BIN="${HERMES_PYTHON:-python3}"
+if [ -x "$HERMES_HOME/hermes-agent/venv/bin/python" ]; then
+  PYTHON_BIN="$HERMES_HOME/hermes-agent/venv/bin/python"
+fi
+GAPI="$PYTHON_BIN $GWORKSPACE_SKILL_DIR/scripts/google_api.py"
+$GAPI gmail search "in:inbox newer_than:7d" --max 5
 ```
+
+Expected outcome:
+- `AUTHENTICATED` from `setup.py --check`
+- Gmail search returns recent messages as JSON
 
 ## Step 6: Log Rotation (optional but recommended)
 
@@ -361,10 +360,10 @@ EOF
 ### WhatsApp: Node.js must be in systemd PATH
 - Hermes bundles Node.js at `~/.hermes/node/bin/` but systemd does NOT expand `~` — use full path `/root/.hermes/node/bin/`
 
-### Gmail App Passwords: remove spaces
-- Google formats App Passwords with spaces for readability but the actual value has none
-- `echo -n 'abcd efgh ijkl mnop'` → WRONG (stores spaces)
-- `echo -n 'abcdefghijklmnop'` → CORRECT (no spaces)
+### Google Workspace auth issues
+- Re-run `setup.py --check`
+- If needed, re-run `setup.py --auth-url` and `setup.py --auth-code ...`
+- Keep `~/.hermes/google_client_secret.json` and `~/.hermes/google_token.json` in place
 
 ### .env file is write-protected
 - `patch` tool is DENIED on `~/.hermes/.env` — use Python read/write scripts or `sed` instead

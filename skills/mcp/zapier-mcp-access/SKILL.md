@@ -100,4 +100,4 @@ Fix: Log into Zapier MCP dashboard at mcp.zapier.com, regenerate the Connect tok
 3. **Empty results** — Zapier has 25 result cap. Narrow date ranges or search all mail with in:anywhere instead of in:inbox.
 4. **output_hint REQUIRED** — Controls the auto-generated jq filter. Without it, results may be unstructured/raw.
 5. **Case-sensitive queries** — `from:BeachPark` may fail. Use exact lowercase: `from:travel@beachpark.com.br`.
-6. **Attachment contents** — Zapier only returns filenames. To download and read attachments, use Python `imaplib` with the Gmail app password at `~/.gmail-app-password`, or `himalaya attachment download <ID>`.
+6. **Attachment contents** — Zapier only returns filenames. Do not revive old IMAP/app-password/Himalaya workflows for attachments in this environment; prefer OAuth-based Google Workspace tooling or treat this as a tooling gap to solve safely.
