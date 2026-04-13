@@ -167,6 +167,8 @@ Deliver to:
 - Deduplicate: same story from multiple sources should appear only once (prefer BBC or the most reputable source)
 - **Always filter by date**: Check pub_date and skip items from previous years (especially 2018 stale cache from G1 feeds). Only process items from today/yesterday. If G1 Rio or G1 SP feeds contain only stale items, skip those sections entirely.
 - If G1 Rio or G1 SP feeds are empty after filtering, broaden to G1 Brasil for that category
-- **Pitfall on Hostinger VPS**: `feeds.g1.globo.com` may resolve to NXDOMAIN (DNS failure). In that case, all G1 feeds will fail. Check pub_date — if items are not from today/yesterday, skip Rio and SP sections entirely and add a brief note at the bottom: "⚠️ G1 feeds indisponíveis hoje."
+- If G1 Rio or G1 SP feeds are stale/unusable, a better fallback than leaving sections empty is to use **Google News RSS search constrained to Rio/São Paulo topics** and then manually filter out weather, sports, entertainment, listicles, and low-quality aggregators.
+- **Pitfall on Hostinger VPS**: `feeds.g1.globo.com` may resolve to NXDOMAIN (DNS failure). In that case, all G1 feeds will fail. Check pub_date — if items are not from today/yesterday, skip Rio and SP sections entirely or fill via Google News fallback, and add a brief note at the bottom: "⚠️ G1 feeds indisponíveis hoje."
 - The script handles encoding issues (ISO-8859-1 from Brazilian sources) automatically
 - For DoorDash stock price: Yahoo Finance may rate limit; use Google Finance with proper parsing as fallback
+- For DoorDash news, be stricter than the raw RSS: skip SEO bait, product listings, generic consumer advice, and low-signal finance rewrites; prefer competition/platform/infrastructure/regulatory stories
