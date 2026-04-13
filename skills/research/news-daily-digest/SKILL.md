@@ -47,6 +47,21 @@ curl -s 'https://www.google.com/finance/quote/DASH:NASDAQ' | grep -oP 'data-last
 curl -s 'https://www.google.com/finance/quote/DASH:NASDAQ' | grep -oP 'data-previous-close="[\d.]+"' | head -1 | cut -d'"' -f2
 ```
 
+**2026-04 finding**: Yahoo works more reliably when you send a browser User-Agent, and the most useful previous-close field may be `chartPreviousClose` rather than `previousClose`:
+```bash
+curl -s -H 'User-Agent: Mozilla/5.0' 'https://query2.finance.yahoo.com/v8/finance/chart/DASH?range=1d&interval=1d' | python3 -c "
+import sys, json
+r = json.load(sys.stdin)['chart']['result'][0]
+meta = r['meta']
+close = meta.get('regularMarketPrice') or r['indicators']['quote'][0]['close'][0]
+pc = meta.get('chartPreviousClose') or meta.get('previousClose') or close
+change = close - pc
+pct = (change / pc) * 100 if pc else 0
+sign = '+' if change >= 0 else ''
+print(f'DASH: \${close:.2f} | {sign}{change:.2f} ({sign}{pct:.1f}%) | Prev: \${pc:.2f}')
+"
+```
+
 Alternative Python approach for more reliable parsing:
 ```bash
 python3 -c "
@@ -89,10 +104,14 @@ python3 ~/.hermes/skills/research/news-daily-digest/scripts/news_digest.py
 (Note: skill lives under `research/` category directory.)
 
 2. Parse the JSON output. Each category has `label` and `items` array with `title`, `link`, `source`, `summary`, `pub_date`.
+   - **2026-04 finding**: when you supplement with Google News RSS directly, `source` may come back empty in some parsers. Fall back to extracting the outlet from the title suffix (`Headline - Outlet`) if the XML source tag is missing.
 
 3. **Filter stale data**: Check `pub_date` and skip items from previous years (especially 2018 stale cache from G1 feeds). Only process items from today/yesterday.
 
-4. Curate the digest — pick only the TOP 3 most important stories across ALL categories combined. Be ruthless. Remove celebrity gossip, minor local stories, sports, entertainment. Prioritize: geopolitical events, major policy changes, significant economic news, emergencies, anything that directly affects Demetrius's life (family, work, Rio, SP).
+4. Curate the digest.
+   - **Default mode**: pick only the TOP 3 most important stories across ALL categories combined.
+   - **If the user explicitly asks for per-category counts** (for example 5–8 world, 4–6 Brazil, 3–4 Rio, 3–4 São Paulo), follow that request instead of the default top-3 format.
+   - In either mode, be ruthless. Remove celebrity gossip, minor local stories, sports, entertainment. Prioritize: geopolitical events, major policy changes, significant economic news, emergencies, anything that directly affects Demetrius's life (family, work, Rio, SP).
 
 5. Sort all stories by date (most recent first) and select top 3.
 
