@@ -141,6 +141,27 @@ curl -s http://localhost:3002/v1/scrape -X POST -H "Content-Type: application/js
   -d '{"url":"https://example.com","formats":["markdown"]}' | python3 -c "import sys,json; print(json.load(sys.stdin).get('success'))"
 ```
 
+### Important failure mode: container looks healthy but API resets connections
+
+Sometimes `docker ps` shows `firecrawl-api-1` as Up, but requests to `http://localhost:3002/` or `/v1/scrape` fail with curl exit 52/56 or `Recv failure: Connection reset by peer`.
+
+Quick checks:
+```bash
+curl -sv http://localhost:3002/ 2>&1 | tail -n 20
+curl -s -X POST http://localhost:3002/v1/scrape \
+  -H "Content-Type: application/json" \
+  -d '{"url":"https://example.com","formats":["markdown"],"onlyMainContent":true}' \
+  --max-time 20
+docker logs firecrawl-api-1 --tail 50
+```
+
+If you see connection resets even though the containers are running:
+1. Treat Firecrawl as down for this task.
+2. Fall back immediately to another research path instead of retrying repeatedly:
+   - `web` research / delegated web research when available
+   - `browser_navigate` only if the target site is likely scrapeable without bot challenges
+3. Note the failure mode in your final reasoning so future sessions don't waste time on the same dead path.
+
 ### View logs
 
 ```bash
