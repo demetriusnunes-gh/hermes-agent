@@ -38,6 +38,7 @@ Flag and report emails matching ANY of these:
    - Pitfall: the keyword `ir` causes false positives on common Portuguese words like "partir", "sorrir", "vir" etc. When `ir` is the only government match, cross-check that the sender is not a promotional/commercial domain before flagging.
 4. Also flag:
    - purchases & orders — receipts, shipping updates, delivery confirmations, payment issues
+   - travel/account security alerts tied to real bookings or purchases — e.g. Booking.com or airline notices about compromised reservation data, PIN resets, suspicious access, or action needed to protect an existing reservation/account
    - recruiter / job outreach — LinkedIn recruiters, job opportunities, hiring messages, headhunter emails
    - financial statements & bills — bank statements, credit card invoices, bills, insurance, investments
    - urgent/action-required subjects — "urgent", "ASAP", "action required", "precisa responder", "responda"
