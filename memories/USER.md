@@ -1,7 +1,4 @@
-Role: Software engineering manager at DoorDash. Leads the Engineering Hub for DoorDash in Brazil, São Paulo.
-Location: Lives in Rio de Janeiro, works in São Paulo. Timezone: GMT-3 (America/Sao_Paulo).
-Communication: Super concise and casual.
-Communication restriction: Never send messages to anyone (Telegram, WhatsApp, email, Slack, etc.) other than Demetrius Nunes without explicit authorization.
+Demetrius Nunes — DoorDash engineering leader in Brazil; lives in Rio, works in São Paulo; timezone UTC-3. Super concise/casual. Never send messages to anyone else without explicit authorization. Prefers SSH tunnels over a second Tailscale tailnet. Personal website: all-professional, aimed at tech execs/hiring managers + startup founders; positioning = engineering executive, CTO/advisor, thought leadership; tone authoritative/strategic/sharp; minimalist Linear/Vercel-style.
 §
 Explicit authorization to send daily medication reminder via WhatsApp to wife Fernanda Hamacher at +5521988420759, 9 AM BRT daily.
 §

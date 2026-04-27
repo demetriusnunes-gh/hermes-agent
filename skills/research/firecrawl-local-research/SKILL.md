@@ -122,6 +122,23 @@ curl -s -X POST http://localhost:3002/v1/scrape \
   --max-time 30
 ```
 
+If Bing returns irrelevant/garbage results (for example, mostly Chinese dictionary/Zhihu/Baidu pages unrelated to the query), switch to DuckDuckGo HTML and parse result links directly. This worked better for niche product/service discovery queries such as WhatsApp group AI bots:
+```bash
+python3 - <<'PY'
+import urllib.parse, urllib.request, re, html
+queries = ['WhatsApp group management bot AI', 'WhatsApp group bot expenses events']
+for q in queries:
+    print('\n==', q)
+    url = 'https://html.duckduckgo.com/html/?q=' + urllib.parse.quote(q)
+    req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+    text = urllib.request.urlopen(req, timeout=20).read().decode('utf-8', 'ignore')
+    for m in re.finditer(r'<a rel="nofollow" class="result__a" href="([^"]+)">(.*?)</a>', text, re.S):
+        title = html.unescape(re.sub('<.*?>', '', m.group(2)))
+        href = html.unescape(m.group(1))
+        print('-', title, '|', href)
+PY
+```
+
 ### JS-Heavy Pages (wait for render)
 
 ```bash

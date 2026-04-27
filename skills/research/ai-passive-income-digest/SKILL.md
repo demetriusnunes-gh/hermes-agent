@@ -55,9 +55,18 @@ Use the browser to search for CURRENT (last 30 days) ideas and opportunities. Fo
 **Research Tips:**
 - Don't waste time retrying blocked sites - switch to alternatives immediately
 - For tech/AI trends, HN Algolia is consistently reliable
+- HN Algolia API pages may render as `Empty page` in browser snapshots; when that happens, use `browser_console(expression='document.body.innerText')` to extract the JSON results directly instead of abandoning the search
+- When constructing HN Algolia API queries, remember to URL encode the '>' symbol in numericFilters as '%3E' (e.g., `created_at_i%3ETIMESTAMP`)
 - Always check page title for blocking indicators ("moment", "challenge", "captcha", "sorry")
 - Visit as many accessible sources as possible - quality > quantity of sources
 - Focus on: Real case studies, people who actually launched and are making money, concrete numbers, step-by-step guides
+- If the browse budget is tight, spend most of it on 2-3 HN Algolia queries plus 1-2 direct visits to the strongest sources rather than broad search-engine exploration
+- When browser tools fail due to bot detection or technical issues, fall back to using terminal with curl to fetch data directly from APIs and web pages
+- When US traction is clear but Brazil-local competition is unclear, do a second-pass market-gap validation with `delegate_task(..., toolsets=['web'])` or equivalent web research. Ask specifically whether Brazil has an obvious local equivalent, which adjacent incumbents exist, and whether the offer should be reframed as a narrower Brazil-first wedge instead of a generic clone.
+- If delegated web-research subagents time out or search results are noisy, fall back to direct `curl`/browser visits of known US proof pages and Brazil incumbent homepages; this was more reliable than generic Bing for this digest. Useful US proof pages include Slang.ai customers/pricing, Assort Health, Notable Health, EliseAI customer stories/newsroom, GovDash, AutogenAI. Useful Brazil incumbent checks include Anota AI/Goomer/Blip/Zenvia for restaurant/WhatsApp automation, iClinic/Feegow/Doctoralia/Ninsaúde for clinics, Kenlo/Jetimob/Vista/Imoview for real estate, and Effecti/ConLicitação/LicitaJá/Portal de Compras Públicas for licitações.
+- Prefer browser/direct-page validation for company proof pages over broad Bing when Bing returns noisy localized results. Recent reliable direct pages: Slang.ai `/customers` exposes concrete customer metrics (e.g., calls/reservations/revenue), Assort Health homepage exposes provider/specialty and outcome metrics, Effecti homepage exposes Brazil incumbent metrics and AI positioning, EliseAI homepage exposes product scope. Use `browser_snapshot` or terminal `urllib`/`curl` snippets to extract titles and traction claims.
+- Re-check incumbent AI positioning before calling Brazil underserved. Effecti now prominently markets "Aimê" as an IA para licitações and claims +3,000 companies, +R$82B arrematados, +840k opportunities, +456k proposals sent; this weakens generic "AI licitação assistant" differentiation. If including licitações, narrow it to a gap not already claimed by Effecti (e.g., auditable proposal/compliance copilot for a specific supplier niche) or downgrade/exclude it.
+- Prefer finalists that survive this explicit Brazil-gap validation step; reject ideas where the US proof is strong but the Brazil fit or differentiation remains weak
 
 **Browser searches to perform (prioritized):**
 - "autonomous AI agent business ideas 2026" (via HN Algolia)
@@ -106,11 +115,19 @@ Only surface the TOP 3 ideas. Format:
 ## Tips
 
 - Do NOT recycle ideas from previous days — each day should be fresh research
+- Strongly prioritize services already proven to earn in the US market that appear to have no strong Brazil-local equivalent yet
+- Only include ideas that plausibly fit Brazilian customer behavior, regulation, payments, and language/localization realities
+- Prefer easy-to-implement rebuilds/adaptations over novel-from-scratch concepts — the key question is: "Is this already working in the US, and can Demetrius localize it credibly for Brazil?"
+- For every finalist, explicitly state why the US proof point is credible and why Brazil still appears underserved
 - Prioritize Brazilian/LatAm market gaps too — less competition, local advantage
 - If an idea requires heavy upfront work, be honest about it
 - Include specific numbers when available (revenue, costs, conversion rates)
+- Treat public pricing, free-trial tiers, usage limits, customer counts, and HN Launch/Show HN engagement (points/comments) as valid traction proxies when explicit revenue is unavailable
+- Prefer finalists with at least two concrete proof signals, e.g. pricing page + HN Launch traction, or customer stats + testimonial/customer logos
+- When research is thin, favor narrow B2B workflow tools with visible pricing over broad platform plays; they are easier to rebuild credibly for Brazil
 - Avoid generic ideas like "build an AI chatbot agency" — go deeper
 - Look for problems people are actively paying to solve, not hypothetical needs
 - Check Product Hunt, Hacker News "Show HN", Reddit for real launches
 - If nothing interesting is found, report "nothing new tonight" briefly
+- If you need to deliver the digest through a local WhatsApp curl endpoint, avoid embedding a long multi-line message with URLs directly in the shell command; write the JSON payload to a temp file and send with `curl --data-binary @file` to avoid shell escaping issues and security-scan false positives
 - Use the browser tools — don't just rely on knowledge cutoff

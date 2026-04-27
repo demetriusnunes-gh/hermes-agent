@@ -22,3 +22,5 @@ Zapier MCP URL with token: https://mcp.zapier.com/api/v1/connect?token=ZWZhNDQ5N
 RECURRING BUG: mcp_servers block in config.yaml gets corrupted (indented 2 spaces too deep, becomes child of _config_version). Fix: dedent mcp_servers→col 0, zapier→2sp, url/timeout/connect_timeout→4sp.
 §
 BOUNTYBOOK: Wallet 0x3D0d25a104CDB2388511a35F8FCC6c1E9C786DFb (MetaMask) stored at ~/.bountybook-wallet (600). Auth via wallet-signature nonce. Earnings in USDC on Base. Note: Some jobs (e.g., flatten_dict) have buggy verifiers failing on ipfs_fetch; prefer jobs that accept raw outputData or check verifier history first.
+§
+VPS dev tools: Node.js v22.13.0 via `n` at /usr/local/bin/node (apt v18 also at /usr/bin/node; normal PATH uses /usr/local/bin first). GitHub CLI is authenticated as demetriusnunes-gh; terminal sessions may have HOME unset, so run `export HOME=/root` before gh/git global commands.

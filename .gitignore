@@ -61,3 +61,8 @@ node_modules/
 package.json
 package-lock.json
 .update_check
+
+# Local runtime/cache artifacts
+context_length_cache.yaml
+webui/.signing_key
+webui/workspaces.json

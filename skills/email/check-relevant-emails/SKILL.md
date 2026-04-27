@@ -36,11 +36,18 @@ Flag and report emails matching ANY of these:
 2. Kids' school — anything from or about "Eleva"
 3. Government — `.gov.br` sender domains, or subjects containing: intimação, notificação, comunicado, declaração, imposto, receita, INSS, detran, prefeitura, governo, multa, CNH, IPTU, IOF, IR
    - Pitfall: the keyword `ir` causes false positives on common Portuguese words like "partir", "sorrir", "vir" etc. When `ir` is the only government match, cross-check that the sender is not a promotional/commercial domain before flagging.
+   - Pitfall: `notificação` / `comunicado` alone can also false-positive on non-government automated mail (for example Google Calendar notifications). Do not flag those unless the sender or surrounding context also indicates an actual government/public-agency source.
+   - Pitfall: topical/news coverage about government (for example a newsletter or media outlet mentioning `governo`, `Itamaraty`, `Trump`, court news, etc.) is not itself a government email. If the sender is news/media/newsletter, treat it as irrelevant even when the subject discusses government affairs.
 4. Also flag:
    - purchases & orders — receipts, shipping updates, delivery confirmations, payment issues
    - travel/account security alerts tied to real bookings or purchases — e.g. Booking.com or airline notices about compromised reservation data, PIN resets, suspicious access, or action needed to protect an existing reservation/account
    - recruiter / job outreach — LinkedIn recruiters, job opportunities, hiring messages, headhunter emails
-   - financial statements & bills — bank statements, credit card invoices, bills, insurance, investments
+   - official financial/account documents that may require review — real bills/boletos/collection notices/statements, and investor/fund communications such as `Comunicado aos Cotistas`
+
+   Do NOT flag low-signal post-purchase marketing around those categories, such as:
+   - hotel / airline review requests, satisfaction surveys, NPS questionnaires, “rate your stay/flight”, “avalie”, “queremos saber sua opinião”
+   - loyalty-club upsells, promo blasts, or general travel marketing from airlines/OTAs
+   - credit-card offers, account upsells, and availability/upgrade promos (for example `cartão ... disponível para você`)
    - urgent/action-required subjects — "urgent", "ASAP", "action required", "precisa responder", "responda"
    - from direct family or close contacts if identified
 
@@ -50,6 +57,11 @@ Ignore:
 - social notifications
 - bulk mail
 - low-signal automated marketing mail
+- review/survey requests after a stay, flight, or purchase unless they also indicate a real problem requiring action
+
+Sender/context guardrails:
+- Do not treat the mere presence of a keyword in body text as sufficient for priority categories when the sender is clearly a newsletter or marketing source.
+- For `Eleva`, prefer sender/subject/body combinations that clearly indicate the school itself or an actual school-related communication/event, not incidental mentions inside newsletters.
 
 ## Silence on Empty
 
@@ -66,6 +78,11 @@ If nothing relevant is found, output exactly:
 ```
 
 ## Deduplication / State Tracking
+
+This is mandatory, not optional. Repeated notifications for the same email are a bug.
+
+You must perform deduplication before producing any user-facing output.
+Use the state file as the source of truth and do not notify on an email/event if it was already reported previously, even if it still appears in the search window.
 
 State file: `~/.hermes/state/email-check-state.json`
 
@@ -197,6 +214,10 @@ False-positive prevention:
 - skip newsletters/promotions unless sender is a true priority contact
 
 ### 6. Report
+
+Before reporting, compute the candidate message IDs + hashes and remove any item already present in the saved state.
+If every candidate was already notified before, output `[SILENT]`.
+Never re-notify the same email just because it is still inside `newer_than:`.
 
 For each relevant email found, report:
 - Sender

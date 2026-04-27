@@ -36,10 +36,11 @@ Primary focus: AI agents.
 ## Sources to Prioritize
 
 1. Official product/docs/changelogs for agent tools
-2. GitHub repos, releases, and issue discussions for major agent frameworks/tools
-3. Technical blog posts from credible builders
-4. Hacker News discussions when they expose real workflows, failures, or tooling shifts
-5. Vendor docs for APIs/models only when they materially affect agent workflows
+2. Official cookbooks/examples/notebooks when they show concrete agent workflow patterns
+3. GitHub repos, releases, and issue discussions for major agent frameworks/tools
+4. Technical blog posts from credible builders
+5. Hacker News discussions when they expose real workflows, failures, or tooling shifts
+6. Vendor docs for APIs/models only when they materially affect agent workflows
 
 ## Topics to Look For
 
