@@ -282,6 +282,20 @@ For follow-up tweaks to an already-live app, keep the business logic testable an
 ```
 
 UI pitfall: absolute-positioned card buttons placed at `top/right` can overlap format/date badges. Prefer bottom-right for secondary detail/help actions and reserve card padding, e.g. `padding: 15px 52px 48px 15px` with `.detail-button { position:absolute; right:12px; bottom:12px; }`. If winner-first ordering already makes the winner obvious, remove redundant text such as “Vencedor: ...” to keep compact cards clean.
+
+Player-profile/card editing pattern used successfully in Ranking PCC:
+- Reuse an existing `profile jsonb` column for flexible card fields instead of adding migrations for every stat.
+- Add `updatePlayer(id, patch)` to both the Supabase and local/demo stores so the feature remains previewable offline.
+- Preserve `profile` and `initialRating` in ranking rows if UI needs avatars/stats on ranking cards; pure ranking functions can carry through non-scoring metadata without affecting score calculations.
+- For profile photos, an MVP-safe approach is client-side resize to max ~512px and store a JPEG data URL in `profile.photoUrl`. This avoids Supabase Storage setup for small private apps, but note that it is not ideal for large/public datasets.
+- Show initials fallback via a reusable `PlayerAvatar` component so ranking and profile cards render cleanly before photos are uploaded.
+- Gate edit buttons by the existing admin check; public users can see cards but cannot mutate profiles.
+- For sports/player cards with many attributes, use larger card widths (`repeat(auto-fill,minmax(340px,1fr))`) and render all stat fields as reusable stat-bar rows instead of compact inline text. Pattern: build an ordered `attrs` array from `profile` keys, render `<StatBar label value>`, show `--` for missing values, clamp numeric bar width to 0–99%, and use a horizontal track/fill (`.stat-track` / `.stat-fill`) so the user can visually compare strengths.
+- Keep card display fields and editor fields in sync: if the editor captures 11 tennis stats (`primeiro_saque`, `segundo_saque`, `recepcao`, `voleio`, `smash`, `forehand`, `backhand`, `slice`, `drop_shot`, `mental`, `fisico`), the visible card should show all 11, not a hand-picked subset.
+- For mobile-friendly sports/player cards, compact vertical space after adding full stat bars: reduce card padding, avatar size, rating size, row padding/gaps, bar height, heading margins, and panel/app padding under a `@media(max-width:760px)` block. Verify with DOM measurements (`.player-card` height/width, stat row count, metric chip count), not just visual intuition.
+- Include non-skill body metrics (`idade`, `altura_cm`, `peso_kg`) as compact chips separate from performance attributes. Pattern: render a reusable `Metric` component with label/value/suffix (`anos`, `cm`, `kg`) above stat bars, while keeping bar rows reserved for 0–99 strength-style attributes.
+
+Tooling pitfall: when modifying minified/one-line CSS or JS, do not pipe `read_file` output back into a file unless you strip line-number prefixes correctly. A bad append introduced `LINE|` prefixes into CSS and broke Vite/LightningCSS minification with `Unexpected token Delim('.')`. Prefer `patch`, `write_file`, or a small Python script using `pathlib.Path(...).read_text()` / `write_text()` for exact file content.
 7. Publish with:
 
 ```bash

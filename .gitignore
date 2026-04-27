@@ -54,6 +54,9 @@ gateway.pid
 channel_directory.json
 cron/jobs.json
 state/
+state-snapshots/
+gateway_state.json
+webui/last_workspace.txt
 webui/sessions/
 
 # Accidental root-level Node.js artefacts
