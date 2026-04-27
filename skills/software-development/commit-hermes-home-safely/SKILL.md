@@ -47,11 +47,20 @@ If `.hermes_history` captured secrets, auth callback URLs, or test noise:
 git checkout -- .hermes_history
 ```
 
-#### Ignore local OAuth artifacts
+#### Ignore local OAuth and runtime artifacts
 If local Google auth files appear untracked, add them to `.gitignore` before proceeding:
 - `google_client_secret.json`
 - `google_token.json`
 - `google_oauth_pending.json`
+
+Also treat these common Hermes/WebUI runtime artifacts as local-only unless the user explicitly asks to version them:
+- `context_length_cache.yaml`
+- `webui/.signing_key`
+- `webui/workspaces.json`
+- `gateway_state.json`
+- `webui/last_workspace.txt`
+
+Prefer reverting tracked runtime state (`git checkout -- gateway_state.json webui/last_workspace.txt`) and adding untracked cache/key files to `.gitignore` rather than committing them.
 
 #### Verify ignores
 Re-run:
@@ -82,12 +91,23 @@ Examples:
 
 If the work naturally splits into separate logical commits, prefer multiple commits over one mixed commit.
 
-### 6. Commit and push
+### 6. Stage, validate, commit, and push
 ```bash
 git add -A
+
+# Catch whitespace errors and accidental literal conflict markers before committing.
+git diff --cached --check
+
+# Inspect staged secret-looking additions. This is intentionally broad; distinguish
+# real secrets from documentation examples before proceeding.
+git diff --cached -U0 | grep '^+' | grep -E -i \
+  '(api[_-]?key|secret|token|password|private[_-]?key|BEGIN |oauth|client_secret|authorization|bearer|signing|webhook|github_pat|sk-[A-Za-z0-9])' || true
+
 git commit -m "..."
 git push origin master
 ```
+
+If `git diff --cached --check` flags documentation that intentionally demonstrates conflict markers, rewrite the example to avoid literal marker lines (for example, space out `< < < < < < <`, `= = = = = = =`, `> > > > > > >`) rather than committing lines that look like unresolved conflicts.
 
 If you discover an omitted tracked change immediately after pushing, amend locally and push with lease only if rewriting that just-created commit is appropriate:
 ```bash
@@ -120,7 +140,9 @@ Do this even if the push succeeded. Some local auth/setup tools may generate new
 
 ## Verification Checklist
 Before reporting completion, confirm:
+- `git diff --cached --check` passed before commit
 - `git push origin master` succeeded (or `--force-with-lease` if intentionally amending a fresh commit)
 - `git status --porcelain` is empty
 - no secrets/tokens/auth callback URLs were committed
+- tracked runtime state (`.hermes_history`, `gateway_state.json`, `webui/last_workspace.txt`) was not committed unless intentionally requested
 - final response summarizes the meaningful changes only
