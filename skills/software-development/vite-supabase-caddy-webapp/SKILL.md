@@ -295,6 +295,15 @@ Player-profile/card editing pattern used successfully in Ranking PCC:
 - For mobile-friendly sports/player cards, compact vertical space after adding full stat bars: reduce card padding, avatar size, rating size, row padding/gaps, bar height, heading margins, and panel/app padding under a `@media(max-width:760px)` block. Verify with DOM measurements (`.player-card` height/width, stat row count, metric chip count), not just visual intuition.
 - Include non-skill body metrics (`idade`, `altura_cm`, `peso_kg`) as compact chips separate from performance attributes. Pattern: render a reusable `Metric` component with label/value/suffix (`anos`, `cm`, `kg`) above stat bars, while keeping bar rows reserved for 0–99 strength-style attributes.
 
+Batch match/result insertion pattern used successfully in Ranking PCC:
+- If the user provides a text batch of results, first parse and echo back a numbered confirmation table before writing to the database. Confirm date format (`DD/MM/YYYY`), whether scores are from Team/Dupla A's perspective, and any name normalization (e.g. `Vinicius -> Vinícius`, `Marcio -> Márcio`). Do not insert until the user explicitly confirms.
+- For Supabase linked projects, use `supabase db query --linked` rather than local `supabase db query`, which defaults to `--local` and fails if the local DB is not running. Example: `supabase db query --linked -o json "select id,name from public.players order by name;"`.
+- Supabase CLI output with multiple SQL statements may only show the last result set clearly; use separate queries for important counts/verification, or a single final `SELECT` containing all needed values.
+- Generate batch SQL from a small Node script that imports the app's real `parseScore` from `src/ranking.js`, maps canonical player names to UUIDs from `public.players`, and emits a `WITH incoming(...) AS (VALUES ...)` insert. This guarantees stored `parsed` JSON matches app logic.
+- Store historical match dates at noon BRT (`YYYY-MM-DD 12:00:00-03`) to avoid date shifting across timezones.
+- Make the insert idempotent with `WHERE NOT EXISTS` on `(team_a, team_b, score_text, played_at)` so reruns do not duplicate rows. Keep team arrays ordered exactly as confirmed because the score is from Team A's perspective.
+- After insertion, verify: total match count, per-date counts if relevant, and recalculated ranking by fetching `players`/`matches` via Supabase JS and running the app's `calculateRanking` locally. If a temporary verifier imports `@supabase/supabase-js`, place/run it inside the app directory so Node can resolve `node_modules`.
+
 Tooling pitfall: when modifying minified/one-line CSS or JS, do not pipe `read_file` output back into a file unless you strip line-number prefixes correctly. A bad append introduced `LINE|` prefixes into CSS and broke Vite/LightningCSS minification with `Unexpected token Delim('.')`. Prefer `patch`, `write_file`, or a small Python script using `pathlib.Path(...).read_text()` / `write_text()` for exact file content.
 7. Publish with:
 
