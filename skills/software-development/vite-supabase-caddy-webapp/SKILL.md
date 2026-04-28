@@ -294,6 +294,50 @@ Player-profile/card editing pattern used successfully in Ranking PCC:
 - Keep card display fields and editor fields in sync: if the editor captures 11 tennis stats (`primeiro_saque`, `segundo_saque`, `recepcao`, `voleio`, `smash`, `forehand`, `backhand`, `slice`, `drop_shot`, `mental`, `fisico`), the visible card should show all 11, not a hand-picked subset.
 - For mobile-friendly sports/player cards, compact vertical space after adding full stat bars: reduce card padding, avatar size, rating size, row padding/gaps, bar height, heading margins, and panel/app padding under a `@media(max-width:760px)` block. Verify with DOM measurements (`.player-card` height/width, stat row count, metric chip count), not just visual intuition.
 - Include non-skill body metrics (`idade`, `altura_cm`, `peso_kg`) as compact chips separate from performance attributes. Pattern: render a reusable `Metric` component with label/value/suffix (`anos`, `cm`, `kg`) above stat bars, while keeping bar rows reserved for 0–99 strength-style attributes.
+- For ranking-result drill-downs, keep the app single-page and derive views from existing canonical arrays rather than adding routes or database queries. Pattern used successfully: in the ranking component, maintain `selectedPlayerId` and `showAllMatches` React state; compute `sortedMatches = [...matches].sort(sortMatchesDesc)`, `visibleMatches = showAllMatches ? sortedMatches : sortedMatches.slice(0, 10)`, and `selectedPlayerMatches = sortedMatches.filter(m => [...m.teamA, ...m.teamB].includes(selectedPlayerId))`. Render player names as accessible transparent buttons (`aria-label="Ver todos os resultados de ..."`) that open a modal reusing the existing `MatchCard`, including edit/delete and Elo detail behavior. Add a full-width “mais resultados (N)” button below latest results only when there are more than the default slice, and optionally toggle to “menos resultados”. Verify in browser by clicking a player and checking the modal count/text, then expanding latest results and confirming the number of rendered `.match-card` elements and no console errors.
+- If the same drill-down must work from player profile/card grids as well as ranking rows, thread `matches`, `playerById`, `onEdit`, and `onDelete` into the `Players` view and reuse the same `PlayerResultsModal` instead of duplicating rendering logic. In card components, make the visible `<h3>` name a styled transparent button (e.g. `.player-card-name-button`) with the same accessible label. A robust pattern is to store the selected player object in state (`selectedPlayer`) from the card click, then filter by `selectedPlayer.id`; this avoids depending on a lookup map in views where the card already has the player object. Render shared modals with `createPortal(..., document.body)` rather than inline under card/grid containers; otherwise fixed-position modal backdrops can be centered relative to transformed/contained ancestors or appear out of the viewport after scrolling deep into cards. Verify by checking `.modal-backdrop.parentElement.tagName === 'BODY'` and that `.player-results-modal.getBoundingClientRect()` is fully within `innerWidth/innerHeight`. Verify with an actual browser click on the card name (not only `element.click()` in DevTools/console), because React event handling and stale deployed bundles can make console-click checks misleading during rapid redeploys.
+
+Static asset / favicon caching pitfall with Cloudflare in front of Caddy:
+- If a newly added `/favicon.ico` or other public asset returns the SPA `index.html` through Cloudflare (`content-type: text/html`, `cf-cache-status: HIT`, old `last-modified`, or the response body starts with `<!doctype html>`), Cloudflare likely cached the SPA fallback from before the file existed. First compare origin vs edge:
+
+```bash
+curl --max-time 10 -skI --resolve <domain>:443:127.0.0.1 https://<domain>/favicon.ico
+curl --max-time 10 -skI https://<domain>/favicon.ico
+curl --max-time 10 -skI 'https://<domain>/favicon.ico?v=<cache-bust>'
+```
+
+- If the origin is correct but the bare edge URL is stale, use a cache-busted asset link immediately, e.g. `<link rel="icon" href="/favicon.ico?v=20260428-tennis" sizes="any" />`, rebuild, and redeploy. Then verify the cache-busted URL returns `content-type: image/vnd.microsoft.icon`, `cf-cache-status: BYPASS` or non-HIT, and ICO first bytes `00 00 01 00`.
+- Also set Caddy headers to prevent repeat stale SPA fallback caching for HTML and favicon/static assets:
+
+```caddyfile
+@html path / /index.html
+header @html {
+	Cache-Control "no-store, no-cache, max-age=0, must-revalidate"
+	CDN-Cache-Control "no-store"
+}
+
+header /favicon.ico {
+	Cache-Control "no-store, no-cache, max-age=0, must-revalidate"
+	CDN-Cache-Control "no-store"
+	Content-Type "image/vnd.microsoft.icon"
+}
+```
+
+- Reload Caddy (`caddy validate --config /etc/caddy/Caddyfile && systemctl reload caddy`), rebuild/deploy the Vite app, and browser-verify with:
+
+```js
+Promise.all([
+  fetch('/favicon.ico?v=<cache-bust>').then(async r => ({
+    status: r.status,
+    type: r.headers.get('content-type'),
+    cache: r.headers.get('cf-cache-status'),
+    firstBytes: Array.from(new Uint8Array(await r.arrayBuffer()).slice(0, 4)),
+  })),
+  document.querySelector('link[rel="icon"]')?.getAttribute('href'),
+])
+```
+
+- The bare `/favicon.ico` may remain wrong until Cloudflare cache TTL expires or that exact URL is purged in Cloudflare; tell the user this explicitly rather than repeatedly changing origin files.
 
 Batch match/result insertion pattern used successfully in Ranking PCC:
 - If the user provides a text batch of results, first parse and echo back a numbered confirmation table before writing to the database. Confirm date format (`DD/MM/YYYY`), whether scores are from Team/Dupla A's perspective, and any name normalization (e.g. `Vinicius -> Vinícius`, `Marcio -> Márcio`). Do not insert until the user explicitly confirms.
