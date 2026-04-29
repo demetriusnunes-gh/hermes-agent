@@ -97,7 +97,13 @@ After pushing, you can verify by:
 3. Ensuring new skills are visible in the skills directory
 
 ## Troubleshooting
-- If you see "fatal: no submodule mapping found": Check .gitmodules file exists and is properly configured
+- If you see `fatal: no submodule mapping found in .gitmodules for path 'submodule-name'`, the parent repo may track a gitlink (`git ls-files -s submodule-name` shows mode `160000`) but be missing the root `.gitmodules` entry. Recover by inspecting the submodule's remote (`git -C submodule-name remote -v`), recreating a root `.gitmodules` stanza such as:
+  ```ini
+  [submodule "submodule-name"]
+    path = submodule-name
+    url = git@github.com:owner/repo.git
+  ```
+  Then run `git add .gitmodules`, validate with `git diff --cached --check`, commit/push the metadata fix, and run `git submodule init submodule-name` so `git submodule status --recursive` works locally again.
 - If push fails due to non-fast-forward: Pull first, resolve any conflicts, then push again
 - If submodule shows wrong commit: Navigate to submodule, checkout correct commit, then update reference in main repo
 - If the parent repo is clean after commit but `git status` still shows `M submodule-name`: inspect inside the submodule with `git status --porcelain` — it may have uncommitted tracked-file changes rather than just a changed SHA.
