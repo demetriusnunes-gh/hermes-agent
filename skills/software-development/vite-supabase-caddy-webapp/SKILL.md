@@ -265,7 +265,8 @@ For follow-up tweaks to an already-live app, keep the business logic testable an
    - If the winner can be either side, compute `winnerIds`/`loserIds` and render the winner first without changing `teamA`/`teamB` in the database.
    - For per-item “how was this calculated?” UI, expose a pure `calculate...Breakdown(...)` helper that replays historical state up to the selected item, then render the detail panel from that object.
 5. Run `npm test && npm run build`.
-6. Browser-check both local preview and the deployed URL, including the new interaction and console errors. For positioned micro-actions on cards, verify bounding boxes programmatically so they do not overlap badges/content:
+6. Redeploy the built static files to the actual Caddy-served directory before telling the user it is live. On this VPS, Ranking PCC source lives under `/root/.www/rankingpcc`, but the public site is served from `/var/www/rankingpcc`; building `dist/` alone does not change the live page. Prefer `npx vite build && rsync -a --delete dist/ /var/www/<app>/` for follow-up tweaks, then verify the deployed URL rather than only the source tree.
+7. Browser-check both local preview and the deployed URL, including the new interaction and console errors. For positioned micro-actions on cards, verify bounding boxes programmatically so they do not overlap badges/content:
 
 ```js
 (() => {
