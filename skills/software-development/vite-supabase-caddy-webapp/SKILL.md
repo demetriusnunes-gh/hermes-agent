@@ -301,6 +301,34 @@ Player-profile/card editing pattern used successfully in Ranking PCC:
 - For lightweight client-side routing in a Vite SPA without adding React Router, map view state to History API paths, e.g. `const ROUTES = { home: '/', report: '/reportar', players: '/jogadores', rules: '/calculo' }`, initialize state from `window.location.pathname`, listen to `popstate`, and implement `navigate(view)` with `history.pushState`. Keep Caddy’s `try_files {path} /index.html` so direct deep links like `/jogadores` return the SPA. Browser-verify both direct deep links and nav clicks (`location.pathname`, active tab, console errors).
 - For large static content tables such as trivia/facts/tips in a small Vite app, prefer a typed data module plus deterministic tests rather than scattering strings in components. Pattern: create `src/<content>.ts` exporting `{ id, text }[]` and a pure/random helper; if the requested count is large (e.g. 1000), a curated seed list expanded with labeled variants can keep bundle/content maintainable while satisfying exact count and uniqueness. In React, choose the random item with lazy state (`const [fact] = useState(() => getRandom...())`) so it does not change on every re-render. Test both the data contract (`toHaveLength(1000)`, uniqueness, non-empty text) and the UI; for random UI tests, mock `Math.random` with `vi.spyOn(Math, 'random').mockReturnValue(0)` and restore mocks in `afterEach`. Verify with the app’s package-filtered test and build commands.
 
+Live sports ticker / third-party scoreboard pattern used successfully in Ranking PCC:
+- For lightweight ATP/WTA live scores without paid API keys, ESPN’s tennis scoreboard page (`https://www.espn.com/tennis/scoreboard`) embeds structured JSON in `window['__espnfitt__']`; the useful data is under `page.content.scoreboard` with `tournaments`, `groupings`, and `competitions`. This is more reliable than scraping visible DOM and avoids needing a browser at runtime.
+- Do not fetch ESPN directly from the browser UI; expect CORS/anti-bot/cache issues. Add a same-origin Caddy proxy route before the static SPA handler:
+
+```caddyfile
+handle /api/espn-tennis-scoreboard {
+	rewrite * /tennis/scoreboard
+	reverse_proxy https://www.espn.com {
+		header_up Host www.espn.com
+		header_up User-Agent "Mozilla/5.0 RankingPCC score ticker"
+	}
+	header Cache-Control "no-store, no-cache, max-age=0, must-revalidate"
+}
+
+handle {
+	root * /var/www/<app>
+	try_files {path} /index.html
+	file_server
+}
+```
+
+- Parse defensively: find the `window['__espnfitt__']=` marker, slice until `;</script>`, `JSON.parse`, then derive pure `TickerItem` objects from `scoreboard.tournaments[*].groupings[*].competitionIds` and `scoreboard.competitions[id]`.
+- ESPN tennis competitors differ for singles vs doubles: singles use `competitor.nm`; doubles use `competitor.rstr[]`. Format doubles as `Player A / Player B` and detect Brazilian involvement by `logo` containing `/bra.png` plus a fallback list of common Brazilian player name hints (e.g. Beatriz Haddad Maia, João Fonseca, Thiago Monteiro, Luisa Stefani, Marcelo Melo, Rafael Matos, Carolina Alves).
+- Score formatting comes from each competitor’s `lnescrs`: base set scores are `v`; tiebreak/deciding super-tiebreak values are `t`. Format sets as `6-4` or `7-6(7-4)`. If no score is present, show round/draw/status instead.
+- Sort ticker items by Brazilian involvement first, then live (`state === 'in'`), then scheduled, then final/recent by date. Render a graceful loading/error/empty state so ESPN outages do not break the homepage.
+- Test parser logic with a small embedded ESPN-like HTML fixture rather than network calls. Also UI-test the ticker by stubbing `fetch('/api/espn-tennis-scoreboard')`; if Supabase is configured in the test environment, the global fetch stub must return JSON-compatible responses for Supabase calls too, or the app can stay stuck loading.
+- After changing Caddy proxy routing, validate and reload Caddy, then browser-verify both `/api/espn-tennis-scoreboard` and the deployed home page. On this VPS, Python `Path('/etc/caddy/Caddyfile').write_text(...)` worked when shell `cp`/`install` commands unexpectedly timed out in the tool environment.
+
 Static asset / favicon caching pitfall with Cloudflare in front of Caddy:
 - If a newly added `/favicon.ico` or other public asset returns the SPA `index.html` through Cloudflare (`content-type: text/html`, `cf-cache-status: HIT`, old `last-modified`, or the response body starts with `<!doctype html>`), Cloudflare likely cached the SPA fallback from before the file existed. First compare origin vs edge:
 
