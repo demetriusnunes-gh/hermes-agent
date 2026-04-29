@@ -23,8 +23,9 @@ Use this when building or revising a personal website, executive profile, adviso
    - Personal/professional balance.
 
 2. Load a visual design skill/template when design matters
-   - `popular-web-designs` is a good default.
-   - For executive-tech minimalism, Vercel/Linear style works well: white/black palette, Geist font, strong typography, restrained cards, sparse color.
+   - `impeccable-design` is the best default for revising or polishing an existing personal/executive site: classify brand vs product, diagnose AI-looking patterns, reduce generic cards/pills/gradients, and run `npx --yes impeccable detect` before and after changes.
+   - `popular-web-designs` is useful when the user wants a specific known design-system direction.
+   - For executive-tech minimalism, Vercel/Linear style can work, but avoid stopping at a generic white/black template. Add an ownable motif, sharper POV copy, layout variation, and specific proof points.
 
 3. Research public profile carefully
    - Prefer Firecrawl first for normal web pages.
@@ -43,7 +44,8 @@ Use this when building or revising a personal website, executive profile, adviso
 5. Local preview and verification
    - Serve locally with `python3 -m http.server <port>` from the site directory.
    - Use `browser_navigate` to verify the page loads and accessibility snapshot contains key headings/CTAs.
-   - Use `browser_vision` if available for visual QA; if vision fails due environment/tool bug, still verify with browser snapshot and HTTP checks.
+   - Use `browser_vision` if available for visual QA. For design revisions, use it twice: first as a critique to identify hierarchy/layout/color/typography issues, then again after changes to catch regressions such as overly tight headline spacing, unbalanced empty areas, broken image crops, or readability issues.
+   - When using Impeccable, run `npx --yes impeccable detect --fast --json <target>` before and after edits; also check for banned copy/style artifacts such as em dashes and pure `#000`/`#fff` when relevant.
    - Validate required strings are present and files exist.
 
 6. Public deployment readiness
@@ -67,8 +69,9 @@ Use this when building or revising a personal website, executive profile, adviso
 
 ## Pitfalls
 
+- Back up live static entrypoints before direct edits, e.g. `cp /var/www/<domain>/index.html /var/www/<domain>/index.html.bak.$(date +%Y%m%d%H%M%S)`, so visual redesigns can be rolled back quickly.
 - Do not block indefinitely on Firecrawl/LinkedIn. LinkedIn is often better handled through browser snapshot after dismissing modals.
-- Do not describe unverifiable private career history as fact; label inferred positioning as copy or use only public/user-provided facts.
+- Do not describe unverifiable private career history as fact; label inferred positioning as copy or use only user-provided facts.
 - Do not say a site is live just because files were written. Verify DNS, HTTPS, and server status.
 - Keep CTAs aligned with the user’s stated preference. If they only want LinkedIn, do not add email/contact forms.
 
