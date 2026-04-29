@@ -67,6 +67,41 @@ Use this when building or revising a personal website, executive profile, adviso
    - Once certificates are obtained, Cloudflare SSL/TLS should be `Full (strict)`.
    - Verify live deployment with `curl -sSIL https://www.<domain>/`, `curl -sSIL https://<domain>/` for redirects, and a browser load of the public URL.
 
+## GitHub repo creation for existing personal-site files
+
+When the user asks to create a GitHub repo for local personal website files already sitting at `/root/.www`:
+
+1. Identify the actual static-site root before initializing git. On this VPS, the personal site may live directly in `/root/.www` with files like `index.html`, `robots.txt`, `sitemap.xml`, `site.webmanifest`, favicon files, and `assets/`, while other apps such as `rankingpcc/` are nested under the same directory.
+2. Do not recursively add unrelated nested apps/repos, `node_modules`, `.env`, local Caddy PKI, screenshots, or QA artifacts. Add a root `.gitignore` first, for example:
+
+```gitignore
+# Other local web apps/repos
+rankingpcc/
+
+# Local screenshots / QA artifacts
+screenshot-*.png
+
+# OS/editor noise
+.DS_Store
+*.swp
+```
+
+3. Add only the website files explicitly:
+
+```bash
+git init -b main
+git add .gitignore README.md index.html robots.txt sitemap.xml site.webmanifest \
+  favicon.ico favicon.svg favicon-16x16.png favicon-32x32.png favicon-48x48.png favicon-64x64.png \
+  apple-touch-icon.png android-chrome-192x192.png android-chrome-512x512.png assets/
+git commit -m "Initial personal website"
+```
+
+4. Before pushing, scan only the intended files for secrets. Avoid broad scans that include nested apps or `node_modules`, which create noisy false positives.
+5. Create the repo with `gh repo create <repo-name> --public --description "..." --source . --remote origin`, then `git push -u origin main`. Use timeouts around `gh` commands on this VPS because repo-listing commands can hang.
+6. Verify with `git status --short --branch`, `git log --oneline --decorate -1`, and `gh repo view <owner>/<repo> --json name,url,visibility,defaultBranchRef`.
+
+Known successful case: `/root/.www` was initialized and pushed to `demetriusnunes-gh/demetriusnunes.com` while excluding nested `rankingpcc/` and screenshot artifacts.
+
 ## Pitfalls
 
 - Back up live static entrypoints before direct edits, e.g. `cp /var/www/<domain>/index.html /var/www/<domain>/index.html.bak.$(date +%Y%m%d%H%M%S)`, so visual redesigns can be rolled back quickly.
