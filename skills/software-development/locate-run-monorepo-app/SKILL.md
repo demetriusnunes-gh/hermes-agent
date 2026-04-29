@@ -16,12 +16,15 @@ Use this when the user asks to find an app/project built locally by name, asks h
 
 ## Workflow
 
-1. Search by filename first from the current directory, then home:
+1. Search by filename first from the current directory, then known app roots, then home:
 
 ```text
 search_files(target='files', path='.', pattern='*<app>*')
+search_files(target='files', path='/root/.www', pattern='*<app>*')
 search_files(target='files', path='~', pattern='*<app>*')
 ```
+
+On this VPS, small deployed web apps may have their canonical working tree under `/root/.www/<app>` even when similarly named prototype copies exist under `~/multica_workspaces/...`.
 
 2. If filename search misses, search file contents for package/app names and variants:
 
@@ -90,5 +93,7 @@ For small React/Vite apps, summarize:
 ## Pitfalls
 
 - Do not stop after filename search returns nothing; generated workspaces may hide the app under deep paths and content search can still find `package.json` names.
+- When several similar app copies exist, prefer the user-specified path or deployed-source roots such as `/root/.www/<app>` over generated/workspace prototypes, and check `git status` before/after edits in every touched checkout.
+- If you accidentally edit a lookalike checkout before the user corrects the path, revert those unintended changes after applying the work in the correct tree.
 - Do not assume `pnpm` is directly on PATH; on this VPS, `corepack pnpm` may work even when `pnpm` does not.
 - Avoid claiming there is a backend unless code inspection finds one. Many prototype apps are fully client-side with localStorage persistence.
