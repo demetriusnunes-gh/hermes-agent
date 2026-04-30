@@ -107,6 +107,10 @@ for f in sorted(glob.glob(os.path.join(out, '*.json'))):
 
 For market-research tasks involving top-grossing mobile apps, use the Appfigures public-page extraction workflow in `references/app-store-chart-research.md`: scrape public chart pages, parse embedded `var __appData`, and verify ratings via Apple Lookup / Google Play detail pages. Treat this as a public-chart proxy unless the user provides paid Sensor Tower/data.ai/AppMagic access.
 
+### Brazilian DETRAN / CNH test-prep research
+
+For CNH/DETRAN test-prep market or content research, use `references/detran-cnh-public-materials.md`: public CONTRAN curriculum, DETRAN educational PDFs, official simulator caveats, useful queries, and PDF extraction pitfalls.
+
 ### Brazilian Research Sources
 
 Good Brazilian sources that work well with Firecrawl:
