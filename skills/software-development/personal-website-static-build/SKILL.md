@@ -52,11 +52,22 @@ Use this when building or revising a personal website, executive profile, adviso
    - Check DNS and current service state before claiming it is live:
      - `getent hosts example.com www.example.com`
      - `curl -I https://example.com/` and `curl -I https://www.example.com/`
-     - `timeout 10 systemctl is-active nginx caddy apache2` where relevant; wrap systemctl/journalctl calls with `timeout` because they may hang in this environment.
+     - `timeout 10 systemctl is-active nginx caddy apache2` where relevant; wrap systemctl/journalctl calls with `timeout` because they may hang.
    - If no web server is active, report that the static site is built but not publicly served yet.
    - Recommend Caddy for simple static hosting with automatic TLS unless the user already has nginx/apache conventions.
 
-7. Caddy static-site deployment on this VPS
+7. Safe temporary third-party redesign previews
+   - Use this pattern when the user is doing a favor for someone else or explicitly worries about security risk.
+   - Keep it static-only: HTML/CSS/assets. Avoid JavaScript, forms, cookies, analytics, external fonts, hotlinked images, tracking pixels, service workers, and embedded third-party widgets.
+   - Preserve requested brand assets by downloading them locally and serving them from the preview path, rather than hotlinking the original site.
+   - Do not copy authenticated areas, partner portals, customer data, forms, private dashboards, or credentials. Only use public pages and public company/profile information.
+   - Publish under an isolated temporary subdirectory such as `/var/www/<domain>/<project-redesign>/`, preferably with `robots.txt` `Disallow: /`, page-level `<meta name="robots" content="noindex, nofollow, noarchive">`, and HTTP `X-Robots-Tag: noindex, nofollow, noarchive` for the preview path.
+   - Add restrictive browser/security posture where possible: no external origins, `Content-Security-Policy` like `default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'`, plus existing Caddy headers (`X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options`).
+   - For Caddy path-specific headers under an existing site, add a matcher before the global header block, e.g. `@preview path /project-redesign*` then `header @preview { X-Robots-Tag "noindex, nofollow, noarchive"; Cache-Control "no-store, no-cache, max-age=0, must-revalidate" }`. Validate and reload Caddy.
+   - Verify live headers with `curl -sSIL https://www.<domain>/<path>/` and check body markers for both languages/variants.
+   - If the user wants stronger isolation, offer a random unguessable path or HTTP Basic Auth rather than making the preview discoverable.
+
+8. Caddy static-site deployment on this VPS
    - Prefer serving from `/var/www/<domain>` rather than `/root/.www`; Caddy runs as the `caddy` user and `/root` permissions can break access.
    - Copy files with `rsync -a --delete /root/.www/ /var/www/<domain>/`, then `chown -R caddy:caddy /var/www/<domain>` and set dirs 755/files 644.
    - The official Caddy Cloudsmith repo setup can hang/time out here; if that happens, use Ubuntu’s package (`apt-get install -y caddy`) as a reliable fallback.

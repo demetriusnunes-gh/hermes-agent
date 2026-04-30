@@ -69,3 +69,4 @@ package-lock.json
 context_length_cache.yaml
 webui/.signing_key
 webui/workspaces.json
+webui/workspace/
