@@ -103,6 +103,10 @@ for f in sorted(glob.glob(os.path.join(out, '*.json'))):
 
 ## Common Patterns
 
+### App Store / Google Play chart research
+
+For market-research tasks involving top-grossing mobile apps, use the Appfigures public-page extraction workflow in `references/app-store-chart-research.md`: scrape public chart pages, parse embedded `var __appData`, and verify ratings via Apple Lookup / Google Play detail pages. Treat this as a public-chart proxy unless the user provides paid Sensor Tower/data.ai/AppMagic access.
+
 ### Brazilian Research Sources
 
 Good Brazilian sources that work well with Firecrawl:
