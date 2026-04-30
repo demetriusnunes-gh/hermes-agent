@@ -521,6 +521,20 @@ Check logs first:
 grep -i "failed to send\|error" ~/.hermes/logs/gateway.log | tail -20
 ```
 
+### WebUI / dashboard chat issues
+When the WebUI loads but chat fails, treat it as a multi-component issue: service status, proxy, WebUI logs, then the chat stream stack trace.
+
+Quick checks:
+```bash
+systemctl is-active hermes-webui.service
+ss -ltnp | grep ':8787'
+tail -200 /var/log/hermes-webui.log
+tail -200 /var/log/hermes-webui-error.log
+```
+
+Known pitfall: if chat stream logs show
+`api.config._set_thread_env() got multiple values for keyword argument 'TERMINAL_CWD'`, profile runtime env already supplied `TERMINAL_CWD` and streaming passed it again. In `hermes-webui/api/streaming.py`, merge runtime env into a dict with explicit run-scoped values last, then call `_set_thread_env(**thread_env)`; do not pass `**_profile_runtime_env` plus duplicate named kwargs directly. Add/verify regression coverage in `tests/test_profile_terminal_env.py` and restart `hermes-webui.service` after patching.
+
 ---
 
 ## Where to Find Things
