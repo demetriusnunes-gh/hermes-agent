@@ -80,10 +80,12 @@ multica login --token
 If `multica login` is run on a VPS and the hosted login callback targets `localhost`, load the related skill:
 - `multica-vps-oauth-localhost-tunnel`
 
-### Check daemon
+### Check and manage daemon
 ```bash
-multica daemon status
-multica daemon start
+multica daemon status   # Check if daemon is running
+multica daemon start    # Start the daemon
+multica daemon stop     # Stop the daemon
+multica daemon restart  # Restart the daemon
 ```
 
 ## Workspace commands

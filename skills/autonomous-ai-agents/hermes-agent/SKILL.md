@@ -344,6 +344,34 @@ Full config reference: https://hermes-agent.nousresearch.com/docs/user-guide/con
 
 Plus: AI Gateway, OpenCode Zen, OpenCode Go, MiniMax CN, GitHub Copilot ACP.
 
+#### Model Fallback Configuration
+
+Hermes supports automatic provider failover when the primary model is unavailable. Configure this in `config.yaml`:
+
+```yaml
+model:
+  default: gpt-5.5           # Primary model
+  provider: openai-codex
+  base_url: https://chatgpt.com/backend-api/codex
+
+fallback_providers:          # Ordered list of fallback providers
+- provider: openrouter
+  model: tencent/hy3-preview:free
+- provider: openrouter
+  model: nvidia/nemotron-3-super-120b-a12b:free
+- provider: openrouter
+  model: inclusionai/ling-2.6-1t:free
+
+fallback_model:              # Primary fallback (tried before fallback_providers)
+  provider: openrouter
+  model: tencent/hy3-preview:free
+```
+
+**Important:** Do not duplicate the `fallback_model` entry under `fallback_providers` as this can interfere with proper fallback behavior. The agent will try:
+1. Primary model (`gpt-5.5` via `openai-codex`)
+2. `fallback_model` (`tencent/hy3-preview:free` via `openrouter`)
+3. Each entry in `fallback_providers` in order
+
 Full provider docs: https://hermes-agent.nousresearch.com/docs/integrations/providers
 
 ### Toolsets

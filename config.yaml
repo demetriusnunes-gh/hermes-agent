@@ -10,6 +10,10 @@ fallback_providers:
   model: nvidia/nemotron-3-super-120b-a12b:free
 - provider: openrouter
   model: inclusionai/ling-2.6-1t:free
+
+fallback_model:
+  provider: openrouter
+  model: tencent/hy3-preview:free
 credential_pool_strategies:
   openrouter: fill_first
 toolsets:
@@ -423,6 +427,6 @@ plugins:
 #
 # For custom OpenAI-compatible endpoints, add base_url and key_env.
 #
-# fallback_model:
-#   provider: openrouter
-#   model: anthropic/claude-sonnet-4
+fallback_model:
+  provider: openrouter
+  model: tencent/hy3-preview:free
