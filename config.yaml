@@ -5,11 +5,11 @@ model:
 providers: {}
 fallback_providers:
 - provider: openrouter
-  model: stepfun/step-3.5-flash:free
+  model: tencent/hy3-preview:free
 - provider: openrouter
   model: nvidia/nemotron-3-super-120b-a12b:free
 - provider: openrouter
-  model: minimax/minimax-m2.5:free
+  model: inclusionai/ling-2.6-1t:free
 credential_pool_strategies:
   openrouter: fill_first
 toolsets:
