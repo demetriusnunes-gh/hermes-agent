@@ -329,6 +329,7 @@ multica issue status <issue-id> done --output json
 
 - Prefer `--output json` whenever the output will be parsed or reused.
 - If the user mentions a board, do not assume there is a `board` command — map it to projects/issues.
+- If creating a project/board with `multica project create ...` fails with a server-side 500 like `POST /api/projects returned 500: {"error":"failed to create project"}`, do not block the task. Fall back to creating the requested issues directly in the workspace with no `--project`, then clearly tell Demetrius the project creation failed and the issues were created workspace-level instead.
 - For anything on a remote VPS using hosted Multica login, use the SSH localhost-callback tunnel skill.
 - For long comments, prefer `--content-stdin`.
 - If workspace context is unclear, start with:
