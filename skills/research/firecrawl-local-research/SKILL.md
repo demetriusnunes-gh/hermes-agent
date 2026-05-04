@@ -187,6 +187,10 @@ If you see connection resets even though the containers are running:
    - `browser_navigate` only if the target site is likely scrapeable without bot challenges
 3. Note the failure mode in your final reasoning so future sessions don't waste time on the same dead path.
 
+### Failure mode: Empty API response with no error
+
+If `curl` requests to `/v1/scrape` return empty output (no JSON body, exit code 0), Firecrawl is completely unresponsive. This is a total failure, not a transient issue. Immediately fall back to `browser_navigate` + `browser_snapshot` for the target URL, as retrying will not resolve the problem.
+
 ### View logs
 
 ```bash
