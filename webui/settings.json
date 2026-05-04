@@ -6,7 +6,7 @@
   "show_cli_sessions": true,
   "sync_to_insights": false,
   "check_for_updates": true,
-  "theme": "dark",
+  "theme": "light",
   "skin": "default",
   "language": "en",
   "bot_name": "Hermes",
