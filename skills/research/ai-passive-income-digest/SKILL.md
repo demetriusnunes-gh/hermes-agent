@@ -133,3 +133,6 @@ Only surface the TOP 3 ideas. Format:
 - If nothing interesting is found, report "nothing new tonight" briefly
 - If you need to deliver the digest through a local WhatsApp curl endpoint, avoid embedding a long multi-line message with URLs directly in the shell command; write the JSON payload to a temp file and send with `curl --data-binary @file` to avoid shell escaping issues and security-scan false positives
 - Use the browser tools — don't just rely on knowledge cutoff
+- Only surface services that are already working and earning in the US market, with evidence of traction, customers, or revenue.
+- For each finalist, explicitly explain: 1) the US proof point, 2) why Brazil appears underserved, 3) why the business should fit the Brazilian market, 4) what the smallest viable Brazil-first version would be.
+- Finish with exactly one line: 'Best Brazil rebuild bet:' plus the strongest option and why — no extra text or emojis.
