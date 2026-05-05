@@ -242,6 +242,7 @@ Parse output with `jq` or read JSON directly.
 | Problem | Fix |
 |---------|-----|
 | `NOT_AUTHENTICATED` | Run setup Steps 2-5 |
+| Check auth status | Run `$GSETUP --check` to verify token validity |
 | `REFRESH_FAILED` | Token revoked — redo Steps 3-5 |
 | `gws: command not found` | Install: `npm install -g @googleworkspace/cli` |
 | `HttpError 403` | Missing scope — `$GSETUP --revoke` then redo Steps 3-5 |
