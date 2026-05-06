@@ -63,8 +63,10 @@ Also treat these common Hermes/WebUI/runtime artifacts as local-only unless the 
 - `webui/last_workspace.txt`
 - `skills/.curator_state`
 - `skills/.usage.json`
+- `profiles/` trees created by profile runs
+- `ollama_cloud_models_cache.json`
 
-Prefer reverting tracked runtime state (`git checkout -- gateway_state.json webui/last_workspace.txt`) and adding untracked cache/key files to `.gitignore` rather than committing them.
+Prefer reverting tracked runtime state (`git checkout -- gateway_state.json webui/last_workspace.txt`) and adding untracked cache/key files to `.gitignore` rather than committing them. If a tracked runtime artifact keeps reappearing and you have confirmed it is generated-only for your session, consider `git update-index --skip-worktree <file>` as a temporary local-only suppression, but only after verifying the file is not intended for version control.
 
 #### Verify ignores
 Re-run:
