@@ -35,7 +35,7 @@ Flag and report emails matching ANY of these:
 1. Wife — Fernanda Hamacher (`fhamacher@gmail.com`, name: "Fernanda Hamacher")
 2. Kids' school — anything from or about "Eleva"
 3. Government — `.gov.br` sender domains, or subjects containing: intimação, notificação, comunicado, declaração, imposto, receita, INSS, detran, prefeitura, governo, multa, CNH, IPTU, IOF, IR
-   - Pitfall: the keyword `ir` causes false positives on common Portuguese words like "partir", "sorrir", "vir" etc. When `ir` is the only government match, cross-check that the sender is not a promotional/commercial domain before flagging.
+    - Pitfall: the keyword `ir` causes false positives on common Portuguese words like "partir", "sorrir", "vir" etc. When `ir` is the only government match, check that the sender domain is not a promotional/commercial one (e.g., contains words like "newsletter", "promo", "offer", "blog", "news" in the sender email or domain).
    - Pitfall: `notificação` / `comunicado` alone can also false-positive on non-government automated mail (for example Google Calendar notifications). Do not flag those unless the sender or surrounding context also indicates an actual government/public-agency source.
    - Pitfall: topical/news coverage about government (for example a newsletter or media outlet mentioning `governo`, `Itamaraty`, `Trump`, court news, etc.) is not itself a government email. If the sender is news/media/newsletter, treat it as irrelevant even when the subject discusses government affairs.
 4. Also flag:
