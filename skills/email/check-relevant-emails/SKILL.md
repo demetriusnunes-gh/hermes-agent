@@ -125,6 +125,7 @@ Hermes runtime note:
 - When using the `terminal` tool, prefer invoking `python /path/to/setup.py --check` and `python /path/to/google_api.py ...` directly.
 - Avoid wrapping these in `bash -lc` unless absolutely necessary, because Hermes may flag shell-wrapper invocations for approval and break unattended cron execution.
 - Also avoid `python -c` / `python - <<'PY'` style one-off scripts during unattended cron runs when possible; Hermes may treat inline script execution as approval-gated. For state inspection or updates, prefer file tools / `execute_code`, or direct script file execution.
+- **Important**: The `google_api.py` script outputs JSON by default. Do not add `--format json` flag as it is not recognized. See `references/google-api-usage.md` for details.
 
 If auth is missing or invalid, fix Google Workspace auth first. Do not fall back to any other email transport.
 
@@ -159,6 +160,8 @@ If you need a wider window for manual checks or low-volume periods:
 ```bash
 $GAPI gmail search "in:inbox newer_than:1d" --max 100
 ```
+
+**Note:** The `google_api.py` script outputs JSON by default - do not add `--format json` flag as it is not recognized.
 
 The search result returns message summaries with fields like:
 - `id`
@@ -288,6 +291,7 @@ STATE_FILE.write_text(json.dumps(state, indent=2))
 5. Be conservative about relevance.
 6. Keep the check quiet on empty.
 7. Report failures if the Google Workspace check itself breaks.
+8. **When using google_api.py, do not add --format json flag** - JSON output is default and the flag is not recognized.
 
 ## Troubleshooting
 
