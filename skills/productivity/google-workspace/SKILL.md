@@ -85,6 +85,16 @@ $GSETUP --check
 
 If it prints `AUTHENTICATED`, skip to Usage — setup is already done.
 
+If the script fails to import `hermes_constants` or hits Debian/Ubuntu PEP 668 restrictions, run it with the Hermes venv Python and add the repo root to `PYTHONPATH`:
+
+```bash
+export HOME=/root
+export PYTHONPATH=/root/.hermes/hermes-agent:$PYTHONPATH
+/root/.hermes/hermes-agent/venv/bin/python /root/.hermes/skills/productivity/google-workspace/scripts/setup.py --auth-url
+```
+
+See `references/session-auth-troubleshooting.md` for the exact recovery recipe.
+
 ### Step 1: Triage — ask the user what they need
 
 **Question 1: "What Google services do you need? Just email, or also

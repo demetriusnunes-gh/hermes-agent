@@ -326,6 +326,19 @@ Full config reference: https://hermes-agent.nousresearch.com/docs/user-guide/con
 
 18 providers supported. Set via `hermes model` or `hermes setup`.
 
+### Inspecting configured vs available models
+
+Use this split when users ask what model is *configured* versus what is *available*:
+
+- `hermes config` shows the active default provider/model from `~/.hermes/config.yaml`.
+- `hermes model` opens the interactive picker for the current provider.
+- `provider_model_ids(provider)` is the code path that powers the available-model catalog for a provider.
+- For `openai-codex`, Hermes prefers live discovery when auth is available and falls back to the curated list in `hermes_cli/codex_models.py`.
+- The Codex catalog can include forward-compatible synthetic slugs synthesized from template models, so available-model lists may be broader than the static defaults.
+- Configured default and available catalog are separate concepts; do not assume they are the same.
+
+See `references/model-catalog-and-routing.md` for a compact inspection checklist and Codex-specific notes.
+
 | Provider | Auth | Key env var |
 |----------|------|-------------|
 | OpenRouter | API key | `OPENROUTER_API_KEY` |
