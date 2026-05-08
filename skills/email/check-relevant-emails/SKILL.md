@@ -126,6 +126,7 @@ Hermes runtime note:
 - Avoid wrapping these in `bash -lc` unless absolutely necessary, because Hermes may flag shell-wrapper invocations for approval and break unattended cron execution.
 - Also avoid `python -c` / `python - <<'PY'` style one-off scripts during unattended cron runs when possible; Hermes may treat inline script execution as approval-gated. For state inspection or updates, prefer file tools / `execute_code`, or direct script file execution.
 - **Important**: The `google_api.py` script outputs JSON by default. Do not add `--format json` flag as it is not recognized. See `references/google-api-usage.md` for details.
+- **Auth caveat**: `setup.py --check` may report `AUTHENTICATED (partial)` when Gmail/Calendar work but Docs/Drive scopes are still missing. For this skill, treat that as usable auth unless Gmail/Calendar themselves fail.
 
 If auth is missing or invalid, fix Google Workspace auth first. Do not fall back to any other email transport.
 
@@ -134,7 +135,7 @@ If auth is missing or invalid, fix Google Workspace auth first. Do not fall back
 ### 1. Load Previous State
 
 ```python
-import json, hashlib, os
+import json, hashlib, os, re
 from pathlib import Path
 
 STATE_FILE = Path(os.path.expanduser("~/.hermes/state/email-check-state.json"))
@@ -145,7 +146,13 @@ else:
 
 notify_ids = set(state.get("notified_ids", []))
 notify_hashes = set(state.get("notified_hashes", []))
+
+# Hashes must use the raw sender address, not the display name.
+def sender_email(from_field: str) -> str:
+    m = re.search(r'<([^>]+)>', from_field)
+    return m.group(1) if m else from_field.strip()
 ```
+
 
 ### 2. Fetch Recent Inbox Messages with Google Workspace
 
@@ -194,6 +201,7 @@ $GAPI calendar list --start 2026-04-12T00:00:00-03:00 --end 2026-04-13T23:59:59-
 ```
 
 Flag events that overlap with the relevance criteria, especially school-related events such as Eleva meetings or parent events.
+Also flag calendar reminders that are clearly actionable financial/account items (for example bill reminders or all-day payment reminders like `Pagar Nubank`) when they represent a real task, not a promo or generic notification.
 
 ### 5. Filter Relevant Emails
 
@@ -315,3 +323,4 @@ Broaden the query window from `newer_than:2h` to `newer_than:1d`, then still ded
 - This skill is intentionally standardized on Google Workspace only.
 - Calendar access should also use Google Workspace only.
 - The old Zapier MCP and IMAP approaches are deprecated for this workflow.
+- See `references/cron-dedup-auth-and-calendar.md` for live-run notes on partial auth, sender normalization, and all-day reminders.
