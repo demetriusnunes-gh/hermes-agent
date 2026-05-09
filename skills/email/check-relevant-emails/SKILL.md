@@ -17,6 +17,9 @@ Primary access method:
 - backed by `gws_bridge.py` → `gws`
 - authenticated via `~/.hermes/google_token.json`
 
+Live notes:
+- `references/cron-dedup-auth-and-calendar.md` — auth, Gmail/Calendar dedup, and all-day calendar hash normalization from recent runs.
+
 Do not use:
 - Zapier MCP
 - IMAP / app passwords

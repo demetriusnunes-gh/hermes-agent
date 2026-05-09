@@ -1,27 +1,23 @@
-# Cron Run Notes: Dedup, Auth, and Calendar Relevance
+# Live notes: auth, dedup, and calendar quirks
 
-Observed during a live check:
+Captured from a successful cron run of the relevant-email/calendar checker.
 
-## Auth caveat
-`python setup.py --check` can return:
+## Auth
+- `python3 ~/.hermes/skills/productivity/google-workspace/scripts/setup.py --check` returned `AUTHENTICATED` after token refresh.
+- Treat `AUTHENTICATED (partial)` as usable for this workflow if Gmail and Calendar calls succeed.
 
-- `AUTHENTICATED (partial): Token refreshed but missing 2 scopes`
-- with missing `documents.readonly` and `drive.readonly`
+## Deduplication
+- Gmail message dedup remains `notified_ids` plus `sha256("{sender_email}|{subject}|{date_iso}")`.
+- Calendar dedup should use stable hashes from the visible event fields, typically:
+  - `sha:event:` + sha256(`"{summary}|{start}|{end}"`)
+  - optionally also `sha:event:` + sha256(`"{calendar}|{summary}|{start}|{end}"`)
+- Do **not** include location in the calendar dedup hash unless the upstream state format changes.
+- Existing state files may already contain `sha:event:`-prefixed hashes for prior notifications.
 
-For this skill, that is still acceptable if Gmail/Calendar access works. Treat it as a warning, not a hard failure.
+## Calendar shape
+- `calendar list` can return all-day items with date-only `start` / `end` values (for example `2026-05-10` → `2026-05-11`).
+- These all-day reminders should still be treated as actionable when they are clearly financial/account tasks such as `Pagar Nubank`.
 
-## Dedup hash normalization
-When building `sha:{sender_email}|{subject}|{date_iso}`:
-
-- extract the raw address from the `From` header
-- do **not** hash the display name
-- keep the header `Date` normalized to ISO 8601 before hashing
-
-Example:
-- `Agenda Edu <no-reply@contato.agendaedu.com>` → `no-reply@contato.agendaedu.com`
-
-## Calendar reminders
-Calendar results may include all-day reminders that are still relevant when they are concrete action items, including financial/account reminders such as bill payments.
-
-Example seen in practice:
-- `Pagar Nubank` (all-day reminder) — relevant financial follow-up
+## Filter hygiene
+- Broadening Gmail search from `newer_than:2h` to `newer_than:1d` increases newsletter noise; keep the relevance filter conservative and dedupe before reporting.
+- Newsletters and promotional mail are still irrelevant even when they mention topical government news or school-adjacent keywords incidentally.
