@@ -130,6 +130,8 @@ Only surface the TOP 3 ideas. Format:
 - Avoid generic ideas like "build an AI chatbot agency" — go deeper
 - Look for problems people are actively paying to solve, not hypothetical needs
 - Check Product Hunt, Hacker News "Show HN", Reddit for real launches
+- If the browser snapshot is empty or blocked, use the HN Algolia terminal fallback in `references/hn-algolia-terminal-fallback.md` before abandoning the query
+- Do not use an idea unless the source itself or HN traction provides a concrete proof signal; if the evidence is thin, exclude it rather than guessing
 - If nothing interesting is found, report "nothing new tonight" briefly
 - If you need to deliver the digest through a local WhatsApp curl endpoint, avoid embedding a long multi-line message with URLs directly in the shell command; write the JSON payload to a temp file and send with `curl --data-binary @file` to avoid shell escaping issues and security-scan false positives
 - Use the browser tools — don't just rely on knowledge cutoff
