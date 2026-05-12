@@ -60,6 +60,7 @@ Ignore:
 - social notifications
 - bulk mail
 - low-signal automated marketing mail
+- generic mailer-daemon / delivery failure notices unless they clearly tie to a real purchase, invoice, or priority contact
 - review/survey requests after a stay, flight, or purchase unless they also indicate a real problem requiring action
 
 Sender/context guardrails:
@@ -327,3 +328,4 @@ Broaden the query window from `newer_than:2h` to `newer_than:1d`, then still ded
 - Calendar access should also use Google Workspace only.
 - The old Zapier MCP and IMAP approaches are deprecated for this workflow.
 - See `references/cron-dedup-auth-and-calendar.md` for live-run notes on partial auth, sender normalization, and all-day reminders.
+- See `references/recent-false-positives.md` for noise patterns and sender/body guardrails discovered during real runs.
