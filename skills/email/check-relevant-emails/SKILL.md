@@ -18,7 +18,7 @@ Primary access method:
 - authenticated via `~/.hermes/google_token.json`
 
 Live notes:
-- `references/cron-dedup-auth-and-calendar.md` — auth, Gmail/Calendar dedup, and all-day calendar hash normalization from recent runs.
+- `references/cron-dedup-auth-and-calendar.md` — auth, Gmail/Calendar dedup, legacy-hash normalization, and all-day calendar hash normalization from recent runs.
 
 Do not use:
 - Zapier MCP
@@ -107,6 +107,10 @@ Rules:
 - append newly reported IDs/hashes after reporting
 - keep last 1000 entries max in each list
 
+Legacy-state compatibility:
+- Normalize existing hashes before comparison; historical files may contain bare SHA-256 digests or `sha:` / `sha:event:` prefixes.
+- When a legacy hash is encountered, treat the raw digest and the prefixed form as equivalent for deduping.
+
 ## Required Setup
 
 Before use, verify Google Workspace auth:
@@ -151,10 +155,19 @@ else:
 notify_ids = set(state.get("notified_ids", []))
 notify_hashes = set(state.get("notified_hashes", []))
 
+# Accept historical state entries that may omit prefixes or use sha:event: for calendar hashes.
+normalized_hashes = set()
+for h in notify_hashes:
+    normalized_hashes.add(h)
+    if h.startswith("sha:"):
+        normalized_hashes.add(h[4:])
+    if h.startswith("sha:event:"):
+        normalized_hashes.add(h[len("sha:event:"):])
+
 # Hashes must use the raw sender address, not the display name.
 def sender_email(from_field: str) -> str:
     m = re.search(r'<([^>]+)>', from_field)
-    return m.group(1) if m else from_field.strip()
+    return m.group(1).strip().lower() if m else from_field.strip().lower()
 ```
 
 
@@ -280,6 +293,8 @@ from pathlib import Path
 STATE_FILE = Path("~/.hermes/state/email-check-state.json").expanduser()
 STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
 
+# Always rewrite the full JSON object; avoid partial-file edits or line-based patches.
+# If the file was read in pieces during inspection, re-read the full file before saving.
 for new_id in newly_notified_ids:
     if new_id not in state["notified_ids"]:
         state["notified_ids"].append(new_id)

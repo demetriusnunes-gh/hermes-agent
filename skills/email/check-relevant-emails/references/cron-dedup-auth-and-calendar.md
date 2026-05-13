@@ -13,6 +13,8 @@ Captured from a successful cron run of the relevant-email/calendar checker.
   - optionally also `sha:event:` + sha256(`"{calendar}|{summary}|{start}|{end}"`)
 - Do **not** include location in the calendar dedup hash unless the upstream state format changes.
 - Existing state files may already contain `sha:event:`-prefixed hashes for prior notifications.
+- Historical state may also contain bare SHA-256 digests without prefixes; normalize both forms before comparison.
+- Always rewrite the full JSON state object after notification. Avoid line-based or partial-file edits, because a truncated or malformed state file can break dedup on the next run.
 
 ## Calendar shape
 - `calendar list` can return all-day items with date-only `start` / `end` values (for example `2026-05-10` → `2026-05-11`).
