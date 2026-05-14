@@ -65,19 +65,18 @@ curl -s -X POST http://127.0.0.1:3000/send \
 
 ## Step 3: Cron Job for WhatsApp Delivery
 
-When setting up a cron job that delivers via WhatsApp, use the deliver format:
+When setting up a scheduled job that delivers via WhatsApp, use the actual Hermes CLI:
 
-```
-deliver: "whatsapp:{phone_number}"
+```bash
+hermes cron create "0 11 * * *" "Send a WhatsApp reminder"
+  --name "Daily reminder"
+  --deliver whatsapp:5521988420759
 ```
 
-Example cron job:
-```python
-cronjob(action="create",
-    name="Daily reminder",
-    deliver="whatsapp:5521988420759",
-    schedule="0 11 * * *",  # Always UTC!
-    prompt="Send a message to X reminding them of Y")
+The `deliver` target for WhatsApp is:
+
+```text
+whatsapp:{phone_number}
 ```
 
 **Important**: The cron scheduler runs in UTC. Convert BRT time to UTC:
@@ -88,11 +87,13 @@ cronjob(action="create",
 
 ```bash
 # Check cron job status
-cronjob(action="list")
+hermes cron list
 
 # Check bridge logs for send activity
 tail -20 ~/.hermes/whatsapp/bridge.log
 ```
+
+See `references/cron-vs-bridge.md` for the verified bridge/cron commands used in this environment.
 
 ## Self-Chat Mode
 
@@ -104,12 +105,13 @@ This means:
 
 ## Pitfalls
 
-1. **Cron runs asynchronously** — `cronjob(action="run")` starts the job but doesn't block. The job runs in a fresh session with no current-chat context.
+1. **Cron runs asynchronously** — `hermes cron run` starts the job but doesn't block. The job runs in a fresh session with no current-chat context.
 2. **Gateway must be running for cron WhatsApp delivery** — The bridge needs to be connected at cron execution time. If the gateway is down, the message won't send.
-3. **Use the bridge HTTP API directly for immediate testing** — More reliable than relying on the cron runner to handle gateway state.
-4. **Bridge port is usually 3000** — Check config.yaml `whatsapp.extra.bridge_port` if it differs.
-5. **No markdown in WhatsApp messages** — WhatsApp doesn't support rich formatting via the bridge API. Keep messages plain text.
-6. **Special characters in JSON payloads** — When sending messages via curl, special characters (especially newlines) in URLs or text can trigger false-positive security scans. Always use proper shell escaping:
+3. **Use `hermes cron`, not `cronjob(...)`** — In this environment the real CLI is `hermes cron create|list|run|edit`. Older pseudo-code snippets can mislead when copying commands.
+4. **Use the bridge HTTP API directly for immediate testing** — More reliable than relying on the cron runner to handle gateway state.
+5. **Bridge port is usually 3000** — Check config.yaml `whatsapp.extra.bridge_port` if it differs.
+6. **No markdown in WhatsApp messages** — WhatsApp doesn't support rich formatting via the bridge API. Keep messages plain text.
+7. **Special characters in JSON payloads** — When sending messages via curl, special characters (especially newlines) in URLs or text can trigger false-positive security scans. Always use proper shell escaping:
    - Use `shell_quote` tool to properly escape JSON payloads for shell commands
    - Or construct payloads in a separate file and reference it with `-d @filename`
    - Test with simple messages first to isolate escaping issues

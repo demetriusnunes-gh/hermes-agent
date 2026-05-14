@@ -56,6 +56,7 @@ Or customize based on user preference.
 - For recurring reminders, verify next scheduled time matches expectation
 
 ## Related Knowledge
+- `daily-whatsapp-reminders` covers recurring WhatsApp reminders in general, including gratitude/habit prompts.
 - User's wife: Fernanda Hamacher, WhatsApp: +5521988420759
 - Dedicated AI WhatsApp number: +5521990718408
 - Authorization exists in user profile for daily 9 AM BRT reminders (can be adapted for other times)
