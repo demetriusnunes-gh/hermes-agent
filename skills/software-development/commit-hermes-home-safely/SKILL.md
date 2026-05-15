@@ -56,9 +56,11 @@ If local Google auth files appear untracked, add them to `.gitignore` before pro
 Also treat these common Hermes/WebUI/runtime artifacts as local-only unless the user explicitly asks to version them:
 - `context_length_cache.yaml`
 - `webui/.signing_key`
+- `webui/.pbkdf2_key`
 - `webui/workspaces.json`
 - `webui/.sessions.json`
 - `webui/models_cache.json`
+- `webui/projects.json`
 - `gateway_state.json`
 - `webui/last_workspace.txt`
 - `skills/.curator_state`
@@ -94,6 +96,8 @@ git -C hermes-agent diff -- <paths>
 ```
 
 Only commit a submodule pointer bump when the submodule working tree is clean and the pointer change is intentional. If the submodule contains incidental generated changes such as `ui-tui/package-lock.json` churn from a local install, revert those inside the submodule first (for example `git -C hermes-agent checkout -- ui-tui/package-lock.json`) so the parent commit records only the intended submodule SHA.
+
+If the parent repo stays noisy because a nested gitdir is dirty but the parent should remain clean, verify the submodule state first and then consider a local-only ignore override such as `git config submodule.hermes-agent.ignore all` for the current checkout. Use this only after confirming the dirt is non-source runtime noise.
 
 ### 5. Write a descriptive conventional commit message
 Summarize both:
@@ -151,6 +155,7 @@ Do this even if the push succeeded. Some local auth/setup tools may generate new
 ## Known Pitfalls
 - `git status` may initially miss the real story if you do not inspect `git diff`.
 - A modified `hermes-agent` entry can mean either an intentional submodule SHA bump, dirty files inside the submodule, or both; always inspect `git -C hermes-agent status` before staging.
+- Local Hermes webui state files like `webui/.pbkdf2_key` and `webui/projects.json` are runtime artifacts, not source changes.
 - OAuth flows can create multiple local files at different times during setup.
 - You may need a follow-up commit if the workflow itself creates a new ignored/runtime artifact after the first push.
 - If force-pushing an amended commit, prefer `--force-with-lease`, not `--force`.
