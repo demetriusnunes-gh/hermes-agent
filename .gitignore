@@ -70,10 +70,12 @@ package-lock.json
 # Local runtime/cache artifacts
 context_length_cache.yaml
 webui/.signing_key
+webui/.pbkdf2_key
 webui/workspaces.json
 webui/workspace/
 webui/.sessions.json
 webui/models_cache.json
+webui/projects.json
 skills/.curator_state
 skills/.usage.json
 skills/.curator_backups/
