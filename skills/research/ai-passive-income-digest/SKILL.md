@@ -77,6 +77,9 @@ Use the browser to search for CURRENT (last 30 days) ideas and opportunities. Fo
 - For dynamic proof pages, direct `urllib.request` plus text extraction often beats browser snapshots. Search for concrete snippets around `pricing`, `customers`, `revenue`, `hours`, `calls`, `reservations`, `proposals`, and `edital`.
 - For Brazil-gap validation, do not stop at the US proof page: quickly check adjacent Brazilian incumbents and narrow the wedge if an incumbent already owns the core workflow.
 - Treat HN points/comments plus explicit pricing/customer/revenue claims as acceptable traction proxies for first-pass filtering; exclude ideas with thin or purely speculative evidence.
+- Use GitHub stars only as supporting context; they are not a substitute for pricing, customers, or revenue evidence.
+- When browser snapshots are sparse, prefer direct HTML extraction with `urllib.request` or `curl` before abandoning a candidate.
+- See `references/2026-05-16-agent-workflow-market-signals.md` for recent examples and wedge notes.
 
 **Browser searches to perform (prioritized):**
 - "autonomous AI agent business ideas 2026" (via HN Algolia)
