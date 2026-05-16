@@ -97,7 +97,11 @@ git -C hermes-agent diff -- <paths>
 
 Only commit a submodule pointer bump when the submodule working tree is clean and the pointer change is intentional. If the submodule contains incidental generated changes such as `ui-tui/package-lock.json` churn from a local install, revert those inside the submodule first (for example `git -C hermes-agent checkout -- ui-tui/package-lock.json`) so the parent commit records only the intended submodule SHA.
 
+Special case: in some worktrees ` /root/.hermes ` is the top-level repo, but the meaningful source tree is the nested `hermes-agent` checkout. If the parent repo looks clean, still check the nested checkout directly before concluding there is nothing to commit; a detached HEAD in the nested repo is normal and does not mean the tree is safe to ignore.
+
 If the parent repo stays noisy because a nested gitdir is dirty but the parent should remain clean, verify the submodule state first and then consider a local-only ignore override such as `git config submodule.hermes-agent.ignore all` for the current checkout. Use this only after confirming the dirt is non-source runtime noise.
+
+See `references/root-hermes-submodule-pitfall.md` for the exact check sequence and examples.
 
 ### 5. Write a descriptive conventional commit message
 Summarize both:

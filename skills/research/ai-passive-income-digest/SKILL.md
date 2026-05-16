@@ -69,11 +69,12 @@ Use the browser to search for CURRENT (last 30 days) ideas and opportunities. Fo
 - When HN Algolia is sparse, broaden the query family to adjacent monetized classes instead of the original phrase: pricing, guardrails, workflow automation, email infra, proposal generators, and agent marketplaces often surface better self-serve products with visible pricing or traction.
 - Re-check incumbent AI positioning before calling Brazil underserved. If Brazil already has a strong adjacent incumbent, narrow the wedge or exclude the idea rather than cloning the US offer.
 - Prefer finalists that survive this explicit Brazil-gap validation step; reject ideas where the US proof is strong but the Brazil fit or differentiation remains weak.
-- See `references/brazil-rebuild-validation-2026-04-30.md` for reusable proof snippets and Brazil-gap notes on Slang AI, Assort Health, EliseAI, GovDash, Effecti, and the current best Brazil-first wedges. See `references/2026-05-12-brazil-gap-notes.md` for prior HN-query patterns and proof snippets. See `references/2026-05-14-digest-research-notes.md` for the latest HN leads, proof snippets, and Brazil-incumbent checks.
+- See `references/brazil-rebuild-validation-2026-04-30.md` for reusable proof snippets and Brazil-gap notes on Slang AI, Assort Health, EliseAI, GovDash, Effecti, and the current best Brazil-first wedges. See `references/2026-05-12-brazil-gap-notes.md` for prior HN-query patterns and proof snippets. See `references/2026-05-14-digest-research-notes.md` and `references/2026-05-15-research-notes.md` for HN leads, proof snippets, and Brazil-incumbent checks.
 
 **Research workflow refinements (2026-05-14):**
 - When HN Algolia is the source of truth, use the API directly with a browser User-Agent and query-only URL encoding; keep `created_at_i%3E...` in `numericFilters`.
 - If a browser snapshot is empty or omits numbers, skip to terminal `python3 + urllib.request`, strip HTML, and search for keyword-adjacent evidence snippets.
+- For dynamic proof pages, direct `urllib.request` plus text extraction often beats browser snapshots. Search for concrete snippets around `pricing`, `customers`, `revenue`, `hours`, `calls`, `reservations`, `proposals`, and `edital`.
 - For Brazil-gap validation, do not stop at the US proof page: quickly check adjacent Brazilian incumbents and narrow the wedge if an incumbent already owns the core workflow.
 - Treat HN points/comments plus explicit pricing/customer/revenue claims as acceptable traction proxies for first-pass filtering; exclude ideas with thin or purely speculative evidence.
 
@@ -83,6 +84,7 @@ Use the browser to search for CURRENT (last 30 days) ideas and opportunities. Fo
 - "self-running AI business" (via HN Algolia)
 - "AI agent revenue" (via HN Algolia)
 - "automated AI services" (via HN Algolia)
+- If those are sparse, broaden immediately to `Show HN AI`, `Launch HN AI`, `Show HN proposal`, `Show HN voice AI`, `Show HN email API`, and `Show HN guardrails`.
 
 ### 2. Filter & Prioritize
 
