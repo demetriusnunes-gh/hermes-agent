@@ -209,6 +209,8 @@ Root cause: DNS record does not exist yet. For Cloudflare-managed domains, creat
 - Value: VPS public IPv4
 - Proxy: DNS-only is simplest when Caddy should obtain/manage the public certificate directly.
 
+For `demetriusnunes.com` on this Hostinger VPS, there is a proven `cfcli` workflow for creating and verifying these records, including the IPv4 DNS-resolution wrapper needed when the Cloudflare token is IP-restricted and the VPS tries IPv6. See `references/cloudflare-cfcli-dns-on-hostinger-vps.md` before doing manual Cloudflare DNS work or overwriting existing Cloudflare config.
+
 If Cloudflare proxy/orange-cloud is enabled and the browser shows Cloudflare 525 SSL handshake errors, Caddy may not be serving a cert Cloudflare accepts during origin negotiation. For small internal/public apps where Cloudflare terminates public TLS, a proven fix is to use Caddy's internal CA at the origin:
 
 ```caddyfile
