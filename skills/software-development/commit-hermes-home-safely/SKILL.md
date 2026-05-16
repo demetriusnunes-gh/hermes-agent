@@ -101,6 +101,8 @@ Special case: in some worktrees `/root/.hermes` is the top-level repo, but the m
 
 If the parent repo stays noisy because a nested gitdir is dirty but the parent should remain clean, verify the submodule state first and then consider a local-only ignore override such as `git config submodule.hermes-agent.ignore all` for the current checkout. Use this only after confirming the dirt is non-source runtime noise. If `git config --get submodule.hermes-agent.ignore` already returns `all`, remember that it can hide real worktree dirt from a casual status check; temporarily inspect with `--ignore-submodules=none` before deciding there is nothing to do.
 
+Special case: nested repositories inside the submodule (for example `hermes-agent/nova-platform/nova-platform` or `hermes-agent/tinker-atropos`) can make the outer submodule appear modified even when the parent repo itself is only tracking the submodule SHA. Inspect those nested repos directly with `git -C <nested-repo> status --porcelain --ignore-submodules=none` before staging the parent. Do not assume a clean top-level `git status` means the nested repos are safe to ignore.
+
 For session-specific examples and cleanup notes, see `references/root-hermes-submodule-pitfall.md`, `references/hermes-home-commit-pitfalls.md`, and `references/push-permission-and-nested-repo-pitfalls.md`.
 
 If a shell command to remove generated cache directories is blocked by the tool's recursive-delete guard, use a narrower cleanup path instead of retrying `rm -rf` blindly. For example, remove `__pycache__` with a Python `shutil.rmtree(...)` helper or target individual files with non-recursive commands, then re-run `git status`.
