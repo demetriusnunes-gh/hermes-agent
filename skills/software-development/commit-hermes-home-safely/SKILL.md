@@ -162,6 +162,7 @@ Do this even if the push succeeded. Some local auth/setup tools may generate new
 - `git status` may initially miss the real story if you do not inspect `git diff`.
 - A modified `hermes-agent` entry can mean either an intentional submodule SHA bump, dirty files inside the submodule, or both; always inspect `git -C hermes-agent status --ignore-submodules=none` before staging.
 - Nested repositories inside the submodule (for example `hermes-agent/tinker-atropos`) need their own status checks; one dirty nested repo can be the only source of the parent submodule noise.
+- A local `git config submodule.hermes-agent.ignore all` setting can make the parent repo look clean while the submodule still has real changes; always confirm with `git status --porcelain --ignore-submodules=none` before concluding there is nothing to commit.
 - Local Hermes webui state files like `webui/.pbkdf2_key` and `webui/projects.json` are runtime artifacts, not source changes.
 - OAuth flows can create multiple local files at different times during setup.
 - You may need a follow-up commit if the workflow itself creates a new ignored/runtime artifact after the first push.

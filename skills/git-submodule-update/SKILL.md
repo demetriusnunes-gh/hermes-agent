@@ -109,6 +109,8 @@ After pushing, you can verify by:
 - If submodule shows wrong commit: Navigate to submodule, checkout correct commit, then update reference in main repo
 - If the parent repo is clean after commit but `git status` still shows `M submodule-name`: inspect inside the submodule with `git status --porcelain` — it may have uncommitted tracked-file changes rather than just a changed SHA.
 - If you can commit inside the submodule but cannot push that submodule's remote (e.g. permission denied to upstream): **do not leave the parent repo pointing at an unpublished submodule commit.** Create a local safety branch in the submodule (for example `git branch local/<topic> <commit>`), then reset the submodule back to the last published commit/branch tip before finalizing the parent repo.
+- If `git config --get submodule.hermes-agent.ignore` returns `all`, do not trust a plain parent `git status` as evidence the submodule is clean. Re-run `git status --porcelain --ignore-submodules=none` and inspect `git -C hermes-agent status --porcelain --ignore-submodules=none` before staging the parent pointer.
+- If a nested repo such as `hermes-agent/tinker-atropos/` is intentionally present but untracked by the parent, inspect it directly so you can tell the difference between legitimate nested worktree dirt and a stale parent submodule marker.
 - After preserving unpublished submodule work on a local branch, re-check the parent repo with `git status --porcelain` to ensure it is truly clean before reporting success.
 
 ## Additional experiential note
