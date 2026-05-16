@@ -76,6 +76,7 @@ webui/workspace/
 webui/.sessions.json
 webui/models_cache.json
 webui/projects.json
+webui/.login_attempts.json
 skills/.curator_state
 skills/.usage.json
 skills/.curator_backups/
