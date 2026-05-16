@@ -87,6 +87,7 @@ git push origin master
 - You must `git add hermes-agent` to record the new submodule commit in the main repo
 - Always verify what changed in submodules before committing to avoid committing unintended states
 - If the submodule SHA changed *and* the submodule worktree is dirty, resolve the dirty worktree first. For generated/noisy files inside `hermes-agent` (for example `web/package-lock.json` rewritten by an update/build), revert the file inside the submodule with `git -C hermes-agent checkout -- path/to/file` before staging the parent submodule pointer.
+- If `git -C hermes-agent status --porcelain --ignore-submodules=none` shows an untracked nested repository (for example `tinker-atropos/`), inspect that nested repo directly before assuming the parent needs a commit. A clean nested repo can still keep the outer submodule marked dirty if it is intentionally present but unversioned by the parent.
 - Before leaving the parent repo pointing at a new submodule SHA, verify that SHA exists on an upstream remote branch: `git -C hermes-agent branch -r --contains HEAD`.
 - Group related changes in commit messages using conventional commits style for clarity
 
