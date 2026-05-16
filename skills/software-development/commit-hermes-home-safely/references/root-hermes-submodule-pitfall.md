@@ -3,8 +3,10 @@
 Observed during session:
 
 - `cd /root/.hermes && git status --porcelain` can be clean even when the embedded `hermes-agent` checkout has local dirt.
+- `git config --get submodule.hermes-agent.ignore` may be set to `all`, which hides dirt unless you explicitly inspect with `--ignore-submodules=none`.
 - In this repo layout, `hermes-agent` is a nested git checkout/submodule-like dependency that must be inspected separately.
 - The nested checkout can be in detached HEAD while the parent repo stays on `master`; that is not itself a problem, but it means changes may live only inside the nested repo.
+- Nested repos inside the submodule (for example `hermes-agent/tinker-atropos`) can be the actual source of the dirt and need their own `git status`.
 
 Recommended checks before declaring "nothing to commit":
 

@@ -90,16 +90,16 @@ This is important because meaningful tracked files may still be modified even af
 If `hermes-agent` appears modified, inspect it as a submodule before staging the parent repo:
 ```bash
 git diff --submodule=log -- hermes-agent
-git -C hermes-agent status --porcelain
+git -C hermes-agent status --porcelain --ignore-submodules=none
 git -C hermes-agent diff --stat
 git -C hermes-agent diff -- <paths>
 ```
 
 Only commit a submodule pointer bump when the submodule working tree is clean and the pointer change is intentional. If the submodule contains incidental generated changes such as `ui-tui/package-lock.json` churn from a local install, revert those inside the submodule first (for example `git -C hermes-agent checkout -- ui-tui/package-lock.json`) so the parent commit records only the intended submodule SHA.
 
-Special case: in some worktrees ` /root/.hermes ` is the top-level repo, but the meaningful source tree is the nested `hermes-agent` checkout. If the parent repo looks clean, still check the nested checkout directly before concluding there is nothing to commit; a detached HEAD in the nested repo is normal and does not mean the tree is safe to ignore.
+Special case: in some worktrees `/root/.hermes` is the top-level repo, but the meaningful source tree is the nested `hermes-agent` checkout. If the parent repo looks clean, still check the nested checkout directly before concluding there is nothing to commit; a detached HEAD in the nested repo is normal and does not mean the tree is safe to ignore. Also watch for nested git projects inside the submodule (for example `hermes-agent/tinker-atropos/` with its own `.git` file) — a dirty nested repo can make the outer submodule look modified even when the parent repo itself only tracks the pointer.
 
-If the parent repo stays noisy because a nested gitdir is dirty but the parent should remain clean, verify the submodule state first and then consider a local-only ignore override such as `git config submodule.hermes-agent.ignore all` for the current checkout. Use this only after confirming the dirt is non-source runtime noise.
+If the parent repo stays noisy because a nested gitdir is dirty but the parent should remain clean, verify the submodule state first and then consider a local-only ignore override such as `git config submodule.hermes-agent.ignore all` for the current checkout. Use this only after confirming the dirt is non-source runtime noise. If `git config --get submodule.hermes-agent.ignore` already returns `all`, remember that it can hide real worktree dirt from a casual status check; temporarily inspect with `--ignore-submodules=none` before deciding there is nothing to do.
 
 See `references/root-hermes-submodule-pitfall.md` for the exact check sequence and examples.
 
@@ -158,7 +158,8 @@ Do this even if the push succeeded. Some local auth/setup tools may generate new
 
 ## Known Pitfalls
 - `git status` may initially miss the real story if you do not inspect `git diff`.
-- A modified `hermes-agent` entry can mean either an intentional submodule SHA bump, dirty files inside the submodule, or both; always inspect `git -C hermes-agent status` before staging.
+- A modified `hermes-agent` entry can mean either an intentional submodule SHA bump, dirty files inside the submodule, or both; always inspect `git -C hermes-agent status --ignore-submodules=none` before staging.
+- Nested repositories inside the submodule (for example `hermes-agent/tinker-atropos`) need their own status checks; one dirty nested repo can be the only source of the parent submodule noise.
 - Local Hermes webui state files like `webui/.pbkdf2_key` and `webui/projects.json` are runtime artifacts, not source changes.
 - OAuth flows can create multiple local files at different times during setup.
 - You may need a follow-up commit if the workflow itself creates a new ignored/runtime artifact after the first push.
@@ -167,6 +168,7 @@ Do this even if the push succeeded. Some local auth/setup tools may generate new
 ## Verification Checklist
 Before reporting completion, confirm:
 - `git diff --cached --check` passed before commit
+- parent/submodule inspection included `git status --porcelain --ignore-submodules=none` and, when applicable, nested repo checks under `hermes-agent/`
 - `git push origin master` succeeded (or `--force-with-lease` if intentionally amending a fresh commit)
 - `git status --porcelain` is empty
 - if `hermes-agent` was touched, `git -C hermes-agent status --porcelain` is empty and any parent submodule SHA change was intentional
