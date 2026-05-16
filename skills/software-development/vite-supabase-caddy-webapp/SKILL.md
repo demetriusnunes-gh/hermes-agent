@@ -31,6 +31,19 @@ Load and follow:
 
 ## Proven Workflow
 
+### Hackathon/source-archive apps
+
+When the user provides a hackathon brief plus a source archive/directory and asks to run it under a subdomain, treat it as both a challenge-scoring task and a deployment task:
+
+- Read the markdown brief first and extract scoring criteria, hidden-test implications, required schemas, and any allowed output enums.
+- Run existing tests/builds before edits, then add a small deterministic public scorer if fixtures or answer keys are available.
+- Implement challenge logic in pure/testable modules before polishing UI.
+- For apps with API/runtime behavior, deploy as a systemd Node service behind Caddy `reverse_proxy` instead of publishing only static `dist/` files.
+- Verify local service health, Caddy Host-header routing, and only then public DNS/HTTPS.
+- If DNS is missing, finish with the exact Cloudflare `A` record required and avoid saying the public URL is live.
+
+See `references/hackathon-decision-platform.md` for the full captured pattern, including service/Caddy templates and final-response checklist.
+
 ### 1. Inspect Environment
 
 ```bash

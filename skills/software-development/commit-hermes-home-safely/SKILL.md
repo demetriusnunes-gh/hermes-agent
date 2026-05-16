@@ -101,7 +101,7 @@ Special case: in some worktrees `/root/.hermes` is the top-level repo, but the m
 
 If the parent repo stays noisy because a nested gitdir is dirty but the parent should remain clean, verify the submodule state first and then consider a local-only ignore override such as `git config submodule.hermes-agent.ignore all` for the current checkout. Use this only after confirming the dirt is non-source runtime noise. If `git config --get submodule.hermes-agent.ignore` already returns `all`, remember that it can hide real worktree dirt from a casual status check; temporarily inspect with `--ignore-submodules=none` before deciding there is nothing to do.
 
-For session-specific examples and cleanup notes, see `references/root-hermes-submodule-pitfall.md` and `references/hermes-home-commit-pitfalls.md`.
+For session-specific examples and cleanup notes, see `references/root-hermes-submodule-pitfall.md`, `references/hermes-home-commit-pitfalls.md`, and `references/push-permission-and-nested-repo-pitfalls.md`.
 
 If a shell command to remove generated cache directories is blocked by the tool's recursive-delete guard, use a narrower cleanup path instead of retrying `rm -rf` blindly. For example, remove `__pycache__` with a Python `shutil.rmtree(...)` helper or target individual files with non-recursive commands, then re-run `git status`.
 
@@ -128,6 +128,12 @@ git diff --cached --check
 # real secrets from documentation examples before proceeding.
 git diff --cached -U0 | grep '^+' | grep -E -i \
   '(api[_-]?key|secret|token|password|private[_-]?key|BEGIN |oauth|client_secret|authorization|bearer|signing|webhook|github_pat|sk-[A-Za-z0-9])' || true
+
+# Before pushing, confirm the target remote is writable by the current account.
+# A successful auth check (gh auth status / git credentials) does NOT mean the
+# repo grants push rights; org-owned upstreams can still reject with 403.
+git remote -v
+gh auth status 2>/dev/null || true
 
 git commit -m "..."
 git push origin master

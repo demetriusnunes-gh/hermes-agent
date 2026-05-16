@@ -234,6 +234,8 @@ else
 fi
 ```
 
+**Important:** this only detects credentials, not repo write access. If a push later returns 403/permission denied, verify the remote owner and your membership/permissions before retrying.
+
 ---
 
 ## Troubleshooting
@@ -243,6 +245,7 @@ fi
 | `git push` asks for password | GitHub disabled password auth. Use a personal access token as the password, or switch to SSH |
 | `remote: Permission to X denied` | Token may lack `repo` scope — regenerate with correct scopes |
 | `fatal: Authentication failed` | Cached credentials may be stale — run `git credential reject` then re-authenticate |
+| `Permission to <owner>/<repo>.git denied` or `403` on push | Auth is valid but the account lacks write access to that repo. Confirm the remote owner/repo matches the intended destination; org-owned upstreams and nested submodules often require separate permissions. |
 | `ssh: connect to host github.com port 22: Connection refused` | Try SSH over HTTPS port: add `Host github.com` with `Port 443` and `Hostname ssh.github.com` to `~/.ssh/config` |
 | Credentials not persisting | Check `git config --global credential.helper` — must be `store` or `cache` |
 | Multiple GitHub accounts | Use SSH with different keys per host alias in `~/.ssh/config`, or per-repo credential URLs |
