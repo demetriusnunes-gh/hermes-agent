@@ -79,6 +79,8 @@ git status --porcelain
 ### 4. Re-check for additional tracked changes and submodule dirtiness
 After cleanup, re-run status and diff again. Do not assume the first diff captured everything.
 
+If the repo contains a nested submodule that belongs to a different GitHub owner than the parent repo, verify whether you are expected to push the submodule to a fork instead of the upstream remote before staging the parent.
+
 Example:
 ```bash
 git status --porcelain
@@ -103,7 +105,7 @@ If the parent repo stays noisy because a nested gitdir is dirty but the parent s
 
 Special case: nested repositories inside the submodule (for example `hermes-agent/nova-platform/nova-platform` or `hermes-agent/tinker-atropos`) can make the outer submodule appear modified even when the parent repo itself is only tracking the submodule SHA. Inspect those nested repos directly with `git -C <nested-repo> status --porcelain --ignore-submodules=none` before staging the parent. Do not assume a clean top-level `git status` means the nested repos are safe to ignore.
 
-For session-specific examples and cleanup notes, see `references/root-hermes-submodule-pitfall.md`, `references/hermes-home-commit-pitfalls.md`, `references/push-permission-and-nested-repo-pitfalls.md`, and `references/nested-submodule-push-pitfalls.md`.
+For session-specific examples and cleanup notes, see `references/root-hermes-submodule-pitfall.md`, `references/hermes-home-commit-pitfalls.md`, `references/push-permission-and-nested-repo-pitfalls.md`, `references/nested-submodule-push-pitfalls.md`, and `references/forked-submodule-push-pitfalls.md`.
 
 If a shell command to remove generated cache directories is blocked by the tool's recursive-delete guard, use a narrower cleanup path instead of retrying `rm -rf` blindly. For example, remove `__pycache__` with a Python `shutil.rmtree(...)` helper or target individual files with non-recursive commands, then re-run `git status`.
 

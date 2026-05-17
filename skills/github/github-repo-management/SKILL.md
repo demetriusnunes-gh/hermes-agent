@@ -156,6 +156,8 @@ curl -s -X POST \
 
 ## 3. Forking Repositories
 
+If a push to the upstream repo is denied but authentication is valid, check whether you need to create or use a fork remote. This is especially common for nested submodules tracked from a parent repo.
+
 **With gh:**
 
 ```bash
@@ -179,7 +181,7 @@ cd repo-name
 git remote add upstream https://github.com/owner/repo-name.git
 ```
 
-### Keeping a Fork in Sync
+#### Keeping a Fork in Sync
 
 ```bash
 # Pure git — works everywhere
@@ -194,6 +196,21 @@ git push origin main
 ```bash
 gh repo sync $GH_USER/repo-name
 ```
+
+### Forked Submodule Remotes
+
+When a parent repo contains a submodule pointing at an upstream you cannot push to, create a writable fork for the submodule and add it as a separate remote:
+
+```bash
+gh repo fork owner/submodule-repo --clone=false
+git -C path/to/submodule remote add fork git@github.com:$GH_USER/submodule-repo.git
+# If the fork already has commits:
+git -C path/to/submodule fetch fork
+git -C path/to/submodule rebase fork/main
+git -C path/to/submodule push fork main
+```
+
+If the parent should permanently track the fork, update `.gitmodules` and commit the submodule pointer bump in the parent repo.
 
 ## 4. Repository Information
 
