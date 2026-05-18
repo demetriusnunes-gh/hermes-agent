@@ -67,6 +67,8 @@ Use the browser to search for CURRENT (last 30 days) ideas and opportunities. Fo
 - Prefer browser/direct-page validation for company proof pages over broad Bing when Bing returns noisy localized results. Recent reliable direct pages: Slang.ai `/pricing` and `/customers` expose pricing, restaurant counts, call-training volume, and concrete customer metrics (e.g., calls/reservations/revenue); Assort Health homepage exposes provider/specialty and outcome metrics; EliseAI homepage exposes customer logos and product scope; GovDash exposes customer-win and proposal-time metrics; Effecti homepage exposes Brazil incumbent metrics and AI positioning. Use `browser_snapshot` or terminal `urllib`/`curl` snippets to extract titles and traction claims.
 - When the browser snapshot omits numbers or a JS-heavy page times out, run `browser_console(expression='document.body.innerText')`; if that times out too, fall back to terminal `python3` + `urllib.request` with a browser User-Agent, strip tags, and search for evidence snippets. This worked for Slang AI pricing, Assort Health, EliseAI, GovDash, Effecti, Anota AI, and Kenlo.
 - When HN Algolia is sparse, broaden the query family to adjacent monetized classes instead of the original phrase: pricing, guardrails, workflow automation, email infra, proposal generators, and agent marketplaces often surface better self-serve products with visible pricing or traction.
+- Prefer small, operational B2B layers with clear pricing or usage-metering over broad platform or content plays; those are easier to localize for Brazil and easier to maintain passively.
+- If a candidate is strong in the US but has a strong adjacent Brazil incumbent, narrow the wedge or exclude it rather than treating the market as blank.
 - Re-check incumbent AI positioning before calling Brazil underserved. If Brazil already has a strong adjacent incumbent, narrow the wedge or exclude the idea rather than cloning the US offer.
 - Prefer finalists that survive this explicit Brazil-gap validation step; reject ideas where the US proof is strong but the Brazil fit or differentiation remains weak.
 - See `references/brazil-rebuild-validation-2026-04-30.md` for reusable proof snippets and Brazil-gap notes on Slang AI, Assort Health, EliseAI, GovDash, Effecti, and the current best Brazil-first wedges. See `references/2026-05-12-brazil-gap-notes.md` for prior HN-query patterns and proof snippets. See `references/2026-05-14-digest-research-notes.md` and `references/2026-05-15-research-notes.md` for HN leads, proof snippets, and Brazil-incumbent checks.
@@ -80,6 +82,7 @@ Use the browser to search for CURRENT (last 30 days) ideas and opportunities. Fo
 - Use GitHub stars only as supporting context; they are not a substitute for pricing, customers, or revenue evidence.
 - When browser snapshots are sparse, prefer direct HTML extraction with `urllib.request` or `curl` before abandoning a candidate.
 - See `references/2026-05-16-agent-workflow-market-signals.md` for recent examples and wedge notes.
+- See `references/2026-05-18-session-signals.md` for the latest proof snippets, Brazil-gap notes, and HN query patterns from this run.
 
 **Browser searches to perform (prioritized):**
 - "autonomous AI agent business ideas 2026" (via HN Algolia)
