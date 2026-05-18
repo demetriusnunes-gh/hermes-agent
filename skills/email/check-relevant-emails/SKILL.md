@@ -21,6 +21,7 @@ Live notes:
 - `references/cron-dedup-auth-and-calendar.md` — auth, Gmail/Calendar dedup, legacy-hash normalization, and all-day calendar hash normalization from recent runs.
 - `references/session-2026-05-17-tooling-notes.md` — concise session notes on auth tolerance, JSON output, raw state reads, and safe state-mutation execution.
 - `references/2026-05-18-google_api-json-shapes.md` — tool output shapes (`messages` / `events` wrappers) and stable hashing notes for Gmail and all-day calendar items.
+- `references/2026-05-18-calendar-shape-and-dedup.md` — calendar wrapper fallback (`items` vs `events`) and visible-field event hashes.
 
 Do not use:
 - Zapier MCP
@@ -104,14 +105,16 @@ Example:
 
 Rules:
 - `notified_ids`: Gmail message IDs already reported
-- `notified_hashes`: SHA-256 of `"{sender_email}|{subject}|{date_iso}"`
-- only report emails not present in either list
+- `notified_hashes`: SHA-256 of `"{sender_email}|{subject}|{date_iso}"` for emails
+- calendar events must use a stable visible-field hash, typically `sha:event:` + SHA-256 of `"{summary}|{start}|{end}"` (optionally include calendar name if needed by the upstream format)
+- only report emails/events not present in either list
 - append newly reported IDs/hashes after reporting
 - keep last 1000 entries max in each list
 
 Legacy-state compatibility:
 - Normalize existing hashes before comparison; historical files may contain bare SHA-256 digests or `sha:` / `sha:event:` prefixes.
 - When a legacy hash is encountered, treat the raw digest and the prefixed form as equivalent for deduping.
+- For calendar dedupe, prefer the visible-field hash over raw Google event IDs; raw IDs can bypass prior state entries.
 
 ## Required Setup
 
