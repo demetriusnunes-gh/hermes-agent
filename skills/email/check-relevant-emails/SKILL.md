@@ -20,6 +20,7 @@ Primary access method:
 Live notes:
 - `references/cron-dedup-auth-and-calendar.md` — auth, Gmail/Calendar dedup, legacy-hash normalization, and all-day calendar hash normalization from recent runs.
 - `references/session-2026-05-17-tooling-notes.md` — concise session notes on auth tolerance, JSON output, raw state reads, and safe state-mutation execution.
+- `references/2026-05-18-google_api-json-shapes.md` — tool output shapes (`messages` / `events` wrappers) and stable hashing notes for Gmail and all-day calendar items.
 
 Do not use:
 - Zapier MCP
