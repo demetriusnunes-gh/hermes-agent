@@ -120,6 +120,16 @@ Good Brazilian sources that work well with Firecrawl:
 - Folha: `https://www1.folha.uol.com.br/...`
 - Endeavor: `https://endeavor.org.br/...`
 
+### Media / Photo Gallery Extraction
+
+For gallery-style pages where the goal is to archive the actual photos:
+- First inspect the raw HTML for `<link rel="preload" as="image" href="...">` tags; many gallery sites expose the full image list there even when the visible DOM is lazy-loaded.
+- In the browser, `document.querySelectorAll('img')` plus `currentSrc`/`src` is a fast way to enumerate the visible assets.
+- Prefer direct image URLs over screenshots, and deduplicate aggressively to exclude logos/widgets.
+- Save the download set with numeric prefixes (`001_...`, `002_...`) and a `source_urls.txt` manifest so the order and provenance are preserved.
+- If the task also requires publishing the assets on the VPS, place them under the Caddy-served web root and add a minimal `index.html` gallery so the folder is browsable over HTTP.
+- See `references/gallery-photo-archival.md` for a compact end-to-end recipe.
+
 ### Search Results
 
 Scrape Bing for search results:

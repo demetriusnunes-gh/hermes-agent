@@ -61,3 +61,21 @@ Research the web effectively while working around aggressive bot detection. The 
 - Use `full=true` on browser_snapshot for article content
 - For research that needs many pages, consider using `execute_code` with curl instead of browser for RSS feeds
 - Always check the page title — if it contains "moment", "challenge", "captcha", or "sorry", the site blocked you
+
+## Media-gallery workaround (Fotto / Gabby)
+
+Some photo gallery sites render only low-res thumbnails in the DOM, while the real usable asset list is embedded in the server-rendered HTML.
+
+Procedure:
+1. Fetch the page HTML directly.
+2. Search for `self.__next_f.push(...)` / embedded JSON blobs.
+3. Extract the `medias` array and collect the `preview` URLs first.
+4. Only treat the browser DOM `<img>` URLs as thumbnails unless the page explicitly exposes a higher-res field.
+5. Do **not** waste time guessing `thumb` → `full` URL transformations unless the HTML or app bundle shows those paths exist.
+
+For the Gabby Produções event page we verified:
+- `thumbnail` = low-res thumb
+- `image` = higher-res public preview
+- full-res/original was not publicly reachable from the page HTML
+
+See `references/fotto-gallery-downloads.md` for a concise extraction recipe and observed URL patterns.
