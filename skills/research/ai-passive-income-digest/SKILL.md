@@ -71,7 +71,13 @@ Use the browser to search for CURRENT (last 30 days) ideas and opportunities. Fo
 - If a candidate is strong in the US but has a strong adjacent Brazil incumbent, narrow the wedge or exclude it rather than treating the market as blank.
 - Re-check incumbent AI positioning before calling Brazil underserved. If Brazil already has a strong adjacent incumbent, narrow the wedge or exclude the idea rather than cloning the US offer.
 - Prefer finalists that survive this explicit Brazil-gap validation step; reject ideas where the US proof is strong but the Brazil fit or differentiation remains weak.
-- See `references/brazil-rebuild-validation-2026-04-30.md` for reusable proof snippets and Brazil-gap notes on Slang AI, Assort Health, EliseAI, GovDash, Effecti, and the current best Brazil-first wedges. See `references/2026-05-12-brazil-gap-notes.md` for prior HN-query patterns and proof snippets. See `references/2026-05-14-digest-research-notes.md` and `references/2026-05-15-research-notes.md` for HN leads, proof snippets, and Brazil-incumbent checks.
+- See `references/brazil-rebuild-validation-2026-04-30.md` for reusable proof snippets and Brazil-gap notes on Slang AI, Assort Health, EliseAI, GovDash, Effecti, and the current best Brazil-first wedges. See `references/2026-05-12-brazil-gap-notes.md` for prior HN-query patterns and proof snippets. See `references/2026-05-14-digest-research-notes.md` and `references/2026-05-15-research-notes.md` for HN leads, proof snippets, and Brazil-incumbent checks. See `references/2026-05-19-session-signals.md` for the latest wedge-shaping notes from this session.
+
+**Brazil-gap validation (tightened):**
+- Before calling a market underserved, check whether an adjacent incumbent already owns the core workflow in Brazil.
+- If the incumbent is strong, narrow the US idea to a smaller workflow wedge rather than cloning the whole product.
+- For recruiting ideas, assume there is already an ATS/recruiting incumbent and validate against a narrower screening or agency sub-workflow.
+- For billing/usage metering and agent-email infra, the opportunity is more likely in self-serve infrastructure and localization than in brand-new category creation.
 
 **Research workflow refinements (2026-05-14):**
 - When HN Algolia is the source of truth, use the API directly with a browser User-Agent and query-only URL encoding; keep `created_at_i%3E...` in `numericFilters`.
