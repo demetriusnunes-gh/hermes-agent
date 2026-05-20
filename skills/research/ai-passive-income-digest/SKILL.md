@@ -89,6 +89,7 @@ Use the browser to search for CURRENT (last 30 days) ideas and opportunities. Fo
 - When browser snapshots are sparse, prefer direct HTML extraction with `urllib.request` or `curl` before abandoning a candidate.
 - See `references/2026-05-16-agent-workflow-market-signals.md` for recent examples and wedge notes.
 - See `references/2026-05-18-session-signals.md` for the latest proof snippets, Brazil-gap notes, and HN query patterns from this run.
+- See `references/2026-05-20-session-signals.md` for the latest validated leads (Voker, Superlog, Ardent) and which HN/query + pricing-page combinations were most productive.
 
 **Browser searches to perform (prioritized):**
 - "autonomous AI agent business ideas 2026" (via HN Algolia)
