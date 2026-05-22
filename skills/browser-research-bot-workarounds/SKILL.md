@@ -58,9 +58,9 @@ Research the web effectively while working around aggressive bot detection. The 
 ## Tips
 
 - Don't waste time retrying blocked sites — switch to alternatives immediately
-- Use `full=true` on browser_snapshot for article content
-- For research that needs many pages, consider using `execute_code` with curl instead of browser for RSS feeds
-- Always check the page title — if it contains "moment", "challenge", "captcha", or "sorry", the site blocked you
+- For marketing and pricing pages, try `browser_snapshot` first: many sites expose the key numbers directly in the DOM without needing extra scraping.
+- If the snapshot is sparse or omits prices, run `browser_console(expression='document.body.innerText')` before giving up; this often reveals the hidden text on JS-heavy pages.
+- For HN Algolia API pages that render as an empty browser page, use `browser_console(expression='document.body.innerText')` to extract the JSON payload directly.
 
 ## Media-gallery workaround (Fotto / Gabby)
 

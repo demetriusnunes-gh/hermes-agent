@@ -91,6 +91,7 @@ Use the browser to search for CURRENT (last 30 days) ideas and opportunities. Fo
 - See `references/2026-05-18-session-signals.md` for the latest proof snippets, Brazil-gap notes, and HN query patterns from this run.
 - See `references/2026-05-20-session-signals.md` for the latest validated leads (Voker, Superlog, Ardent) and which HN/query + pricing-page combinations were most productive.
 - See `references/2026-05-21-session-signals.md` for the latest HN query families, proof-page extraction snippets, and Brazil-gap notes from the newest digest run.
+- See `references/2026-05-22-agent-observability-market-scan.md` for a compact proof bank on LLMCap, Superlog, Tilde.run, Retroguard, Torrix, and Incidentary, plus the validation pattern that worked on this run.
 
 **Browser searches to perform (prioritized):**
 - "autonomous AI agent business ideas 2026" (via HN Algolia)
