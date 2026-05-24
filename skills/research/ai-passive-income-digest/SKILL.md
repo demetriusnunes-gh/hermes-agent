@@ -87,11 +87,13 @@ Use the browser to search for CURRENT (last 30 days) ideas and opportunities. Fo
 - Treat HN points/comments plus explicit pricing/customer/revenue claims as acceptable traction proxies for first-pass filtering; exclude ideas with thin or purely speculative evidence.
 - Use GitHub stars only as supporting context; they are not a substitute for pricing, customers, or revenue evidence.
 - When browser snapshots are sparse, prefer direct HTML extraction with `urllib.request` or `curl` before abandoning a candidate.
+- For pricing/traction pages, search the stripped text for exact tier strings, event caps, and funding claims (e.g. `$0 / month`, `30 Day Free Trial`, `raised $6M`, `pre-seed`) rather than relying on visible page chrome.
 - See `references/2026-05-16-agent-workflow-market-signals.md` for recent examples and wedge notes.
 - See `references/2026-05-18-session-signals.md` for the latest proof snippets, Brazil-gap notes, and HN query patterns from this run.
 - See `references/2026-05-20-session-signals.md` for the latest validated leads (Voker, Superlog, Ardent) and which HN/query + pricing-page combinations were most productive.
 - See `references/2026-05-21-session-signals.md` for the latest HN query families, proof-page extraction snippets, and Brazil-gap notes from the newest digest run.
 - See `references/2026-05-22-agent-observability-market-scan.md` for a compact proof bank on LLMCap, Superlog, Tilde.run, Retroguard, Torrix, and Incidentary, plus the validation pattern that worked on this run.
+- See `references/2026-05-24-session-signals.md` for the latest HN query patterns, pricing-page snippets, and Brazil-gap conclusions on Voker, AgentMail, and Outlit.
 
 **Browser searches to perform (prioritized):**
 - "autonomous AI agent business ideas 2026" (via HN Algolia)
@@ -99,7 +101,7 @@ Use the browser to search for CURRENT (last 30 days) ideas and opportunities. Fo
 - "self-running AI business" (via HN Algolia)
 - "AI agent revenue" (via HN Algolia)
 - "automated AI services" (via HN Algolia)
-- If those are sparse, broaden immediately to `Show HN AI`, `Launch HN AI`, `Show HN proposal`, `Show HN voice AI`, `Show HN email API`, and `Show HN guardrails`.
+- If those are sparse, broaden immediately to `Show HN AI`, `Launch HN AI`, `Show HN pricing AI`, `Show HN customers AI`, `Show HN proposal`, `Show HN voice AI`, `Show HN email API`, and `Show HN guardrails`.
 
 ### 2. Filter & Prioritize
 
