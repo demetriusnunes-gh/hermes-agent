@@ -21,6 +21,7 @@ Research the web effectively while working around aggressive bot detection. The 
 - **Bing**: `bing.com/search?q=QUERY` — partial results, use for general searches
 - **Brazilian news sites**: G1, Folha, UOL, Poder360, BBC Brasil — RSS and web pages work
 - **Direct URLs to known articles**: Most news sites work if you navigate directly
+- **Official event/tournament sites**: often better than search snippets for live results, draws, and match reports when the search engine is noisy
 - **Wikipedia**: No blocks
 - **GitHub**: No blocks
 
@@ -61,6 +62,10 @@ Research the web effectively while working around aggressive bot detection. The 
 - For marketing and pricing pages, try `browser_snapshot` first: many sites expose the key numbers directly in the DOM without needing extra scraping.
 - If the snapshot is sparse or omits prices, run `browser_console(expression='document.body.innerText')` before giving up; this often reveals the hidden text on JS-heavy pages.
 - For HN Algolia API pages that render as an empty browser page, use `browser_console(expression='document.body.innerText')` to extract the JSON payload directly.
+- For sports/event sites, prefer the official site homepage over search result pages. If the homepage is readable, use `browser_console` to enumerate anchor text/hrefs and jump straight to the relevant article/result page.
+- When Bing search results are polluted or misleading, query the official site directly with `browser_console(Array.from(document.querySelectorAll('a'))...)` rather than relying on search snippets.
+
+See `references/official-event-sites.md` for a worked example.
 
 ## Media-gallery workaround (Fotto / Gabby)
 
