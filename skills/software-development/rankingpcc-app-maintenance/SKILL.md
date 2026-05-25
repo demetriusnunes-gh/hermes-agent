@@ -26,6 +26,7 @@ Use a test-driven workflow for UI and parsing changes: add/adjust Vitest coverag
 - Sofascore parser/client: `/root/.www/rankingpcc/src/sofascoreTennisScores.js` and `src/sofascoreTennisScores.test.js` (kept as prior implementation/reference)
 - TNNS Live parser/client: `/root/.www/rankingpcc/src/tnnsliveTennisScores.js` and `src/tnnsliveTennisScores.test.js` (current live ticker source)
 - Homepage test: `/root/.www/rankingpcc/src/main.test.jsx`
+- Inactivity-penalty reference: `references/inactivity-penalty.md` (rolling 52-week activity window, 12-week annual grace, derived 5-point weekly penalty)
 - Tennis-score proxy service file: `/root/.www/rankingpcc/sofascore-proxy.mjs` (currently implemented with TNNS Live backend, while preserving the old public route)
 - Optional TNNS proxy source copy: `/root/.www/rankingpcc/tnnslive-proxy.mjs`
 - Repo Caddyfile copy: `/root/.www/rankingpcc/Caddyfile`
@@ -68,6 +69,13 @@ Use a test-driven workflow for UI and parsing changes: add/adjust Vitest coverag
    - Open `https://rankingpcc.demetriusnunes.com`
    - Check the accessibility snapshot for expected text
    - If visual layout matters, use browser vision/screenshot too
+
+## Ranking/Inactivity Notes
+
+- Ranking math lives in `src/ranking.js`; keep changes test-driven in `src/ranking.test.js`.
+- Inactivity penalties should be derived during `calculateRanking(...)`, not persisted as fake matches or permanent rating mutations.
+- Current policy: rolling 52-week window, one match makes that week active, 12 inactive weeks of grace per year, then -5 points per extra inactive week. See `references/inactivity-penalty.md` for details and deterministic test patterns.
+- Preserve both `baseRating` and penalized `rating` when inactivity is involved so tests/UI can separate Elo movement from decay.
 
 ## Tennis Ticker Notes
 
@@ -163,6 +171,28 @@ systemctl restart rankingpcc-sofascore-proxy.service
 ```
 
 If direct writes/copies into `/etc/systemd/system` or `/etc/caddy` are blocked by tool approval/timeouts, a practical workaround is to keep the service name and route unchanged, overwrite the repo proxy implementation (`sofascore-proxy.mjs`) with the desired backend, then kill the running node process and let systemd restart it.
+
+## Ranking Calculation Changes
+
+When changing `src/ranking.js`, keep ranking modifiers as derived fields rather than stored mutations or synthetic matches. Add/adjust `src/ranking.test.js` first, then expose only small transparent labels in `src/main.jsx` and document the rule under `/calculo`.
+
+For activity/inactivity-style rules, prefer the simplest user-stated benchmark and make the penalty reversible:
+
+- Compute normal Elo first.
+- Preserve `baseRating` when applying any derived penalty.
+- Add explicit fields such as `activityPenalty`, `gamesBehindLeader`, or similar so the UI can explain the adjusted `rating`.
+- Avoid calendar/week-based inactivity systems unless the user explicitly confirms the UX; they can look surprising in a club ranking. A rule relative to the most active player is easier to reason about: e.g. leader has N matches, each player loses X points per match behind leader.
+- Keep changes easy to revert by isolating ranking logic, tests, and the small UI/rules text patches.
+
+Verification for ranking-rule changes:
+
+```bash
+npm test -- --run src/ranking.test.js
+npm run build
+cp -a dist/. /var/www/rankingpcc/
+```
+
+Browser-verify `/calculo` after deploy to ensure the public explanation matches the implemented rule.
 
 ## Common Pitfalls
 
