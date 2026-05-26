@@ -42,7 +42,7 @@ Flag and report emails matching ANY of these:
 2. Kids' school — anything from or about "Eleva"
 3. Government — `.gov.br` sender domains, or subjects containing: intimação, notificação, comunicado, declaração, imposto, receita, INSS, detran, prefeitura, governo, multa, CNH, IPTU, IOF, IR
     - Pitfall: the keyword `ir` causes false positives on common Portuguese words like "partir", "sorrir", "vir" etc. When `ir` is the only government match, check that the sender domain is not a promotional/commercial one (e.g., contains words like "newsletter", "promo", "offer", "blog", "news" in the sender email or domain).
-   - Pitfall: `notificação` / `comunicado` alone can also false-positive on non-government automated mail (for example Google Calendar notifications). Do not flag those unless the sender or surrounding context also indicates an actual government/public-agency source.
+   - Pitfall: `notificação` / `comunicado` alone can also false-positive on non-government automated mail (for example Google Calendar notifications, corporate benefits mail, or employer communications). Do not flag those unless the sender itself clearly indicates an actual government/public-agency source.
    - Pitfall: `IR` / `ir` must be matched conservatively. Treat it as relevant only when it is a standalone tax/income signal with corroborating context; do **not** infer government relevance from common Portuguese words or from finance/travel/newsletters that merely contain similar text.
    - Pitfall: topical/news coverage about government (for example a newsletter or media outlet mentioning `governo`, `Itamaraty`, `Trump`, court news, etc.) is not itself a government email. If the sender is news/media/newsletter, treat it as irrelevant even when the subject discusses government affairs.
 4. Also flag:
@@ -350,4 +350,5 @@ Broaden the query window from `newer_than:2h` to `newer_than:1d`, then still ded
 - Calendar access should also use Google Workspace only.
 - The old Zapier MCP and IMAP approaches are deprecated for this workflow.
 - See `references/cron-dedup-auth-and-calendar.md` for live-run notes on partial auth, sender normalization, and all-day reminders.
-- See `references/recent-false-positives.md` for noise patterns and sender/body guardrails discovered during real runs.
+- `references/recent-false-positives.md` — noise patterns and sender/body guardrails discovered during real runs.
+- `references/2026-05-26-calendar-notification-and-comunicado-false-positives.md` — Google Calendar / generic-comunicado false positives and the stricter government-sender rule.
