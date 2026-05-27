@@ -71,6 +71,7 @@ Use the browser to search for CURRENT (last 30 days) ideas and opportunities. Fo
 - If a candidate is strong in the US but has a strong adjacent Brazil incumbent, narrow the wedge or exclude it rather than treating the market as blank.
 - Re-check incumbent AI positioning before calling Brazil underserved. If Brazil already has a strong adjacent incumbent, narrow the wedge or exclude the idea rather than cloning the US offer.
 - Prefer finalists that survive this explicit Brazil-gap validation step; reject ideas where the US proof is strong but the Brazil fit or differentiation remains weak.
+- **Extracting data from agent marketplaces:** When researching AI agent business ideas, agent marketplaces and revenue leaderboards (like AgentMRR) are valuable sources. Look for: 1) MRR/all-time revenue figures as traction proof, 2) detailed agent descriptions that reveal business models, 3) founder names for cross-referencing, 4) tags/categories that indicate market focus. Use browser snapshot to extract agent names, revenue figures, and descriptions. For paginated results, check multiple pages or adjust filters.
 - See `references/brazil-rebuild-validation-2026-04-30.md` for reusable proof snippets and Brazil-gap notes on Slang AI, Assort Health, EliseAI, GovDash, Effecti, and the current best Brazil-first wedges. See `references/2026-05-12-brazil-gap-notes.md` for prior HN-query patterns and proof snippets. See `references/2026-05-14-digest-research-notes.md` and `references/2026-05-15-research-notes.md` for HN leads, proof snippets, and Brazil-incumbent checks. See `references/2026-05-19-session-signals.md` for the latest wedge-shaping notes from this session.
 
 **Brazil-gap validation (tightened):**
@@ -88,6 +89,7 @@ Use the browser to search for CURRENT (last 30 days) ideas and opportunities. Fo
 - Use GitHub stars only as supporting context; they are not a substitute for pricing, customers, or revenue evidence.
 - When browser snapshots are sparse, prefer direct HTML extraction with `urllib.request` or `curl` before abandoning a candidate.
 - For pricing/traction pages, search the stripped text for exact tier strings, event caps, and funding claims (e.g. `$0 / month`, `30 Day Free Trial`, `raised $6M`, `pre-seed`) rather than relying on visible page chrome.
+- **Extracting data from agent marketplaces:** When researching AI agent business ideas, agent marketplaces and revenue leaderboards (like AgentMRR) are valuable sources. Look for: 1) MRR/all-time revenue figures as traction proof, 2) detailed agent descriptions that reveal business models, 3) founder names for cross-referencing, 4) tags/categories that indicate market focus. Use browser snapshot to extract agent names, revenue figures, and descriptions. For paginated results, check multiple pages or adjust filters.
 - See `references/2026-05-16-agent-workflow-market-signals.md` for recent examples and wedge notes.
 - See `references/2026-05-18-session-signals.md` for the latest proof snippets, Brazil-gap notes, and HN query patterns from this run.
 - See `references/2026-05-20-session-signals.md` for the latest validated leads (Voker, Superlog, Ardent) and which HN/query + pricing-page combinations were most productive.
@@ -95,6 +97,7 @@ Use the browser to search for CURRENT (last 30 days) ideas and opportunities. Fo
 - See `references/2026-05-22-agent-observability-market-scan.md` for a compact proof bank on LLMCap, Superlog, Tilde.run, Retroguard, Torrix, and Incidentary, plus the validation pattern that worked on this run.
 - See `references/2026-05-24-session-signals.md` for the latest HN query patterns, pricing-page snippets, and Brazil-gap conclusions on Voker, AgentMail, and Outlit.
 - See `references/2026-05-25-session-signals.md` for the latest proof combos and Brazil-gap notes on Pulse AI, Delegare, and Datapace.
+- See `references/2026-05-27-session-signals.md` for agent marketplace research signals and extraction techniques.
 
 **Browser searches to perform (prioritized):**
 - "autonomous AI agent business ideas 2026" (via HN Algolia)
@@ -138,7 +141,7 @@ Only surface the TOP 3 ideas. Format:
 3. [IDEA NAME]
    ...
 
-💡 Best bet tonight: One sentence on which idea has the best risk/reward ratio and why.
+Best Brazil rebuild bet: [strongest option] - [one sentence explanation]
 ```
 
 ## Tips
