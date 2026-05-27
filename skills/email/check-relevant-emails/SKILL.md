@@ -327,6 +327,8 @@ STATE_FILE.write_text(json.dumps(state, indent=2))
 7. Report failures if the Google Workspace check itself breaks.
 8. **When using google_api.py, do not add --format json flag** - JSON output is default and the flag is not recognized.
 
+9. **When google_api.py outputs plain text (e.g., "No messages found matching query:"), treat it as an empty result set, not as JSON.**
+
 ## Troubleshooting
 
 ### `NOT_AUTHENTICATED`
