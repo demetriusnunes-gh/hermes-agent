@@ -275,7 +275,7 @@ display:
     - context_pct
     - cwd
   copy_shortcut: auto
-  tool_progress: new
+  tool_progress: all
   background_process_notifications: all
 dashboard:
   theme: default
@@ -499,7 +499,7 @@ mcp_servers:
     timeout: 120
     connect_timeout: 60
 session_reset:
-  mode: none
+  mode: both
   idle_minutes: 1440
   at_hour: 4
 group_sessions_per_user: true
@@ -507,23 +507,7 @@ streaming:
   enabled: false
 platform_toolsets:
   cli:
-  - browser
-  - clarify
-  - code_execution
-  - computer_use
-  - cronjob
-  - delegation
-  - file
-  - image_gen
-  - memory
-  - messaging
-  - session_search
-  - skills
-  - terminal
-  - todo
-  - tts
-  - vision
-  - web
+  - hermes-cli
   telegram:
   - hermes-telegram
   discord:
@@ -540,6 +524,3 @@ WHATSAPP_HOME_CHANNEL: 203873557991626@lid
 TELEGRAM_HOME_CHANNEL: '8742978410'
 plugins:
   enabled: []
-known_plugin_toolsets:
-  cli:
-  - spotify
