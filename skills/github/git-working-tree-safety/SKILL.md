@@ -57,6 +57,8 @@ Use this skill when you need to commit and push changes from a checkout that may
 - `git add -A` should come after `git diff --name-status`, not before.
 - If a checkout contains unrelated files, keep them out of the commit unless they are part of the intended change.
 - If a path is a gitlink/submodule pointer, verify whether the pointer update is intentional before staging it.
+- When working under a parent checkout that already contains nested repos or gitlinks, verify the repo root with `git rev-parse --show-toplevel` before staging so you don't commit from the wrong level.
+- If `git status` in the parent repo shows a nested repo path as modified, inspect whether the parent is tracking a gitlink and make sure you intended to update the pointer rather than files inside the nested repo.
 - If push protection or secret scanning rejects the push, fix the commit content and re-push; do not retry the same tree unchanged.
 
 ## Verification
@@ -69,3 +71,4 @@ Before finishing, confirm:
 ## Reference
 
 See `references/writable-checkout-playbook.md` for a concise commit/push checklist and conflict-handling notes.
+See `references/nested-checkout-and-gitlink-notes.md` for a focused checklist on parent checkouts, nested repos, and gitlink hygiene.
