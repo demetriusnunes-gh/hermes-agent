@@ -359,31 +359,26 @@ Plus: AI Gateway, OpenCode Zen, OpenCode Go, MiniMax CN, GitHub Copilot ACP.
 
 #### Model Fallback Configuration
 
-Hermes supports automatic provider failover when the primary model is unavailable. Configure this in `config.yaml`:
+Hermes supports automatic provider failover when the primary model is unavailable. Use `fallback_providers` as the source of truth in `config.yaml`:
 
 ```yaml
 model:
-  default: gpt-5.5           # Primary model
+  default: gpt-5.4-mini
   provider: openai-codex
   base_url: https://chatgpt.com/backend-api/codex
 
-fallback_providers:          # Ordered list of fallback providers
+fallback_providers:          # Ordered list; tried in sequence
 - provider: openrouter
-  model: tencent/hy3-preview:free
+  model: openrouter/owl-alpha
 - provider: openrouter
   model: nvidia/nemotron-3-super-120b-a12b:free
 - provider: openrouter
-  model: inclusionai/ling-2.6-1t:free
-
-fallback_model:              # Primary fallback (tried before fallback_providers)
-  provider: openrouter
-  model: tencent/hy3-preview:free
+  model: openai/gpt-oss-120b:free
 ```
 
-**Important:** Do not duplicate the `fallback_model` entry under `fallback_providers` as this can interfere with proper fallback behavior. The agent will try:
-1. Primary model (`gpt-5.5` via `openai-codex`)
-2. `fallback_model` (`tencent/hy3-preview:free` via `openrouter`)
-3. Each entry in `fallback_providers` in order
+**Migration / pitfall:** `fallback_model` is a legacy single-dict key. Hermes still merges it into the effective chain, but `fallback_providers` remains primary and should be the only place you write new fallbacks. When migrating an old config, remove `fallback_model` after copying its entry into `fallback_providers` to avoid confusing “hidden” extra fallbacks in the effective chain.
+
+See `references/fallback-provider-chain.md` for the effective-chain rules and a migration note.
 
 Full provider docs: https://hermes-agent.nousresearch.com/docs/integrations/providers
 

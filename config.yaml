@@ -5,9 +5,11 @@ model:
 providers: {}
 fallback_providers:
 - provider: openrouter
-  model: tencent/hy3-preview:free
+  model: openrouter/owl-alpha
 - provider: openrouter
   model: nvidia/nemotron-3-super-120b-a12b:free
+- provider: openrouter
+  model: openai/gpt-oss-120b:free
 credential_pool_strategies:
   openrouter: fill_first
 toolsets:
@@ -485,9 +487,6 @@ x_search:
   timeout_seconds: 180
   retries: 2
 _config_version: 23
-fallback_model:
-  provider: openrouter
-  model: tencent/hy3-preview:free
 smart_model_routing:
   enabled: false
   max_simple_chars: 160
