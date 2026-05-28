@@ -196,6 +196,28 @@ git push origin main
 gh repo sync $GH_USER/repo-name
 ```
 
+### Safe Commit/Push Flow for a Working Checkout
+
+When you're operating on a live checkout that may already contain generated or user-owned changes, be explicit about the target remote/branch before committing:
+
+```bash
+# Inspect the tree you are about to modify
+git status --porcelain --ignore-submodules=none
+
+# Verify the writable remote actually exists and points where you expect
+git remote -v
+git ls-remote fork refs/heads/<branch>
+
+# Review only the intended changes before staging
+git diff --name-status
+git add -A
+git commit -m "<message>"
+
+git push fork HEAD:<branch>
+```
+
+If a push is rejected for secret scanning or push protection, remove the secret-bearing file from the commit and re-push; do not keep retrying the same tree. See `references/commit-push-fork-playbook.md` for the concise checklist used in Hermes-home checkouts.
+
 ## 4. Repository Information
 
 **With gh:**
