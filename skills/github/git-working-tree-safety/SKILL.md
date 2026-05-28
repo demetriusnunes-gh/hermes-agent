@@ -61,6 +61,7 @@ Use this skill when you need to commit and push changes from a checkout that may
 - If `git status` in the parent repo shows a nested repo path as modified, inspect whether the parent is tracking a gitlink and make sure you intended to update the pointer rather than files inside the nested repo.
 - If the parent repo shows a path as `M` with a `-dirty` subrepo pointer, inspect the nested repo's own `git status` before touching the parent; the parent may only be recording the nested repo's HEAD movement.
 - If a nested repo is present, compare `git -C <nested> rev-parse --show-toplevel` and `git -C <nested> status` with the parent checkout before deciding which repo to commit in.
+- In a parent checkout that contains a nested working tree, treat the nested repo as the default commit target unless you explicitly intend to update the parent gitlink pointer.
 - If push protection or secret scanning rejects the push, fix the commit content and re-push; do not retry the same tree unchanged.
 
 ## Verification

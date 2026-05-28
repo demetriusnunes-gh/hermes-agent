@@ -24,6 +24,7 @@ Gmail, Calendar, Drive, Contacts, Sheets, and Docs — through Hermes-managed OA
 ## References
 
 - `references/gmail-search-syntax.md` — Gmail search operators (is:unread, from:, newer_than:, etc.)
+- `references/zapier-calendar-find-events-quirks.md` — Calendar lookup quirks seen in this environment (explicit calendar ID, `startTime` enum)
 
 ## Scripts
 
@@ -204,6 +205,14 @@ $GAPI gmail modify MESSAGE_ID --remove-labels UNREAD
 # List events (defaults to next 7 days)
 $GAPI calendar list
 $GAPI calendar list --start 2026-03-01T00:00:00Z --end 2026-03-07T23:59:59Z
+```
+
+When using the Zapier MCP calendar finder, pass the calendar ID/email explicitly and use the case-sensitive ordering value `startTime`.
+
+```bash
+# Zapier MCP calendar finder: explicit calendar and exact ordering enum
+# (see references/zapier-calendar-find-events-quirks.md)
+```
 
 # Create event (ISO 8601 with timezone required)
 $GAPI calendar create --summary "Team Standup" --start 2026-03-01T10:00:00-06:00 --end 2026-03-01T10:30:00-06:00
