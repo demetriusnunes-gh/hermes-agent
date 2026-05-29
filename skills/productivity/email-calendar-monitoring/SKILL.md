@@ -1,0 +1,79 @@
+---
+name: email-calendar-monitoring
+description: "Scheduled Gmail inbox + Google Calendar monitoring with strict deduplication and [SILENT] on empty runs."
+version: 1.0.0
+author: Hermes Agent
+metadata:
+  hermes:
+    tags: [Email, Gmail, Calendar, Monitoring, Dedup, Google-Workspace, Cron]
+---
+
+# Email + Calendar Monitoring
+
+Use this skill for recurring scans of a user's Gmail inbox and Google Calendar when the goal is to surface only new, high-confidence items and stay silent otherwise.
+
+This is a monitoring workflow, not a general inbox browser. It should be conservative, deduplicated, and quiet on empty.
+
+## Primary backend
+
+Use the Google Workspace skill for all data access:
+- `productivity/google-workspace`
+- `scripts/google_api.py`
+- `scripts/setup.py --check`
+
+## Triggers
+
+Use this skill when the user asks for:
+- "check my email"
+- "any important emails?"
+- scheduled inbox/calendar scans
+- actionable reminders from Gmail or Calendar
+
+## Workflow
+
+1. Check Google auth first.
+2. Load `~/.hermes/state/email-check-state.json` before scanning.
+3. Scan Gmail and Calendar using Google Workspace only.
+4. Decide relevance conservatively.
+5. Deduplicate against both prior message/event ids and stable hashes before output.
+6. If nothing new survives deduplication, output exactly `[SILENT]`.
+7. If there are new items, update the state file in the same run before returning the report.
+
+## Deduplication rules
+
+- Gmail:
+  - dedupe on Gmail message id
+  - also dedupe on a stable hash of sender email + subject + date
+- Calendar:
+  - dedupe on a stable visible-field hash such as summary + start + end
+  - do not rely only on raw event ids when a visible-field hash is available
+- Normalize legacy hashes before comparison:
+  - treat bare SHA-256 digests and prefixed forms like `sha:` / `sha:event:` as equivalent
+- Keep the persistent lists bounded; trim old entries rather than allowing unbounded growth
+
+## Relevance rules
+
+Flag only high-confidence items, such as:
+- direct family contacts
+- school-related messages/events
+- government/public-agency messages
+- receipts, shipping, delivery, payment issues
+- real account/security alerts tied to an existing account or reservation
+- job/recruiter outreach
+- bills, statements, collection notices, investor/fund communications
+
+Be conservative:
+- ignore newsletters, promotions, bulk mail, and low-signal marketing
+- ignore generic calendar notifications unless the sender or content clearly indicates a real actionable item
+- do not treat a keyword match alone as sufficient when the sender is obviously promotional or media/newsletter traffic
+
+## Output rules
+
+- If no new relevant items remain after deduplication: `[SILENT]`
+- If auth fails: report the auth failure once, concisely
+- Otherwise: report only the new items that survived deduplication
+
+## Notes
+
+- This skill pairs with the Google Workspace auth/setup flow.
+- For session-specific false-positive patterns and normalization examples, see `references/false-positive-notes.md`.

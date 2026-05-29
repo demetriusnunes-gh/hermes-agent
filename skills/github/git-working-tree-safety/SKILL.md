@@ -73,11 +73,6 @@ Use this skill when you need to commit and push changes from a checkout that may
 - If a path is a gitlink/submodule pointer, verify whether the pointer update is intentional before staging it.
 - If the checkout contains a nested repo or submodule, inspect both layers before staging:
   - `git status --porcelain --ignore-submodules=none` at the parent root
-  - `git -C <nested> status --porcelain`
-  - commit the layer that actually owns the change, and only commit the parent if you intend to update the gitlink pointer
-- When a path or directory is suspicious, inspect the actual index entry before deciding what changed:
-  ```bash
-  git ls-files -s <path>
   - If the checkout contains a nested repo or submodule, inspect both layers before staging:
     - `git status --porcelain --ignore-submodules=none` at the parent root
     - `git -C <nested> rev-parse --show-toplevel` to confirm the nested repo root
@@ -88,9 +83,11 @@ Use this skill when you need to commit and push changes from a checkout that may
     - When `git add -A` emits `warning: adding embedded git repository`, stop and verify whether the nested repo should be committed on its own or whether you intentionally want to update the parent gitlink pointer.
     - When a checkout contains a path tracked as a gitlink (`mode 160000`) or a nested working tree without `.gitmodules`, use `git ls-files -s <path>` / `git ls-tree HEAD <path>` plus `git -C <path> status` to determine whether the real change lives inside the nested repo or in the parent pointer.
     - In a parent checkout that contains a nested working tree, treat the nested repo as the default commit target unless you explicitly intend to update the parent gitlink pointer.
+    - If the parent repo contains a submodule that itself contains another git repository, commit/push the inner repo first, then update and push the parent gitlink pointer.
     - If `git push` is rejected as non-fast-forward, fetch the remote tip, rebase or merge onto it, and retry; do not force-push unless that is explicitly the intended workflow.
     - See `references/nested-checkout-discovery.md` for a concise decision checklist and push-verification sequence.
     - See `references/parent-checkout-target-selection.md` for a broader parent-vs-nested selection checklist.
+    - See `references/embedded-repo-and-submodule-flow.md` for the observed flow when a parent repo contains a submodule that itself contains a nested git repository.
 
 ## Verification
 
@@ -101,6 +98,7 @@ Before finishing, confirm:
 
 ## Reference
 
-See `references/writable-checkout-playbook.md` for a concise commit/push checklist and conflict-handling notes.
-See `references/nested-checkout-and-gitlink-notes.md` for a focused checklist on parent checkouts, nested repos, and gitlink hygiene.
-See `references/parent-vs-nested-target-selection.md` for a short decision checklist when a parent checkout may contain the real target repo.
+- See `references/writable-checkout-playbook.md` for a concise commit/push checklist and conflict-handling notes.
+- See `references/nested-checkout-and-gitlink-notes.md` for a focused checklist on parent checkouts, nested repos, and gitlink hygiene.
+- See `references/parent-vs-nested-target-selection.md` for a short decision checklist when a parent checkout may contain the real target repo.
+- See `references/embedded-repo-and-submodule-flow.md` for the observed flow when a parent repo contains a submodule that itself contains a nested git repository.
