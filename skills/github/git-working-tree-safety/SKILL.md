@@ -29,27 +29,39 @@ Use this skill when you need to commit and push changes from a checkout that may
    ```bash
    git status --porcelain --ignore-submodules=none
    ```
-2. Verify the exact remote and branch you intend to push to.
+2. If the checkout may contain a nested repo, gitlink, or parent tracking pointer, inspect both layers before deciding where the real change lives.
+   ```bash
+   git ls-files -s <path>
+   git -C <nested> rev-parse --show-toplevel
+   git -C <nested> status --porcelain --ignore-submodules=none
+   ```
+   Treat the nested repo as the default commit target unless you explicitly intend to update the parent pointer.
+3. Verify the exact remote and branch you intend to push to.
    ```bash
    git remote -v
    git ls-remote <remote> refs/heads/<branch>
    ```
-3. Review the delta before staging.
+4. Review the delta before staging.
    ```bash
    git diff --name-status
    ```
-4. If Git reports unmerged paths, resolve them first; do not stage through conflict markers.
-5. Stage only after review.
+5. If Git reports unmerged paths, resolve them first; do not stage through conflict markers.
+6. Stage only after review.
    ```bash
    git add -A
    ```
-6. Commit with a message that describes the actual change.
+7. Commit with a message that describes the actual change.
    ```bash
    git commit -m "<message>"
    ```
-7. Push to the verified remote/branch explicitly.
+8. Push to the verified remote/branch explicitly.
    ```bash
    git push <remote> HEAD:<branch>
+   ```
+9. Verify the remote ref after push and confirm the local commit matches it.
+   ```bash
+   git rev-parse HEAD
+   git ls-remote <remote> refs/heads/<branch>
    ```
 
 ## Pitfalls
@@ -90,3 +102,4 @@ Before finishing, confirm:
 
 See `references/writable-checkout-playbook.md` for a concise commit/push checklist and conflict-handling notes.
 See `references/nested-checkout-and-gitlink-notes.md` for a focused checklist on parent checkouts, nested repos, and gitlink hygiene.
+See `references/parent-vs-nested-target-selection.md` for a short decision checklist when a parent checkout may contain the real target repo.
