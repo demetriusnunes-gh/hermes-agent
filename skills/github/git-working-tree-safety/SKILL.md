@@ -20,6 +20,7 @@ Use this skill when you need to commit and push changes from a checkout that may
 - The repository is not clean before your change.
 - You are working in a shared or long-lived checkout.
 - The remote target matters and must be verified explicitly.
+- The checkout may contain a nested repo, gitlink, or generated working tree inside a parent repo, and you need to identify the real commit target.
 - You need to recover from unmerged paths before committing.
 
 ## Core workflow
