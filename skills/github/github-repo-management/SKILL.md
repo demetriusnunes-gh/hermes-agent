@@ -220,7 +220,7 @@ If a push is rejected for secret scanning or push protection, remove the secret-
 
 If the checkout is a parent repo that contains a nested working tree, verify whether the nested path is tracked as a gitlink before staging the parent. A `mode 160000` entry means the parent is only tracking the nested repo pointer, so the nested repo is usually the true commit target.
 
-See `references/commit-push-fork-playbook.md` for the concise checklist used in Hermes-home checkouts.
+Before pushing, verify the remote branch exists with `git ls-remote <remote> refs/heads/<branch>` and confirm the remote ref matches the pushed commit afterward.
 
 ## 4. Repository Information
 
