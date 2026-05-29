@@ -41,6 +41,7 @@ Use this skill when you need to commit and push changes from a checkout that may
    git remote -v
    git ls-remote <remote> refs/heads/<branch>
    ```
+   If you created a fork for a repo you don't own, confirm that the local remote actually points to your fork before pushing. If not, add a dedicated remote (for example `fork`) explicitly and push to that remote instead of assuming `origin` is writable.
 4. Review the delta before staging.
    ```bash
    git diff --name-status

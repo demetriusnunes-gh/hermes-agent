@@ -163,6 +163,8 @@ curl -s -X POST \
 gh repo fork owner/repo-name --clone
 ```
 
+After forking, verify the local checkout actually has a usable remote for your fork. See `references/fork-remote-verification.md` for the short recovery checklist.
+
 **With git + curl:**
 
 ```bash
@@ -216,9 +218,9 @@ git commit -m "<message>"
 git push fork HEAD:<branch>
 ```
 
-If a push is rejected for secret scanning or push protection, remove the secret-bearing file from the commit and re-push; do not keep retrying the same tree.
+If `gh repo fork` was used, verify the fork exists with `gh repo view <you>/<repo>` and then confirm the local checkout has a remote pointing to that fork. If the expected remote is missing, add it explicitly with `git remote add fork git@github.com:<you>/<repo>.git` (or HTTPS) before pushing.
 
-If the checkout is a parent repo that contains a nested working tree, verify whether the nested path is tracked as a gitlink before staging the parent. A `mode 160000` entry means the parent is only tracking the nested repo pointer, so the nested repo is usually the true commit target.
+If a push is rejected for secret scanning or push protection, remove the secret-bearing file from the commit and re-push; do not keep retrying the same tree.
 
 Before pushing, verify the remote branch exists with `git ls-remote <remote> refs/heads/<branch>` and confirm the remote ref matches the pushed commit afterward.
 
