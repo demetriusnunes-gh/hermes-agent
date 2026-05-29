@@ -216,7 +216,11 @@ git commit -m "<message>"
 git push fork HEAD:<branch>
 ```
 
-If a push is rejected for secret scanning or push protection, remove the secret-bearing file from the commit and re-push; do not keep retrying the same tree. See `references/commit-push-fork-playbook.md` for the concise checklist used in Hermes-home checkouts.
+If a push is rejected for secret scanning or push protection, remove the secret-bearing file from the commit and re-push; do not keep retrying the same tree.
+
+If the checkout is a parent repo that contains a nested working tree, verify whether the nested path is tracked as a gitlink before staging the parent. A `mode 160000` entry means the parent is only tracking the nested repo pointer, so the nested repo is usually the true commit target.
+
+See `references/commit-push-fork-playbook.md` for the concise checklist used in Hermes-home checkouts.
 
 ## 4. Repository Information
 

@@ -25,6 +25,7 @@ Gmail, Calendar, Drive, Contacts, Sheets, and Docs — through Hermes-managed OA
 
 - `references/gmail-search-syntax.md` — Gmail search operators (is:unread, from:, newer_than:, etc.)
 - `references/zapier-calendar-find-events-quirks.md` — Calendar lookup quirks seen in this environment (explicit calendar ID, `startTime` enum)
+- `references/email-monitoring-dedup.md` — Stateful Gmail/Calendar monitoring pattern with persistent deduplication and [SILENT] behavior.
 
 ## Scripts
 
@@ -162,6 +163,7 @@ Should print `AUTHENTICATED`. Setup is complete — token refreshes automaticall
 
 - Token is stored at `~/.hermes/google_token.json` and auto-refreshes.
 - Pending OAuth session state/verifier are stored temporarily at `~/.hermes/google_oauth_pending.json` until exchange completes.
+- For scheduled monitoring jobs, follow `references/email-monitoring-dedup.md`: dedupe against persistent state before output, update state in the same run, and return exactly `[SILENT]` when nothing new survives deduplication.
 - If `gws` is installed, `google_api.py` points it at the same `~/.hermes/google_token.json` credentials file. Users do not need to run a separate `gws auth login` flow.
 - To revoke: `$GSETUP --revoke`
 

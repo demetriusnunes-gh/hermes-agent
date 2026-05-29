@@ -65,16 +65,17 @@ Use this skill when you need to commit and push changes from a checkout that may
 - When a path or directory is suspicious, inspect the actual index entry before deciding what changed:
   ```bash
   git ls-files -s <path>
-  git ls-tree HEAD <path>
-  ```
-  A mode `160000` entry means the parent repo is tracking a nested repo pointer, not normal files.
-- When working under a parent checkout that already contains nested repos or gitlinks, verify the repo root with `git rev-parse --show-toplevel` before staging so you don't commit from the wrong level.
-- If the parent checkout shows an untracked directory that is itself a git repo, treat the nested repo as the likely commit target and inspect it directly with `git -C <nested> status` before assuming the parent tree is relevant.
-- If the parent repo shows a path as `M` with a `-dirty` subrepo pointer, inspect the nested repo's own `git status` before touching the parent; the parent may only be recording the nested repo's HEAD movement.
-- If a nested repo is present, compare `git -C <nested> rev-parse --show-toplevel` and `git -C <nested> status` with the parent checkout before deciding which repo to commit in.
-- In a parent checkout that contains a nested working tree, treat the nested repo as the default commit target unless you explicitly intend to update the parent gitlink pointer.
+  - If the checkout contains a nested repo or submodule, inspect both layers before staging:
+    - `git status --porcelain --ignore-submodules=none` at the parent root
+    - `git -C <nested> status --porcelain`
+    - commit the layer that actually owns the change, and only commit the parent if you intend to update the gitlink pointer
+  - If the parent checkout shows an untracked directory that is itself a git repo, treat the nested repo as the likely commit target and inspect it directly with `git -C <nested> status` before assuming the parent tree is relevant.
+  - If the parent repo shows a path as `M` with a `-dirty` subrepo pointer, inspect the nested repo's own `git status` before touching the parent; the parent may only be recording the nested repo's HEAD movement.
+  - If a nested repo is present, compare `git -C <nested> rev-parse --show-toplevel` and `git -C <nested> status` with the parent checkout before deciding which repo to commit in.
+  - In a parent checkout that contains a nested working tree, treat the nested repo as the default commit target unless you explicitly intend to update the parent gitlink pointer.
+  - When a checkout contains a path that is tracked as a gitlink (`mode 160000`) but no `.gitmodules` entry is present, rely on `git ls-files -s <path>` / `git ls-tree HEAD <path>` plus `git -C <path> status` to determine whether the real change lives inside the nested repo or in the parent pointer.
 
-See `references/nested-checkout-discovery.md` for a concise checklist for distinguishing parent checkouts, nested git repos, and gitlink updates.
+  See `references/nested-checkout-discovery.md` for a concise checklist for distinguishing parent checkouts, nested git repos, and gitlink updates.
 
 ## Verification
 
