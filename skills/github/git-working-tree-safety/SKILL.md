@@ -48,6 +48,8 @@ Use this skill when you need to commit and push changes from a checkout that may
    ```
 5. If Git reports unmerged paths, resolve them first; do not stage through conflict markers.
 6. Stage only after review.
+   - Prefer explicit path staging (`git add <paths...>`) when the checkout contains unrelated runtime artifacts, generated trees, or other ambient noise.
+   - Use `git add -A` only when you have already confirmed the entire checkout is intended to be part of the commit.
    ```bash
    git add -A
    ```
@@ -102,3 +104,4 @@ Before finishing, confirm:
 - See `references/nested-checkout-and-gitlink-notes.md` for a focused checklist on parent checkouts, nested repos, and gitlink hygiene.
 - See `references/parent-vs-nested-target-selection.md` for a short decision checklist when a parent checkout may contain the real target repo.
 - See `references/embedded-repo-and-submodule-flow.md` for the observed flow when a parent repo contains a submodule that itself contains a nested git repository.
+- See `references/ambient-noise-checkout.md` for staging discipline in noisy workspace roots with lots of runtime artifacts.
