@@ -1,34 +1,34 @@
-# Nested Checkout Discovery Checklist
+# Nested checkout discovery checklist
 
-Use this when a top-level checkout contains suspicious untracked directories or when a parent repo may actually be tracking a nested working tree.
+Use this when a repo contains a nested working tree, submodule, or other git-linked directory and you need to decide which level should be committed.
 
-## Fast triage
+## Quick checks
 
-1. Identify the current repo root.
+1. Confirm the top-level repo root.
    ```bash
    git rev-parse --show-toplevel
    ```
-2. Check the parent tree status without submodule collapsing.
+2. Inspect the parent tree.
    ```bash
    git status --porcelain --ignore-submodules=none
+   git diff --name-status
    ```
-3. If an untracked directory appears, inspect whether it is a nested git repo.
+3. If a path looks like a repo, inspect it directly.
    ```bash
-   git -C <dir> rev-parse --show-toplevel
-   git -C <dir> status --porcelain --ignore-submodules=none
+   git -C <nested> rev-parse --show-toplevel
+   git -C <nested> status --porcelain
    ```
-4. Decide which repository is the real target:
-   - If the directory is a standalone git repo, commit there unless you explicitly intend to update the parent pointer.
-   - If the parent repo tracks it as a gitlink/submodule, confirm whether the pointer change is intentional before staging.
+4. Check whether the parent is tracking a gitlink.
+   ```bash
+   git ls-files -s <path>
+   git ls-tree HEAD <path>
+   ```
+   A mode `160000` entry means the parent is storing a nested repo pointer, not normal files.
+5. Decide the commit target before staging:
+   - If the nested repo owns the content change, commit inside the nested repo.
+   - If the parent should record the nested repo’s new SHA, commit the parent gitlink update.
+   - If the parent tree itself changed, commit the parent only.
 
-## Decision rule
+## Common pitfall
 
-- **Nested repo with its own `.git`** → usually commit in the nested repo.
-- **Parent repo shows only a gitlink movement** → treat it as a parent pointer update, not file-level changes.
-- **Untracked directory with no nested repo** → inspect contents before staging; it may be generated output.
-
-## Verification before commit
-
-- Compare parent and child `git status` outputs.
-- Confirm the intended repo has the changes.
-- Only then stage and commit.
+Do not stage the parent tree first and then discover the actual change was inside a nested repo. That usually turns a simple nested-repo update into a confusing parent-pointer commit.

@@ -57,6 +57,10 @@ Use this skill when you need to commit and push changes from a checkout that may
 - `git add -A` should come after `git diff --name-status`, not before.
 - If a checkout contains unrelated files, keep them out of the commit unless they are part of the intended change.
 - If a path is a gitlink/submodule pointer, verify whether the pointer update is intentional before staging it.
+- If the checkout contains a nested repo or submodule, inspect both layers before staging:
+  - `git status --porcelain --ignore-submodules=none` at the parent root
+  - `git -C <nested> status --porcelain`
+  - commit the layer that actually owns the change, and only commit the parent if you intend to update the gitlink pointer
 - When a path or directory is suspicious, inspect the actual index entry before deciding what changed:
   ```bash
   git ls-files -s <path>
