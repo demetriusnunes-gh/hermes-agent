@@ -57,6 +57,12 @@ Use this skill when you need to commit and push changes from a checkout that may
 - `git add -A` should come after `git diff --name-status`, not before.
 - If a checkout contains unrelated files, keep them out of the commit unless they are part of the intended change.
 - If a path is a gitlink/submodule pointer, verify whether the pointer update is intentional before staging it.
+- When a path or directory is suspicious, inspect the actual index entry before deciding what changed:
+  ```bash
+  git ls-files -s <path>
+  git ls-tree HEAD <path>
+  ```
+  A mode `160000` entry means the parent repo is tracking a nested repo pointer, not normal files.
 - When working under a parent checkout that already contains nested repos or gitlinks, verify the repo root with `git rev-parse --show-toplevel` before staging so you don't commit from the wrong level.
 - If the parent checkout shows an untracked directory that is itself a git repo, treat the nested repo as the likely commit target and inspect it directly with `git -C <nested> status` before assuming the parent tree is relevant.
 - If the parent repo shows a path as `M` with a `-dirty` subrepo pointer, inspect the nested repo's own `git status` before touching the parent; the parent may only be recording the nested repo's HEAD movement.
