@@ -75,22 +75,22 @@ Use this skill when you need to commit and push changes from a checkout that may
 - If a path is a gitlink/submodule pointer, verify whether the pointer update is intentional before staging it.
 - If the checkout contains a nested repo or submodule, inspect both layers before staging:
   - `git status --porcelain --ignore-submodules=none` at the parent root
-  - If the checkout contains a nested repo or submodule, inspect both layers before staging:
-    - `git status --porcelain --ignore-submodules=none` at the parent root
-    - `git -C <nested> rev-parse --show-toplevel` to confirm the nested repo root
-    - `git -C <nested> status --porcelain --ignore-submodules=none`
-    - commit the layer that actually owns the change, and only commit the parent if you intend to update the gitlink pointer or parent-tracked files
-    - If the parent checkout shows an untracked directory that is itself a git repo, treat the nested repo as the likely commit target and inspect it directly with `git -C <nested> status` before assuming the parent tree is relevant.
-    - If the parent repo shows a path as `M` with a `-dirty` subrepo pointer, inspect the nested repo's own `git status` before touching the parent; the parent may only be recording the nested repo's HEAD movement.
-    - When `git add -A` emits `warning: adding embedded git repository`, stop and verify whether the nested repo should be committed on its own or whether you intentionally want to update the parent gitlink pointer.
-    - When a checkout contains a path tracked as a gitlink (`mode 160000`) or a nested working tree without `.gitmodules`, use `git ls-files -s <path>` / `git ls-tree HEAD <path>` plus `git -C <path> status` to determine whether the real change lives inside the nested repo or in the parent pointer.
-    - In a parent checkout that contains a nested working tree, treat the nested repo as the default commit target unless you explicitly intend to update the parent gitlink pointer.
-    - If the parent repo contains a submodule that itself contains another git repository, commit/push the inner repo first, then update and push the parent gitlink pointer.
-    - If `git push` is rejected as non-fast-forward, fetch the remote tip, rebase or merge onto it, and retry; do not force-push unless that is explicitly the intended workflow.
-    - See `references/nested-checkout-discovery.md` for a concise decision checklist and push-verification sequence.
-    - See `references/parent-checkout-target-selection.md` for a broader parent-vs-nested selection checklist.
-    - See `references/embedded-repo-and-submodule-flow.md` for the observed flow when a parent repo contains a submodule that itself contains a nested git repository.
-
+  - `git -C <nested> rev-parse --show-toplevel` to confirm the nested repo root
+  - `git -C <nested> status --porcelain --ignore-submodules=none`
+  - commit the layer that actually owns the change, and only commit the parent if you intend to update the gitlink pointer or parent-tracked files
+  - If the parent checkout shows an untracked directory that is itself a git repo, treat the nested repo as the likely commit target and inspect it directly with `git -C <nested> status` before assuming the parent tree is relevant.
+  - If the parent repo shows a path as `M` with a `-dirty` subrepo pointer, inspect the nested repo's own `git status` before touching the parent; the parent may only be recording the nested repo's HEAD movement.
+  - When `git add -A` emits `warning: adding embedded git repository`, stop and verify whether the nested repo should be committed on its own or whether you intentionally want to update the parent gitlink pointer.
+  - When a checkout contains a path tracked as a gitlink (`mode 160000`) or a nested working tree without `.gitmodules`, use `git ls-files -s <path>` / `git ls-tree HEAD <path>` plus `git -C <path> status` to determine whether the real change lives inside the nested repo or in the parent pointer.
+  - In a parent checkout that contains a nested working tree, treat the nested repo as the default commit target unless you explicitly intend to update the parent gitlink pointer.
+  - If the nested repo has a fork branch for the intended publish target, verify the branch mapping explicitly with `git -C <nested> ls-remote <remote> refs/heads/<branch>` before assuming a push will move that branch.
+  - If the nested repo's current local branch is not the branch that should be published, push the correct local branch/HEAD pair explicitly (for example `git -C <nested> push <remote> HEAD:<branch>`) instead of assuming `git push <remote> <local-branch>` targets the right remote ref.
+  - If the parent repo contains a submodule that itself contains another git repository, commit/push the inner repo first, then update and push the parent gitlink pointer.
+  - If `git push` is rejected as non-fast-forward, fetch the remote tip, rebase or merge onto it, and retry; do not force-push unless that is explicitly the intended workflow.
+  - See `references/nested-checkout-discovery.md` for a concise decision checklist and push-verification sequence.
+  - See `references/parent-checkout-target-selection.md` for a broader parent-vs-nested selection checklist.
+  - See `references/embedded-repo-and-submodule-flow.md` for the observed flow when a parent repo contains a submodule that itself contains a nested git repository.
+  - See `references/nested-repo-without-gitmodules.md` for a worked example of a gitlink-style nested repo with no `.gitmodules` entry and the verification steps used to publish both layers cleanly.
 ## Verification
 
 Before finishing, confirm:

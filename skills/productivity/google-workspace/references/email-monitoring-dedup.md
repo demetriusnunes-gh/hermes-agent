@@ -20,6 +20,12 @@ When using this skill for scheduled inbox/calendar scans, treat duplicate alerts
 
 A thread-level hash is useful for mailing lists and multi-message threads because it prevents multiple alerts for the same conversation when Gmail surfaces several messages from the same thread.
 
+## Session notes
+
+- In Hermes workers, if a file read API returns an "unchanged since last read" stub, load the file directly from disk in the worker before deduplicating or updating it.
+- Some calendar finder wrappers validate the ordering enum case-sensitively and require `startTime` rather than `starttime` or `updated`.
+- Gmail monitoring is cleaner if you normalize on one canonical alert per thread after relevance filtering.
+
 ## False-positive guardrails seen in real runs
 
 - Google Calendar notification emails (for example from `calendar-notification@google.com` / Google Agenda) are **not** government mail just because the subject contains `Notificação` or other generic Portuguese words.

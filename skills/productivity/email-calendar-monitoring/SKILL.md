@@ -44,12 +44,19 @@ Use this skill when the user asks for:
 - Gmail:
   - dedupe on Gmail message id
   - also dedupe on a stable hash of sender email + subject + date
+  - when a thread contains multiple messages, collapse it to one alert per thread and choose the newest message as the canonical report item
 - Calendar:
   - dedupe on a stable visible-field hash such as summary + start + end
   - do not rely only on raw event ids when a visible-field hash is available
 - Normalize legacy hashes before comparison:
   - treat bare SHA-256 digests and prefixed forms like `sha:` / `sha:event:` as equivalent
 - Keep the persistent lists bounded; trim old entries rather than allowing unbounded growth
+
+## Implementation pitfalls
+
+- If a Hermes read of the state file returns an "unchanged since last read" stub, read the file directly from disk in the worker code before deduplicating or updating it.
+- For Gmail monitoring, do a thread-level canonicalization pass after relevance filtering so one conversation does not emit multiple alerts.
+- For Zapier calendar lookups in this environment, use the exact case-sensitive `ordering` value `startTime`.
 
 ## Relevance rules
 
