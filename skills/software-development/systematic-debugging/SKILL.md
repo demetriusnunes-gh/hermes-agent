@@ -158,6 +158,8 @@ search_files("variable_name\\s*=", path="src/", file_glob="*.py")
 
 **Find the pattern before fixing:**
 
+> See `references/order-tie-breakers.md` for a common variant: when primary sorting is by domain time, tie-break with creation time instead of `id` if the user expects registration order.
+
 ### 1. Find Working Examples
 
 - Locate similar working code in the same codebase
