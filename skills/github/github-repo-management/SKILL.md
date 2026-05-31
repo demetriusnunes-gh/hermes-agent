@@ -224,6 +224,8 @@ If a push is rejected for secret scanning or push protection, remove the secret-
 
 Before pushing, verify the remote branch exists with `git ls-remote <remote> refs/heads/<branch>` and confirm the remote ref matches the pushed commit afterward.
 
+If GitHub push protection blocks the push because a secret is present in reachable history, do not keep retrying the same ref. Rewrite a sanitized branch that removes the offending path/blob from history, verify the rewritten branch no longer contains the secret, and push that sanitized ref instead.
+
 ## 4. Repository Information
 
 **With gh:**

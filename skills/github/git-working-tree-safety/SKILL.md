@@ -88,10 +88,12 @@ Use this skill when you need to commit and push changes from a checkout that may
   - If the nested repo's current local branch is not the branch that should be published, push the correct local branch/HEAD pair explicitly (for example `git -C <nested> push <remote> HEAD:<branch>`) instead of assuming `git push <remote> <local-branch>` targets the right remote ref.
   - If the parent repo contains a submodule that itself contains another git repository, commit/push the inner repo first, then update and push the parent gitlink pointer.
   - If `git push` is rejected as non-fast-forward, fetch the remote tip, rebase or merge onto it, and retry; do not force-push unless that is explicitly the intended workflow.
+  - If GitHub push protection blocks a push because a secret exists anywhere in reachable history, stop retrying the same ref and rewrite a sanitized branch that removes the offending path or blob from history before pushing again. Verify the rewritten branch no longer contains the secret path/blobs, then push the sanitized ref.
   - See `references/nested-checkout-discovery.md` for a concise decision checklist and push-verification sequence.
   - See `references/parent-checkout-target-selection.md` for a broader parent-vs-nested selection checklist.
   - See `references/embedded-repo-and-submodule-flow.md` for the observed flow when a parent repo contains a submodule that itself contains a nested git repository.
   - See `references/nested-repo-without-gitmodules.md` for a worked example of a gitlink-style nested repo with no `.gitmodules` entry and the verification steps used to publish both layers cleanly.
+  - See `references/push-protection-remediation.md` for a minimal history-rewrite and verification recipe when push protection blocks a publish.
 ## Verification
 
 Before finishing, confirm:
