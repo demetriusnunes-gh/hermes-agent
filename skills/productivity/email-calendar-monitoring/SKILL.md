@@ -55,6 +55,7 @@ Use this skill when the user asks for:
 ## Implementation pitfalls
 
 - If a Hermes read of the state file returns an "unchanged since last read" stub, read the file directly from disk in the worker code before deduplicating or updating it.
+- Gmail search output can contain raw control characters or HTML-heavy snippets that break strict JSON parsing; use a tolerant parser, and if the search payload is messy, re-fetch the handful of candidate messages with `gmail get` before final relevance/dedup decisions.
 - For Gmail monitoring, do a thread-level canonicalization pass after relevance filtering so one conversation does not emit multiple alerts.
 - For Zapier calendar lookups in this environment, use the exact case-sensitive `ordering` value `startTime`.
 
