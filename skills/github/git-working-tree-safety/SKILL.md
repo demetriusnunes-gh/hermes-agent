@@ -79,6 +79,7 @@ Use this skill when you need to commit and push changes from a checkout that may
   - `git -C <nested> status --porcelain --ignore-submodules=none`
   - commit the layer that actually owns the change, and only commit the parent if you intend to update the gitlink pointer or parent-tracked files
   - If the parent checkout shows an untracked directory that is itself a git repo, treat the nested repo as the likely commit target and inspect it directly with `git -C <nested> status` before assuming the parent tree is relevant.
+- In noisy session-root checkouts like `/root/.hermes`, the real code checkout may be a nested repo (for example `/root/.hermes/hermes-agent`); verify the nested repo's branch, remotes, and `HEAD` before staging or pushing anything from the parent root.
   - If the parent repo shows a path as `M` with a `-dirty` subrepo pointer, inspect the nested repo's own `git status` before touching the parent; the parent may only be recording the nested repo's HEAD movement.
   - When `git add -A` emits `warning: adding embedded git repository`, stop and verify whether the nested repo should be committed on its own or whether you intentionally want to update the parent gitlink pointer.
   - When a checkout contains a path tracked as a gitlink (`mode 160000`) or a nested working tree without `.gitmodules`, use `git ls-files -s <path>` / `git ls-tree HEAD <path>` plus `git -C <path> status` to determine whether the real change lives inside the nested repo or in the parent pointer.
@@ -105,3 +106,4 @@ Before finishing, confirm:
 - See `references/parent-vs-nested-target-selection.md` for a short decision checklist when a parent checkout may contain the real target repo.
 - See `references/embedded-repo-and-submodule-flow.md` for the observed flow when a parent repo contains a submodule that itself contains a nested git repository.
 - See `references/ambient-noise-checkout.md` for staging discipline in noisy workspace roots with lots of runtime artifacts.
+- See `references/noisy-parent-root-nested-repo.md` for the `/root/.hermes`-style case where the parent is just runtime noise and the real repo is nested below it.
