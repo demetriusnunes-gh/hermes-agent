@@ -20,6 +20,7 @@ Use the Google Workspace skill for all data access:
 - `productivity/google-workspace`
 - `scripts/google_api.py`
 - `scripts/setup.py --check`
+- `references/session-notes.md` for session-proven parsing and dedup pitfalls
 
 ## Triggers
 
