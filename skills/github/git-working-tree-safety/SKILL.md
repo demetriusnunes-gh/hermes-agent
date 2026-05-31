@@ -36,6 +36,7 @@ Use this skill when you need to commit and push changes from a checkout that may
    git -C <nested> status --porcelain --ignore-submodules=none
    ```
    Treat the nested repo as the default commit target unless you explicitly intend to update the parent pointer.
+   If `git status` and `git diff` seem to disagree, use `git status --porcelain=v2` plus `git hash-object`/`git ls-files -s` to prove which layer actually changed; see `references/status-vs-diff-discrepancy.md`.
 3. Verify the exact remote and branch you intend to push to.
    ```bash
    git remote -v
@@ -79,7 +80,7 @@ Use this skill when you need to commit and push changes from a checkout that may
   - `git -C <nested> status --porcelain --ignore-submodules=none`
   - commit the layer that actually owns the change, and only commit the parent if you intend to update the gitlink pointer or parent-tracked files
   - If the parent checkout shows an untracked directory that is itself a git repo, treat the nested repo as the likely commit target and inspect it directly with `git -C <nested> status` before assuming the parent tree is relevant.
-- In noisy session-root checkouts like `/root/.hermes`, the real code checkout may be a nested repo (for example `/root/.hermes/hermes-agent`); verify the nested repo's branch, remotes, and `HEAD` before staging or pushing anything from the parent root.
+- In noisy session-root checkouts like `/root/.hermes`, the real code checkout may be the parent root itself or a nested repo below it; verify the owning repo's branch, remotes, and `HEAD` before staging or pushing anything.
   - If the parent repo shows a path as `M` with a `-dirty` subrepo pointer, inspect the nested repo's own `git status` before touching the parent; the parent may only be recording the nested repo's HEAD movement.
   - When `git add -A` emits `warning: adding embedded git repository`, stop and verify whether the nested repo should be committed on its own or whether you intentionally want to update the parent gitlink pointer.
   - When a checkout contains a path tracked as a gitlink (`mode 160000`) or a nested working tree without `.gitmodules`, use `git ls-files -s <path>` / `git ls-tree HEAD <path>` plus `git -C <path> status` to determine whether the real change lives inside the nested repo or in the parent pointer.
@@ -94,6 +95,7 @@ Use this skill when you need to commit and push changes from a checkout that may
   - See `references/embedded-repo-and-submodule-flow.md` for the observed flow when a parent repo contains a submodule that itself contains a nested git repository.
   - See `references/nested-repo-without-gitmodules.md` for a worked example of a gitlink-style nested repo with no `.gitmodules` entry and the verification steps used to publish both layers cleanly.
   - See `references/push-protection-remediation.md` for a minimal history-rewrite and verification recipe when push protection blocks a publish.
+  - See `references/status-vs-diff-discrepancy.md` for a hash-based way to resolve tracked-file status/diff mismatches in noisy workspaces.
 ## Verification
 
 Before finishing, confirm:
