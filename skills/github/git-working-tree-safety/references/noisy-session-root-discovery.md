@@ -1,28 +1,34 @@
 # Noisy session-root discovery
 
-Observed in `/root/.hermes`:
+Use this when working under `~/.hermes` or another long-lived session root that may contain both runtime artifacts and one or more nested git repositories.
 
-- The session root itself can be a Git repository with many runtime artifacts (`state.db`, `sessions/`, `cron/`, `profiles/`, `skills/.usage.json`, caches, locks, etc.).
-- A nested repo may also exist below it (for example `/root/.hermes/hermes-agent/`), and the nested repo can be the actual code target for publish work.
-- The parent repo and nested repo may each have their own remotes, branches, and `HEAD` states. Do not assume the outer repo is the codebase.
+## Quick sequence
 
-## Verification sequence
-
-1. Check the parent root first:
+1. Inspect the outer root first:
    ```bash
-   git -C /root/.hermes status --porcelain --ignore-submodules=none
-   git -C /root/.hermes remote -v
-   git -C /root/.hermes branch --show-current
+   git status --porcelain --ignore-submodules=none
+   git remote -v
+   git branch --show-current
    ```
-2. Discover nested repos with `find /root/.hermes -name .git -type d -prune` or equivalent.
-3. For any nested repo, inspect it independently:
+2. Enumerate nested repos before staging:
+   - look for child directories that are themselves git repositories
+   - check each candidate with:
+     ```bash
+     git -C <candidate> rev-parse --show-toplevel
+     git -C <candidate> status --porcelain --ignore-submodules=none
+     git -C <candidate> remote -v
+     git -C <candidate> branch --show-current
+     ```
+3. Decide the publish target by ownership, not by path similarity.
+   - Treat the noisy outer root as ambient state unless it is the intended repo.
+   - Prefer the nested repo as the commit target when the actual code lives there.
+4. Verify the exact remote branch before push:
    ```bash
-   git -C /root/.hermes/hermes-agent status --porcelain --ignore-submodules=none
-   git -C /root/.hermes/hermes-agent remote -v
-   git -C /root/.hermes/hermes-agent branch --show-current
+   git -C <repo> ls-remote <remote> refs/heads/<branch>
+   git -C <repo> rev-list --left-right --count <remote>/<branch>...HEAD
    ```
-4. Use `git ls-remote <remote> refs/heads/<branch>` before pushing to confirm the exact publish target exists.
+5. If a push to the intended remote is rejected as non-fast-forward, fetch and re-check what the remote tip is before retrying.
 
-## Pitfall
+## Why this matters
 
-In a noisy outer checkout, the parent tree can look like the active workspace even when the publish target is the nested repo. Verify ownership before staging or pushing anything.
+The outer session root often contains untracked caches, locks, snapshots, or other runtime files that should not be staged. The real publishable code may be a nested repository with its own branch and remotes, even when the outer checkout looks like the active workspace.

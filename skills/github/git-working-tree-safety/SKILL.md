@@ -112,3 +112,4 @@ Before finishing, confirm:
 - See `references/ambient-noise-checkout.md` for staging discipline in noisy workspace roots with lots of runtime artifacts.
 - See `references/noisy-parent-root-nested-repo.md` for the `/root/.hermes`-style case where the parent is just runtime noise and the real repo is nested below it.
   - See `references/noisy-session-root-discovery.md` for a compact discovery sequence when the outer session root is noisy and a nested repo is the real publish target.
+  - In `~/.hermes`-style workspaces, inspect the outer root and every nested repo before staging; the outer root is often ambient runtime noise, while the publishable code lives in a child repo with its own branch/remotes.
