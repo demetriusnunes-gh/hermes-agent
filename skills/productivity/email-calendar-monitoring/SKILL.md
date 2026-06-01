@@ -50,8 +50,16 @@ Use this skill when the user asks for:
   - dedupe on a stable visible-field hash such as summary + start + end
   - do not rely only on raw event ids when a visible-field hash is available
 - Normalize legacy hashes before comparison:
-  - treat bare SHA-256 digests and prefixed forms like `sha:` / `sha:event:` as equivalent
-- Keep the persistent lists bounded; trim old entries rather than allowing unbounded growth
+  - treat bare SHA-256 digests and prefixed forms like `sha:` / `sha:event:` / `sha:thread:` as equivalent
+- Treat the state file as the source of truth for suppression:
+  - load it before scanning
+  - filter candidates against both `notified_ids` and `notified_hashes` before any user-facing output
+  - update the same file in the same run only after the final candidate set is frozen
+  - keep the persistent lists bounded; trim old entries rather than allowing unbounded growth
+
+## Practical implementation note
+
+If a monitoring worker needs to repair or normalize old suppression state, rewrite the state file from a deduplicated in-memory snapshot rather than appending ad hoc. This prevents duplicate re-alerts when the same message or event is seen again in a later run.
 
 ## Implementation pitfalls
 
@@ -86,5 +94,6 @@ Be conservative:
 
 ## Notes
 
-- This skill pairs with the Google Workspace auth/setup flow.
-- For session-specific false-positive patterns and normalization examples, see `references/false-positive-notes.md`.
+This skill pairs with the Google Workspace auth/setup flow.
+For session-specific false-positive patterns and normalization examples, see `references/false-positive-notes.md`.
+For state-format and suppression normalization details, see `references/state-format.md`.
