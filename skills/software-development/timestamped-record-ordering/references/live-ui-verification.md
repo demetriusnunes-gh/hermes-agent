@@ -29,3 +29,5 @@ Use this when a timestamp-ordering change is deployed to a real site and you nee
 ## Pitfall
 
 If the code change is correct but the site still shows the old order, the issue is often that the deployed static assets were not refreshed or the browser is seeing a cached bundle. Verify the served HTML first, then the rendered UI.
+
+For local static previews, prefer serving the app over HTTP instead of opening `file:///.../index.html` directly. That makes the rendered DOM match the real browser origin and avoids blank or partial renders that can hide ordering bugs.

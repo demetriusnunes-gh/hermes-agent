@@ -178,3 +178,4 @@ Write one test that proves the result changes when `createdAt` changes, not when
 
 - `references/rankingpcc-createdAt-tiebreak.md` — compact case study with the ranking app fix, comparator shape, and the regression test that guards it.
 - `references/live-ui-verification.md` — live-site validation notes: stale bundle detection, cachebust checks, and browser-level confirmation of the rendered order.
+- `references/browser-dom-extraction.md` — DOM-query pattern for extracting rendered match rows and turning them into month-level analysis.
