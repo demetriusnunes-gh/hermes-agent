@@ -72,6 +72,15 @@ When the target market is Brazil, explicitly check:
 - SMB adoption patterns
 - local regulatory or data handling constraints
 - whether a strong Brazilian incumbent already owns the category
+- whether the smallest viable version is a single-upload -> single-outcome workflow (clip, dub, photo/listing) rather than a broad platform
+
+## Proof shortcuts
+For quick vetting, official homepage metrics and customer-proof signals are often enough if they are clear and recent. Good examples:
+- creator/user scale claims on the product homepage
+- download counts
+- business/customer counts
+- customer-logo pages or named case studies
 
 ## Reference material
 See `references/brazil-market-shortlist.md` for a concise example of the Brazil rebuild filtering criteria and the kinds of finalists/exclusions that passed this session's review.
+See `references/brazil-ai-passive-income-digest.md` for session notes on proof signals, Brazil-fit filters, and the shortlist pattern that worked here.
