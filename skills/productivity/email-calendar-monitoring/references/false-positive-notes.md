@@ -1,25 +1,14 @@
-# False-positive notes from monitoring runs
+# False-positive notes for email/calendar monitoring
 
-Concise notes for scheduled Gmail + Calendar monitoring.
+This file records sender/content patterns that looked relevant at first glance but should usually be ignored during scheduled monitoring.
 
-## Patterns to reject
+## Session examples
 
-- Promotional senders that contain security/account-like words in the subject or snippet.
-- Google Calendar notification emails that say things like "notificação" or "Você não tem nenhum evento programado para hoje" unless they are clearly actionable and high-confidence.
-- Commercial newsletters or promos that mention government topics; treat the sender context as decisive.
-- Calendar entries or reminders that are only generic reminders without a clear task.
+- **Nespresso** marketing mail about capsules running low: promotional; not actionable on its own.
+- **Let's Get Rusty** tutorial/newsletter content: editorial/promotional, not a high-confidence alert.
+- **Medium Weekly Digest** items: digest/newsletter traffic; ignore unless a specific direct account/security/payment issue is present.
+- **G1 / the news** newsletters discussing government or security topics: the sender is still a media/newsletter source, so treat as irrelevant for alerting.
 
-## Patterns to keep
+## Filtering reminder
 
-- Direct family contacts.
-- School communications from the school or school-domain senders.
-- Real security alerts for an actual account.
-- Shipping / order / payment notices with clear transaction context.
-
-## Dedup reminder
-
-Before producing user-facing output, remove every candidate already present in either:
-- `notified_ids`
-- `notified_hashes`
-
-If nothing survives, output `[SILENT]`.
+A keyword match such as "security", "login", "invoice", or "government" is not enough by itself. Keep the sender and message type in view, and only alert when the source is an actual account/system, biller, school, agency, or similarly high-confidence sender.

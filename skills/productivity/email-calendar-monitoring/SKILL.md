@@ -75,6 +75,8 @@ Be conservative:
 - ignore newsletters, promotions, bulk mail, and low-signal marketing
 - ignore generic calendar notifications unless the sender or content clearly indicates a real actionable item
 - do not treat a keyword match alone as sufficient when the sender is obviously promotional or media/newsletter traffic
+- media/newsletter senders stay irrelevant even when the subject discusses government, security, or finance topics
+- a promotional sender about an existing hobby or purchase history is still promotional unless the message is clearly an actionable account, billing, delivery, or security notice
 
 ## Output rules
 
