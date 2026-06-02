@@ -61,6 +61,8 @@ Use this skill when the user asks for:
 
 If a monitoring worker needs to repair or normalize old suppression state, rewrite the state file from a deduplicated in-memory snapshot rather than appending ad hoc. This prevents duplicate re-alerts when the same message or event is seen again in a later run.
 
+If a provisional scan surfaced low-signal items, do not keep them in the final suppression set. Rebuild the final candidate list from the conservative relevance filter, then rewrite the state from that final snapshot before reporting.
+
 ## Implementation pitfalls
 
 - If a Hermes read of the state file returns an "unchanged since last read" stub, read the file directly from disk in the worker code before deduplicating or updating it.
@@ -85,6 +87,7 @@ Be conservative:
 - do not treat a keyword match alone as sufficient when the sender is obviously promotional or media/newsletter traffic
 - media/newsletter senders stay irrelevant even when the subject discusses government, security, or finance topics
 - a promotional sender about an existing hobby or purchase history is still promotional unless the message is clearly an actionable account, billing, delivery, or security notice
+- when a broad inbox query returns digest/editorial senders, exclude them by sender class first; do not let topical keywords (for example security/finance/government) override the sender-type filter
 
 ## Output rules
 
