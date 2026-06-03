@@ -21,6 +21,7 @@ Use the Google Workspace skill for all data access:
 - `scripts/google_api.py`
 - `scripts/setup.py --check`
 - `references/session-notes.md` for session-proven parsing and dedup pitfalls
+- `references/state-rewrite-playbook.md` for tolerant state-file recovery and clean rewrite sequencing
 
 ## Triggers
 
@@ -66,6 +67,7 @@ If a provisional scan surfaced low-signal items, do not keep them in the final s
 ## Implementation pitfalls
 
 - If a Hermes read of the state file returns an "unchanged since last read" stub, read the file directly from disk in the worker code before deduplicating or updating it.
+- If the suppression state fails strict JSON parsing or appears to contain extra trailing data, recover with a tolerant parse path and rewrite a clean snapshot from memory rather than appending to the bad file.
 - Gmail search output can contain raw control characters or HTML-heavy snippets that break strict JSON parsing; use a tolerant parser, and if the search payload is messy, re-fetch the handful of candidate messages with `gmail get` before final relevance/dedup decisions.
 - For Gmail monitoring, do a thread-level canonicalization pass after relevance filtering so one conversation does not emit multiple alerts.
 - For Zapier calendar lookups in this environment, use the exact case-sensitive `ordering` value `startTime`.
