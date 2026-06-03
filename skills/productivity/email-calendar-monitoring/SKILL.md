@@ -90,6 +90,13 @@ Be conservative:
 - media/newsletter senders stay irrelevant even when the subject discusses government, security, or finance topics
 - a promotional sender about an existing hobby or purchase history is still promotional unless the message is clearly an actionable account, billing, delivery, or security notice
 - when a broad inbox query returns digest/editorial senders, exclude them by sender class first; do not let topical keywords (for example security/finance/government) override the sender-type filter
+- treat school portals and parent communication systems (for example Agenda Edu / Escola Eleva) as potentially high-confidence even when they land in `CATEGORY_UPDATES`; judge by whether the message is an actionable school notice, billing item, or document request rather than the category label alone
+
+## Scan hygiene
+
+- After a broad search, re-fetch the small final candidate set with `gmail get` if snippets are noisy, HTML-heavy, or packed with invisible characters.
+- Normalize candidate sender/subject/date before computing the stable Gmail hash so dedup stays consistent across different search result shapes.
+- When the candidate set is tiny, prefer one final conservative pass over outputting speculative alerts; silence is better than a false positive.
 
 ## Output rules
 
