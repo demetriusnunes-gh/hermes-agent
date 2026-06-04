@@ -1,6 +1,6 @@
 ---
 name: git-working-tree-safety
-description: "Safely commit and push from dirty or shared Git checkouts."
+description: "Safely commit, push, and publish from dirty or shared Git checkouts."
 version: 1.0.0
 author: Hermes Agent
 license: MIT
@@ -73,6 +73,34 @@ Use this skill when you need to commit and push changes from a checkout that may
    git rev-parse HEAD
    git ls-remote <remote> refs/heads/<branch>
    ```
+
+## Secure publication and push-protection
+
+Use this section when the repository is ready to publish but the push is blocked by permissions, branch protection, or secret-scanning rules.
+
+### Classify the failure
+
+- `403` / permission denied: the destination remote is not writable by the current account.
+- `GH013` / push protection: GitHub detected a secret somewhere in the branch history.
+- If two sibling directories look related, confirm they are distinct repositories before rewriting anything.
+
+### Safe recovery flow
+
+1. Identify the exact repo, branch, and remote you intend to publish.
+2. If history is contaminated, rewrite it in a disposable clone or throwaway worktree rather than in the only clean checkout.
+3. Remove the sensitive path or value from all reachable commits on the branch, not just the tip.
+4. Verify the sanitized history before pushing.
+5. Push the cleaned branch to a verified writable remote or fork.
+6. Confirm the remote ref points at the sanitized tip after the push.
+
+### Pitfalls specific to publication
+
+- Do not force-push contaminated history to a protected remote.
+- Do not assume `origin` is writable when a fork remote may be required.
+- Do not leave secret values in commit messages, logs, or notes.
+- Do not rewrite the only working copy unless that is explicitly intended.
+- If a push is rejected as non-fast-forward, fetch the remote tip and rebase or merge before retrying.
+- If push protection blocks the branch, stop retrying the same ref; create a sanitized branch instead and verify that the offending path or blob is absent from history.
 
 ## Pitfalls
 
