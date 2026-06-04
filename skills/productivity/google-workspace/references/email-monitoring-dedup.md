@@ -22,7 +22,7 @@ A thread-level hash is useful for mailing lists and multi-message threads becaus
 
 ## Session notes
 
-- In Hermes workers, if a file read API returns an "unchanged since last read" stub, load the file directly from disk in the worker before deduplicating or updating it.
+- In Hermes workers, if you need to parse the on-disk state as strict JSON, read the file directly from disk in the worker/terminal instead of using the line-numbered file reader output. The file reader is excellent for inspection, but its `LINE_NUM|CONTENT` formatting is not raw JSON.
 - Gmail search payloads can include raw control characters or very HTML-heavy snippets; if strict JSON parsing fails, switch to a tolerant parser and re-fetch the small final candidate set with `gmail get` before deciding relevance.
 - Some calendar finder wrappers validate the ordering enum case-sensitively and require `startTime` rather than `starttime` or `updated`.
 - Gmail monitoring is cleaner if you normalize on one canonical alert per thread after relevance filtering.
