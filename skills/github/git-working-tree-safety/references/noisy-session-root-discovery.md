@@ -1,46 +1,42 @@
-# Noisy Session-Root Discovery
+# Noisy session-root discovery checklist
 
-Use this when the outer workspace root is a Hermes session directory full of runtime artifacts, and the real publishable repository may be nested below it.
+Use this when working in a session-root checkout like `/root/.hermes/hermes-agent` where the outer tree may be ambient runtime noise and the real publish target may be a nested repo.
 
 ## Discovery sequence
 
-1. Inspect the outer root first:
+1. Identify the owning repo for the path you plan to publish:
    ```bash
-   git -C /root/.hermes status --porcelain --ignore-submodules=none
-   git -C /root/.hermes branch --show-current
-   git -C /root/.hermes remote -v
+   git rev-parse --show-toplevel
+   git status --porcelain --ignore-submodules=none
    ```
-2. Look for nested repositories rather than assuming the outer root is the target. In practice, scan for `.git/` directories and `.git` files that point to gitdirs:
+
+2. If the root contains a nested repo, inspect it directly:
    ```bash
-   python3 - <<'PY'
-   import os
-   root='/root/.hermes'
-   items=[]
-   for dirpath, dirnames, filenames in os.walk(root):
-       if dirpath != root and '.git' in dirnames:
-           items.append(dirpath)
-           dirnames[:] = []
-       if '.git' in filenames:
-           items.append(dirpath)
-   print('\n'.join(sorted(items)))
-   PY
+   git -C <nested> rev-parse --show-toplevel
+   git -C <nested> status --porcelain --ignore-submodules=none
+   git -C <nested> branch --show-current
+   git -C <nested> remote -v
    ```
-3. For each candidate repo, inspect it directly:
+
+3. Compare local HEAD to the intended remote branch before deciding to push:
    ```bash
-   git -C <repo> rev-parse --show-toplevel
-   git -C <repo> status --porcelain --ignore-submodules=none
-   git -C <repo> branch --show-current
-   git -C <repo> remote -v
+   git -C <nested> fetch <remote>
+   git -C <nested> rev-list --left-right --count <remote>/<branch>...HEAD
+   git -C <nested> ls-remote <remote> refs/heads/<branch>
    ```
-4. Pick the repo that actually owns the code changes and has the intended publish branch/remote. In `/root/.hermes`-style workspaces, that is often a child repo such as `/root/.hermes/hermes-agent`, not the noisy outer session root.
 
-## Verification cues
+4. If the local branch is behind or equal to the remote, do not assume a push is needed:
+   - `0\t0` means the branch already matches the remote.
+   - `N\t0` means local commits exist and can be pushed fast-forward.
+   - `0\tN` means the remote has newer work; rebase/merge first.
 
-- The outer root has many unrelated untracked runtime artifacts.
-- The nested repo has a clean working tree or the intended change set.
-- The nested repo's remotes point to the repository you actually want to publish.
-- If the nested repo contains further submodules or gitlinks, inspect them before staging the parent pointer.
+5. Push the exact repo/branch pair you verified:
+   ```bash
+   git -C <nested> push <remote> HEAD:<branch>
+   ```
 
-## Why this matters
+## Notes
 
-Avoids committing the outer session scaffolding by accident and makes push target selection explicit before any history is published.
+- This is a discovery checklist, not a replacement for `git-working-tree-safety`.
+- Use it when a top-level checkout and a nested repo both exist under the same session root.
+- Prefer the nested repo as the publish target unless you explicitly intend to update the parent gitlink pointer.

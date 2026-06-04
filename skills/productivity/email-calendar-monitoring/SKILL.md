@@ -21,6 +21,7 @@ Use the Google Workspace skill for all data access:
 - `scripts/google_api.py`
 - `scripts/setup.py --check`
 - `references/session-notes.md` for session-proven parsing and dedup pitfalls
+- `references/session-observations.md` for recent high-confidence sender/content examples and ignored noise patterns
 - `references/state-rewrite-playbook.md` for tolerant state-file recovery and clean rewrite sequencing
 
 ## Triggers

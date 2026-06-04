@@ -43,6 +43,12 @@ Use this skill when you need to commit and push changes from a checkout that may
    git ls-remote <remote> refs/heads/<branch>
    ```
    If you created a fork for a repo you don't own, confirm that the local remote actually points to your fork before pushing. If not, add a dedicated remote (for example `fork`) explicitly and push to that remote instead of assuming `origin` is writable.
+   Before pushing, compare local HEAD to the target branch so you know whether you are fast-forwarding, already up to date, or behind:
+   ```bash
+   git fetch <remote>
+   git rev-list --left-right --count <remote>/<branch>...HEAD
+   ```
+   Use the count to decide whether a push is needed (`N\t0`), unnecessary (`0\t0`), or should be preceded by a rebase/merge (`0\tN`).
 4. Review the delta before staging.
    ```bash
    git diff --name-status
