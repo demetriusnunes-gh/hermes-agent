@@ -66,7 +66,7 @@ When asked for a shortlist, answer in a compact table or bullets with:
 
 ## Brazil-specific lens
 When the target market is Brazil, explicitly check:
-- Portuguese language quality and tone
+- Portuguese output quality and tone
 - Pix/boleto/card payment behavior
 - WhatsApp-heavy workflows
 - SMB adoption patterns
@@ -74,8 +74,15 @@ When the target market is Brazil, explicitly check:
 - whether a strong Brazilian incumbent already owns the category
 - whether the smallest viable version is a single-upload -> single-outcome workflow (clip, dub, photo/listing) rather than a broad platform
 
+### High-signal Brazil rebuild archetypes
+When you need a fast shortlist, prioritize categories that already have a clear US leader and a narrow Brazil-first MVP:
+- WhatsApp / voice receptionist for SMB lead capture and booking
+- PT-BR meeting transcription, notes, and follow-up delivery
+- Ad creative generation for performance marketing teams and agencies
+- Product-photo / listing optimization for marketplaces and e-commerce sellers
+
 ## Proof shortcuts
-For quick vetting, official homepage metrics and customer-proof signals are often enough if they are clear and recent. Good examples:
+
 - creator/user scale claims on the product homepage
 - download counts
 - business/customer counts
@@ -84,3 +91,4 @@ For quick vetting, official homepage metrics and customer-proof signals are ofte
 ## Reference material
 See `references/brazil-market-shortlist.md` for a concise example of the Brazil rebuild filtering criteria and the kinds of finalists/exclusions that passed this session's review.
 See `references/brazil-ai-passive-income-digest.md` for session notes on proof signals, Brazil-fit filters, and the shortlist pattern that worked here.
+See `references/brazil-ai-passive-income-candidates.md` for a compact session note on the three strongest Brazil-first AI rebuild archetypes that repeatedly surfaced here.
