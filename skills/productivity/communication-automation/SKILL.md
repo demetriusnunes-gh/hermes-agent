@@ -77,6 +77,8 @@ Use this subsection when sending a WhatsApp message, scheduling a reminder, or v
 - Cron expressions should be treated as UTC.
 - Convert local time to UTC before storing or editing the schedule.
 - For recurring reminders, avoid repetitive phrasing that sounds machine-generated.
+- If the user gives only a *date* (no time), make the chosen default time explicit in the confirmation so the schedule is not ambiguous.
+- When a reminder is about a one-off obligation already handled by the user (for example, "already scheduled, just verify funds"), keep the reminder short and state the verification action rather than re-explaining the task.
 
 ## Pitfalls
 
