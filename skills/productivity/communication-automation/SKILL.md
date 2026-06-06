@@ -84,6 +84,41 @@ Use this subsection when sending a WhatsApp message, scheduling a reminder, or v
 - If the user gives only a *date* (no time), make the chosen default time explicit in the confirmation so the schedule is not ambiguous.
 - When a reminder is about a one-off obligation already handled by the user (for example, "already scheduled, just verify funds"), keep the reminder short and state the verification action rather than re-explaining the task.
 
+## Scheduled news digest pattern
+
+Use this subsection for cron-generated morning briefings, especially when the user wants an ultra-short world/Brazil/local/business digest.
+
+### Workflow
+
+1. Prefer live feed/search sources over memory.
+2. Query a small set of high-signal sources first; use broad news aggregation only as a fallback.
+3. Prioritize the requested geography or topic window before general headlines.
+4. Collapse similar stories and keep only the most consequential item from each bucket.
+5. If a delivery spec says to be ruthless about brevity, emit only the minimum number of stories allowed.
+6. If a requested specialized skill is unavailable, continue with the closest class-level workflow rather than stopping.
+7. If nothing high-confidence or materially relevant survives filtering, return exactly `[SILENT]`.
+
+### Source selection guidance
+
+- Favor Reuters for world/business and G1 for Brazil/São Paulo/Rio when available.
+- For regional digests, use targeted query terms such as `Brazil`, `São Paulo`, `Rio de Janeiro`, and any named company/topic like `DoorDash`.
+- Treat search results and feed items as candidates, not final stories; choose only the clearest, newest, and most relevant ones.
+- For market/company items, include a stock move line only when the update is materially relevant and recent.
+
+### Formatting guidance
+
+- Header should be date only.
+- Keep the total story count within the requested cap before writing.
+- One short bullet per story.
+- Avoid URLs unless a story cannot be identified otherwise.
+- Do not add explanation, caveats, or category subtitles unless explicitly requested.
+
+### Verification hints
+
+- Check that the final output matches the required line count before returning.
+- Verify that any silence decision is based on the absence of materially relevant items, not on a tool failure.
+- See `references/news-digesting.md` for a compact source-and-query recipe.
+
 ## Pitfalls
 
 - Do not confuse a monitoring workflow with a general inbox browser.
