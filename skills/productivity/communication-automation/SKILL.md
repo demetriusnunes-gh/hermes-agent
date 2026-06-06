@@ -42,6 +42,7 @@ Use this subsection when scanning Gmail or Calendar for new actionable items.
 ### Filtering guidance
 
 - Prefer high-confidence personal, billing, shipping, school, government, job, or account/security items.
+- Include workspace retention, deletion, or access-change warnings as actionable alerts when they materially affect access or data retention.
 - Ignore newsletters, promos, bulk mail, and low-signal marketing.
 - Do not promote a weak keyword match over an obviously promotional sender.
 - Treat category labels as hints, not truth.
@@ -51,6 +52,9 @@ Use this subsection when scanning Gmail or Calendar for new actionable items.
 
 - Use stable hashes over sender/subject/date or visible event fields when raw IDs are not enough.
 - Normalize legacy hash prefixes before comparing suppression entries.
+- For Google Workspace cron scans, prefer the CLI wrapper for deterministic JSON and re-fetch only the final candidate set.
+- Keep the suppression/state update in the same run as the final filtering step.
+- See `references/monitoring-workflow.md` for the concrete scan recipe.
 - Rewrite state snapshots cleanly if the on-disk file is malformed or stale.
 
 ## Outbound delivery pattern: WhatsApp reminders and sends
