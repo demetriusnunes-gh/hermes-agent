@@ -119,8 +119,10 @@ Use this section when the repository is ready to publish but the push is blocked
   - When `git add -A` emits `warning: adding embedded git repository`, stop and verify whether the nested repo should be committed on its own or whether you intentionally want to update the parent gitlink pointer.
   - When a checkout contains a path tracked as a gitlink (`mode 160000`) or a nested working tree without `.gitmodules`, use `git ls-files -s <path>` / `git ls-tree HEAD <path>` plus `git -C <path> status` to determine whether the real change lives inside the nested repo or in the parent pointer.
   - In a parent checkout that contains a nested working tree, treat the nested repo as the default commit target unless you explicitly intend to update the parent gitlink pointer.
-  - If the nested repo has a fork branch for the intended publish target, verify the branch mapping explicitly with `git -C <nested> ls-remote <remote> refs/heads/<branch>` before assuming a push will move that branch.
+  - In `~/.hermes`-style roots, assume the outer tree may be session/runtime noise until the nested repo is inspected directly.
+  - Before pushing, verify the exact remote branch mapping on the repo you are about to publish with `git -C <nested> ls-remote <remote> refs/heads/<branch>`.
   - If the nested repo's current local branch is not the branch that should be published, push the correct local branch/HEAD pair explicitly (for example `git -C <nested> push <remote> HEAD:<branch>`) instead of assuming `git push <remote> <local-branch>` targets the right remote ref.
+  - If the parent root and nested repo each have changes, publish the nested repo first, then update and push the parent gitlink pointer after verifying the nested remote ref.
   - If the parent repo contains a submodule that itself contains another git repository, commit/push the inner repo first, then update and push the parent gitlink pointer.
   - If `git push` is rejected as non-fast-forward, fetch the remote tip, rebase or merge onto it, and retry; do not force-push unless that is explicitly the intended workflow.
   - If GitHub push protection blocks a push because a secret exists anywhere in reachable history, stop retrying the same ref and rewrite a sanitized branch that removes the offending path or blob from history before pushing again. Verify the rewritten branch no longer contains the secret path/blobs, then push the sanitized ref.
@@ -145,6 +147,6 @@ Before finishing, confirm:
 - See `references/embedded-repo-and-submodule-flow.md` for the observed flow when a parent repo contains a submodule that itself contains a nested git repository.
 - See `references/ambient-noise-checkout.md` for staging discipline in noisy workspace roots with lots of runtime artifacts.
 - See `references/noisy-parent-root-nested-repo.md` for the `/root/.hermes`-style case where the parent is just runtime noise and the real code checkout is nested below it.
-  - See `references/noisy-session-root-discovery.md` for a compact discovery sequence when the outer session root is noisy and a nested repo is the real publish target.
-  - In `~/.hermes`-style workspaces, inspect the outer root and every nested repo before staging; the outer root is often ambient runtime noise, while the publishable code lives in a child repo with its own branch/remotes.
-  - Treat submodules with a `.git` gitdir file as separate commit targets during discovery; inspect their own status/remotes before assuming they are safe to ignore or that the parent pointer is the intended publish artifact.
+- See `references/noisy-session-root-discovery.md` for a compact discovery sequence when the outer session root is noisy and a nested repo is the real publish target.
+- See the new `references/noisy-session-root-discovery.md` note for the parent-vs-nested inspection and explicit push-refspec sequence.
+- In `~/.hermes`-style workspaces, inspect the outer root and every nested repo before staging; the outer root is often ambient runtime noise, while the publishable code lives in a child repo with its own branch/remotes.
