@@ -1,13 +1,18 @@
 # Brazil AI passive-income digest notes
 
-Session-specific evidence pattern for fast shortlist work:
+Session-specific evidence pattern for fast shortlist work.
 
 ## Strong proof signals used
-- **OpusClip**: official homepage says it helps **10M+ creators** create and grow faster.
-- **Photoroom**: official homepage says **300+ million downloads**.
-- **ElevenLabs**: official site says **1M+ users**, **10,000+ businesses**, and **5,000+ voices**.
+- **OpusClip**: official homepage says **10M+ creators** and **16M+ creators and businesses**.
+- **Photoroom**: official homepage says **300+ million downloads** and positions itself as the leading AI visual solution for e-commerce.
+- **ElevenLabs**: official homepage says **1M+ users** and **5,000+ voices**; the site also shows enterprise customer logos.
+- **Fireflies**: official homepage says **800,000+ companies**.
 
-These are good enough as first-pass traction signals when the goal is to find already-working US services that can be rebuilt for Brazil.
+## What worked in practice
+- Start with the official homepage first.
+- If the compact browser snapshot misses the traction claim, inspect the rendered DOM/page text or page source.
+- Avoid relying on third-party roundup pages when the official site is available.
+- Use the claim only if it is directly visible on the company site or clearly supported by it.
 
 ## Brazil-fit filters that mattered
 Keep only ideas that are:

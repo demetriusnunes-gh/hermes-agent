@@ -41,12 +41,15 @@ Produce a small, decision-ready shortlist of opportunities that are:
 
 ## Evidence standard
 Use at least one strong proof signal, preferably more than one:
-- official site claims about customers, usage, or scale
+- official site claims about customers, usage, downloads, or scale
 - reputable press coverage of funding, growth, revenue, or enterprise adoption
 - recognizable customer logos or testimonials
 - public usage statistics or user counts
 
 When possible, triangulate traction using multiple sources rather than relying on a single article.
+
+### Proof extraction tip
+Many modern landing pages hide the strongest traction claim in rendered DOM or page source rather than the compact browser snapshot. If the homepage snapshot is inconclusive, inspect the live page text/source before discarding the candidate. Prefer official-site wording over third-party roundup claims.
 
 ## Output shape
 When asked for a shortlist, answer in a compact table or bullets with:
@@ -56,6 +59,9 @@ When asked for a shortlist, answer in a compact table or bullets with:
 - fit rationale
 - smallest viable MVP
 - brief exclusion note if relevant
+- a final one-line recommendation naming the best rebuild bet and why
+
+Keep the shortlist tight (max 3 ideas) and concise; avoid filler explanations.
 
 ## Pitfalls
 - Do not treat a clever idea as a good opportunity unless there is proof of demand.

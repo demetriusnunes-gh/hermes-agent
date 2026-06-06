@@ -163,7 +163,8 @@ Should print `AUTHENTICATED`. Setup is complete — token refreshes automaticall
 
 - Token is stored at `~/.hermes/google_token.json` and auto-refreshes.
 - Pending OAuth session state/verifier are stored temporarily at `~/.hermes/google_oauth_pending.json` until exchange completes.
-- For scheduled monitoring jobs, follow `references/email-monitoring-dedup.md`: load persistent state first, dedupe on both stable IDs and stable hashes, drop all previously notified candidates before any user-facing output, update state in the same run, and return exactly `[SILENT]` when nothing new survives deduplication.
+- For scheduled monitoring jobs, follow `references/email-monitoring-dedup.md`: load persistent state first, dedupe on both `notified_ids` and `notified_hashes`, drop all previously seen Gmail/calendar candidates before any user-facing output, update the state file in the same run, and return exactly `[SILENT]` when nothing new survives deduplication.
+- Use the raw on-disk JSON for the state file when you need strict parsing; the line-numbered file reader is for inspection, not machine parsing.
 - When reading a JSON state file through Hermes file utilities, prefer a direct disk read in the worker/terminal if you need strict JSON parsing; the line-numbered file reader is for inspection, not parsing.
 - If `gws` is installed, `google_api.py` points it at the same `~/.hermes/google_token.json` credentials file. Users do not need to run a separate `gws auth login` flow.
 - To revoke: `$GSETUP --revoke`
