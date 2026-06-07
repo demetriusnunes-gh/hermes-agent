@@ -20,6 +20,8 @@ This skill covers two common patterns:
 
 - Prefer conservative filtering over broad extraction.
 - Deduplicate against both stable IDs and stable content hashes when available.
+- Load any persistent suppression file before scanning, and remove already-seen candidates before any user-facing output.
+- For state-hygiene details, see `references/email-calendar-state-hygiene.md`.
 - Stay silent when there is nothing high-confidence to report.
 - Treat scheduled jobs as UTC unless the scheduler explicitly says otherwise.
 - Verify the result from the backend response or state change before reporting success.
