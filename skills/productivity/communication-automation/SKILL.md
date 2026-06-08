@@ -22,10 +22,18 @@ This skill covers two common patterns:
 - Deduplicate against both stable IDs and stable content hashes when available.
 - Load any persistent suppression file before scanning, and remove already-seen candidates before any user-facing output.
 - For state-hygiene details, see `references/email-calendar-state-hygiene.md`.
+- For stale cron skill-name warnings and alias drift, see `references/legacy-skill-name-mismatch.md`.
 - Stay silent when there is nothing high-confidence to report.
 - Treat scheduled jobs as UTC unless the scheduler explicitly says otherwise.
 - Verify the result from the backend response or state change before reporting success.
 - Keep reminder text short, plain, and naturally varied when it repeats.
+
+## Skill-name hygiene for scheduled jobs
+
+- Treat `Skill(s) not found and skipped` as a warning that the job's skill layer was not loaded, not necessarily that the whole cron job failed.
+- When a scheduled workflow is renamed or split, update the cron job metadata to the current umbrella skill name or add a compatibility alias if the old name must persist.
+- Prefer one maintained umbrella skill with references over a chain of narrow legacy names in cron metadata.
+- When a job already contains the full prompt logic, removing a stale `skills` entry is often cleaner than preserving a dead alias.
 
 ## Inbound monitoring pattern: email + calendar
 
