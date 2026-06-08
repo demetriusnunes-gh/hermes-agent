@@ -63,6 +63,8 @@ Use this subsection when scanning Gmail or Calendar for new actionable items.
 
 Use this subsection when sending a WhatsApp message, scheduling a reminder, or verifying delivery.
 
+- See `references/whatsapp-target-resolution.md` for exact WhatsApp target resolution and bridge fallback details.
+
 ### Workflow
 
 1. Confirm the bridge or send backend is healthy.
