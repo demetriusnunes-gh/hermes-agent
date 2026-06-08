@@ -26,6 +26,16 @@ This usually means the job metadata is stale, not that Gmail/Calendar access is 
 - add a compatibility alias/wrapper skill if backward compatibility matters
 - remove the stale `skills` entry when the prompt already carries the full workflow
 
+## Example migrations from this session
+
+- `check-relevant-emails` → `google-workspace`
+- `news-daily-digest` → `communication-automation`
+- `ai-passive-income-digest` → `market-opportunity-vetting`
+- `nightly-agent-research-improvement` → remove the skill entry unless a current umbrella skill exists
+- `daily-self-update` → remove the skill entry unless a current umbrella skill exists
+
+When the prompt already states the workflow in full, leaving the old narrow skill name in place only adds warning noise. Prefer the umbrella skill or no skill entry at all.
+
 ## Verification
 
 - inspect `cron/jobs.json`
