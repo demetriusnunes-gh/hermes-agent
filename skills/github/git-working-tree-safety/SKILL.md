@@ -60,15 +60,20 @@ Use this skill when you need to commit and push changes from a checkout that may
    ```bash
    git add -A
    ```
-7. Commit with a message that describes the actual change.
+7. If the intended files are ignored by a local `.gitignore` rule, verify that explicitly before staging.
+   ```bash
+   git check-ignore -v <path>
+   ```
+   If the path is intentionally part of the change, stage it with `git add -f <path>` rather than broadening the commit to unrelated ignored files.
+8. Commit with a message that describes the actual change.
    ```bash
    git commit -m "<message>"
    ```
-8. Push to the verified remote/branch explicitly.
+9. Push to the verified remote/branch explicitly.
    ```bash
    git push <remote> HEAD:<branch>
    ```
-9. Verify the remote ref after push and confirm the local commit matches it.
+10. Verify the remote ref after push and confirm the local commit matches it.
    ```bash
    git rev-parse HEAD
    git ls-remote <remote> refs/heads/<branch>
