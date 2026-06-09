@@ -6,16 +6,17 @@ When using this skill for scheduled inbox/calendar scans, treat duplicate alerts
 
 1. Load persistent state before scanning, e.g. `~/.hermes/state/email-check-state.json`.
 2. The state file may contain both `notified_ids` and `notified_hashes`; treat either one as sufficient to suppress a candidate.
-3. For Gmail, dedupe on both:
+3. Normalize hash tokens before comparison: treat bare SHA-256 digests and prefixed forms like `sha:` / `sha:event:` as equivalent so legacy state still dedupes cleanly.
+4. For Gmail, dedupe on both:
    - the Gmail message id, and
    - a computed stable hash for the notification unit (prefer thread-level hash if you want one alert per thread).
-4. For Calendar, dedupe on both:
+5. For Calendar, dedupe on both:
    - the event id, and
    - a computed stable hash from summary/start/end/location/description (or equivalent stable fields).
-5. Remove any candidate already present in either `notified_ids` or `notified_hashes` before producing user-facing output.
-6. If no new candidates remain, output exactly `[SILENT]`.
-7. If new candidates remain, update the same state file in the same run before returning the report.
-8. If auth fails, report the auth failure once concisely instead of replaying prior alerts.
+6. Remove any candidate already present in either `notified_ids` or `notified_hashes` before producing user-facing output.
+7. If no new candidates remain, output exactly `[SILENT]`.
+8. If new candidates remain, update the same state file in the same run before returning the report.
+9. If auth fails, report the auth failure once concisely instead of replaying prior alerts.
 
 ## Practical note
 
