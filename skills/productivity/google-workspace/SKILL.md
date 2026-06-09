@@ -164,6 +164,7 @@ Should print `AUTHENTICATED`. Setup is complete — token refreshes automaticall
 - Token is stored at `~/.hermes/google_token.json` and auto-refreshes.
 - Pending OAuth session state/verifier are stored temporarily at `~/.hermes/google_oauth_pending.json` until exchange completes.
 - For scheduled monitoring jobs, follow `references/email-monitoring-dedup.md`: load persistent state first, dedupe on both `notified_ids` and `notified_hashes`, drop all previously seen Gmail/calendar candidates before any user-facing output, update the state file in the same run, and return exactly `[SILENT]` when nothing new survives deduplication.
+- When scanning Gmail + Calendar together, build the final report from the exact post-dedup candidate list you persisted; do not hand-rewrite or trim the list from memory after state updates, or a newly detected item can be omitted from the user-facing result.
 - If cron output says `Skill(s) not found and skipped`, check whether the job still points at a legacy skill name; see `references/legacy-cron-skill-name-mismatch.md`.
 - For cron jobs, prefer current umbrella skill names over archived narrow names; if the prompt already contains the full workflow, remove the stale `skills` entry instead of keeping a dead reference around.
 - Use the raw on-disk JSON for the state file when you need strict parsing; the line-numbered file reader is for inspection, not machine parsing.

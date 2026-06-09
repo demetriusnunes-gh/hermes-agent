@@ -27,6 +27,7 @@ A thread-level hash is useful for mailing lists and multi-message threads becaus
 - Gmail search payloads can include raw control characters or very HTML-heavy snippets; if strict JSON parsing fails, switch to a tolerant parser and re-fetch the small final candidate set with `gmail get` before deciding relevance.
 - Some calendar finder wrappers validate the ordering enum case-sensitively and require `startTime` rather than `starttime` or `updated`.
 - Gmail monitoring is cleaner if you normalize on one canonical alert per thread after relevance filtering.
+- For combined Gmail + Calendar scans, keep a single post-dedup candidate list and render the final report directly from that exact list after the state file has been updated. Do not hand-rewrite or trim the report from memory, or a newly detected item can be accidentally omitted even though it was persisted.
 
 ## False-positive guardrails seen in real runs
 
