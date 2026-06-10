@@ -110,6 +110,8 @@ hermes status [--all]       Show component status
 
 ### Tools & Skills
 
+Discovery notes for the skills hub and cross-session recall live in `references/skill-discovery-session-recall.md`.
+
 ```
 hermes tools                Interactive tool enable/disable (curses UI)
 hermes tools list           Show all tools and status
