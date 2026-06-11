@@ -27,8 +27,9 @@ A thread-level hash is useful for mailing lists and multi-message threads becaus
 - In Hermes workers, if you need to parse the on-disk state as strict JSON, read the file directly from disk in the worker/terminal instead of using the line-numbered file reader output. The file reader is excellent for inspection, but its `LINE_NUM|CONTENT` formatting is not raw JSON.
 - Gmail search payloads can include raw control characters or very HTML-heavy snippets; if strict JSON parsing fails, switch to a tolerant parser and re-fetch the small final candidate set with `gmail get` before deciding relevance.
 - Some calendar finder wrappers validate the ordering enum case-sensitively and require `startTime` rather than `starttime` or `updated`.
-- Gmail monitoring is cleaner if you normalize on one canonical alert per thread after relevance filtering.
+- Gmail monitoring is cleaner if you normalize on one canonical alert per thread after relevance filtering. When collapsing a thread, persist **all Gmail message IDs observed in that thread**, not just the representative message ID, so later Gmail searches cannot re-alert a sibling message from the same conversation.
 - For combined Gmail + Calendar scans, keep a single post-dedup candidate list and render the final report directly from that exact list after the state file has been updated. Do not hand-rewrite or trim the report from memory, or a newly detected item can be accidentally omitted even though it was persisted.
+- Treat the dedup state file as safety-critical: if `~/.hermes/state/email-check-state.json` is missing, initialize it; if it exists but cannot be parsed, fail closed with a concise state/auth-style error instead of alerting from an empty state, because duplicate notifications are worse than a missed cron run.
 
 ## False-positive guardrails seen in real runs
 
