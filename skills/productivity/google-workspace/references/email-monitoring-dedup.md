@@ -35,4 +35,5 @@ A thread-level hash is useful for mailing lists and multi-message threads becaus
 
 - Google Calendar notification emails (for example from `calendar-notification@google.com` / Google Agenda) are **not** government mail just because the subject contains `Notificação` or other generic Portuguese words.
 - Treat newsletter/media senders as irrelevant even when they discuss government topics in the subject or body; the sender still needs to be an actual official source.
+- Treat provider newsletters and promotional bank/financial marketing as irrelevant even if they contain generic health/security/finance words (for example Care Plus newsletters or Itaú account ads); require a concrete actionable item such as an appointment, bill, statement, due date, login/security alert, or school notice.
 - When a calendar or inbox notification is clearly just a reminder/update and not a real actionable item, keep it out of the alert set unless it matches a high-confidence school/financial/security case.
