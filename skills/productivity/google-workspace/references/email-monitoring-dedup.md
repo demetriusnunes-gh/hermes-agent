@@ -47,6 +47,14 @@ A thread-level hash is useful for mailing lists and multi-message threads becaus
 - Add a final deterministic sanity filter over the exact alert list immediately before persisting and returning it. This last pass should enforce hard exclusions (sports/news digests, newsletters, promos, Google Calendar notification emails) even if earlier heuristic code marked them relevant. If a false positive is noticed after the state update, repair the state in the same run by removing those IDs/hashes and return the corrected final output (often `[SILENT]`) rather than delivering the stale pre-repair report.
 - When writing helper scripts in Python, do not pass shell parameter-expansion syntax like `${HERMES_HOME:-$HOME/.hermes}` to `os.path.expandvars`; Python will not interpret the `:-default` form. Resolve defaults explicitly with `os.environ.get('HERMES_HOME') or str(Path.home()/'.hermes')` before constructing paths to `google_api.py` or `setup.py`.
 - In cron monitors, if `setup.py --check` succeeds but `google_api.py` fails through the optional `gws` backend with an OAuth/invalid-credentials message, verify with the bundled Python backend before reporting auth failure. A practical way is to run `google_api.py` with a `PATH` that excludes the Hermes node bin containing `gws` (or otherwise ensure `_gws_binary()` is false), while keeping the same `~/.hermes/google_token.json`. Use the Hermes/agent virtualenv Python that has the Google API dependencies installed (for example the active Hermes venv), not a bare system `python3` that may lack `googleapiclient`. Treat this as a backend fallback, not as permission to replay old alerts.
+  - Concrete cron-safe fallback pattern:
+    ```bash
+    PATH=/usr/local/sbin:/usr/sbin:/usr/bin:/sbin:/bin \
+      /root/.hermes/hermes-agent/venv/bin/python \
+      /root/.hermes/skills/productivity/google-workspace/scripts/google_api.py \
+      gmail search "in:inbox newer_than:1d" --max 100
+    ```
+    Use the same prefix for `calendar list`. This forces `_gws_binary()` to be false in environments where the `gws` backend is present but using stale/invalid credentials, while still using the Hermes OAuth token through the Python client.
 - Calendar scans should not treat every upcoming event as alert-worthy by default; apply the same relevance standard as Gmail unless the monitoring job explicitly asks to report all new calendar events.
 - When a calendar or inbox notification is clearly just a reminder/update and not a real actionable item, keep it out of the alert set unless it matches a high-confidence school/financial/security case.
 - Do not treat a recipient/name personalization alone (for example “Demetrius, …” marketing subject lines) as relevance. Personalization is common in promos/newsletters; require concrete transaction evidence, a school/financial/security source, or an explicit required action.
