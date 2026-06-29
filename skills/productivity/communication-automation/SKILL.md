@@ -33,7 +33,15 @@ This skill covers two common patterns:
 - Treat `Skill(s) not found and skipped` as a warning that the job's skill layer was not loaded, not necessarily that the whole cron job failed.
 - When a scheduled workflow is renamed or split, update the cron job metadata to the current umbrella skill name or add a compatibility alias if the old name must persist.
 - Prefer one maintained umbrella skill with references over a chain of narrow legacy names in cron metadata.
-- When a job already contains the full prompt logic, removing a stale `skills` entry is often cleaner than preserving a dead alias.
+- When a job already contains the full prompt logic, removing a stale `skills` entry is often cleaner than keeping a dead reference around.
+
+## Model/provider hygiene for scheduled communication jobs
+
+- If a recurring communication job is important or user-facing, inspect its stored `model`, `provider`, and `base_url` fields when debugging failures or creating/updating the job.
+- `model: null` / `provider: null` means the job inherits the current global model config and fallback chain. That can unexpectedly route through a fallback model the user never explicitly chose for that job.
+- When the user is surprised by a cron job using an unexpected model, explain the distinction between an explicit per-job override and inherited global fallback selection.
+- To prevent future surprise on critical monitoring jobs, pin the intended provider/model on the job with a per-job model override after verifying the current default is the desired one.
+- Do not preserve deprecated/free OpenRouter fallbacks in job-specific configuration; prefer the intended default provider/model or a maintained fallback chain.
 
 ## Inbound monitoring pattern: email + calendar
 
