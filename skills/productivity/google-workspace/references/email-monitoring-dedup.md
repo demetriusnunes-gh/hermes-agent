@@ -22,6 +22,8 @@ When using this skill for scheduled inbox/calendar scans, treat duplicate alerts
 
 A thread-level hash is useful for mailing lists and multi-message threads because it prevents multiple alerts for the same conversation when Gmail surfaces several messages from the same thread.
 
+Do **not** use only a coarse thread-level hash for transactional senders that can place distinct real-world items in the same Gmail thread. Amazon/payment/order-style failures with the same subject may represent separate orders minutes apart; include a stable transaction key such as order number, reservation/confirmation number, invoice/boleto id, or total+message id in the hash so one failed order does not suppress another.
+
 ## Session notes
 
 - In Hermes workers, if you need to parse the on-disk state as strict JSON, read the file directly from disk in the worker/terminal instead of using the line-numbered file reader output. The file reader is excellent for inspection, but its `LINE_NUM|CONTENT` formatting is not raw JSON.
