@@ -17,7 +17,14 @@ The outer Hermes home usually contains sensitive or noisy runtime artifacts. Do 
    git -C /root/.hermes add -u config.yaml skills
    ```
 2. Add only intended new durable library content, e.g. new skill directories under `skills/`.
-3. Leave private/runtime paths untracked unless the user explicitly asks otherwise: `auth*.json`, token files, caches, DBs, sessions, cron output, profile homes, audio/cache folders, gateway locks/PIDs, and other live state.
+3. In a live `/root/.hermes` tree, start with a dry-run or name-only audit before committing:
+   ```bash
+   git add -n <paths...>
+   git diff --cached --name-only
+   git diff --cached --shortstat
+   ```
+   This helps confirm that the staged set is confined to durable profile/skill content instead of runtime noise.
+4. Leave private/runtime paths untracked unless the user explicitly asks otherwise: `auth*.json`, token files, caches, DBs, sessions, cron output, profile homes, audio/cache folders, gateway locks/PIDs, and other live state.
 
 ## Pre-commit checks
 

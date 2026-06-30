@@ -29,6 +29,7 @@ Use this skill when you need to commit and push changes from a checkout that may
    ```bash
    git status --porcelain --ignore-submodules=none
    ```
+   In a noisy runtime root like `/root/.hermes`, also summarize the top-level shape with `git status --porcelain=v2` so you can distinguish durable source changes from ambient runtime artifacts.
 2. If the checkout may contain a nested repo, gitlink, or parent tracking pointer, inspect both layers before deciding where the real change lives.
    ```bash
    git ls-files -s <path>
@@ -52,32 +53,38 @@ Use this skill when you need to commit and push changes from a checkout that may
 4. Review the delta before staging.
    ```bash
    git diff --name-status
+   git diff --cached --name-only
    ```
+   For live Hermes home roots, treat the outer tree as allowlist-only: stage tracked durable files and explicit skill/content directories, and keep auth, caches, databases, sessions, cron output, locks, and other live-state paths out of the commit unless the user explicitly asked for them.
 5. If Git reports unmerged paths, resolve them first; do not stage through conflict markers.
 6. Stage only after review.
    - Prefer explicit path staging (`git add <paths...>`) when the checkout contains unrelated runtime artifacts, generated trees, or other ambient noise.
    - Use `git add -A` only when you have already confirmed the entire checkout is intended to be part of the commit.
-   ```bash
-   git add -A
-   ```
+   - If the staged set is large, recheck it before committing with `git diff --cached --name-only` and `git diff --cached --shortstat`.
 7. If the intended files are ignored by a local `.gitignore` rule, verify that explicitly before staging.
    ```bash
    git check-ignore -v <path>
    ```
    If the path is intentionally part of the change, stage it with `git add -f <path>` rather than broadening the commit to unrelated ignored files.
-8. Commit with a message that describes the actual change.
+8. Run pre-commit hygiene on the staged set before committing.
+   ```bash
+   git diff --cached --check
+   ```
+   Fix trailing whitespace and blank-line-at-EOF issues before the commit, especially in generated markdown or bulk-added reference files.
+9. Commit with a message that describes the actual change.
    ```bash
    git commit -m "<message>"
    ```
-9. Push to the verified remote/branch explicitly.
+10. Push to the verified remote/branch explicitly.
    ```bash
    git push <remote> HEAD:<branch>
    ```
-10. Verify the remote ref after push and confirm the local commit matches it.
+11. Verify the remote ref after push and confirm the local commit matches it.
    ```bash
    git rev-parse HEAD
    git ls-remote <remote> refs/heads/<branch>
    ```
+   The remote tip should match HEAD exactly; if it does not, re-check the refspec and remote target before retrying.
 
 ## Secure publication and push-protection
 
