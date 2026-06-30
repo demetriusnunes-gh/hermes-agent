@@ -157,5 +157,6 @@ Before finishing, confirm:
 - See `references/noisy-parent-root-nested-repo.md` for the `/root/.hermes`-style case where the parent is just runtime noise and the real code checkout is nested below it.
 - See `references/noisy-session-root-discovery.md` for a compact discovery sequence when the outer session root is noisy and a nested repo is the real publish target.
 - See `references/hermes-runtime-root-backup.md` for the allowlist staging, secret-scan, whitespace-check, and push-verification sequence when the outer Hermes home itself is the backup/publish target.
+- See `references/roger-hermes-root-publish.md` for the recurring `/root/.hermes` publish checklist and the outer-root allowlist staging rule.
 - See the new `references/noisy-session-root-discovery.md` note for the parent-vs-nested inspection and explicit push-refspec sequence.
 - In `~/.hermes`-style workspaces, inspect the outer root and every nested repo before staging; the outer root is often ambient runtime noise, while the publishable code lives in a child repo with its own branch/remotes.
