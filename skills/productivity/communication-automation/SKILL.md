@@ -80,6 +80,7 @@ Use this subsection when scanning Gmail or Calendar for new actionable items.
 Use this subsection when sending a WhatsApp message, scheduling a reminder, or verifying delivery.
 
 - See `references/whatsapp-target-resolution.md` for exact WhatsApp target resolution and bridge fallback details.
+- See `references/whatsapp-send-verification.md` for a minimal health-check + send + response-verification recipe and short recurring reminder phrasing.
 
 ### Workflow
 
