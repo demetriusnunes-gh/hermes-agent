@@ -46,7 +46,7 @@ The production ranking now uses a doubles Elo model plus zero-sum activity redis
 - The homepage should show latest club ranking results as a slim, horizontally animated ticker, not an external TNNS/Sofascore live feed.
 - Keep a “Resultados” page/view for all reported club results.
 - Do not reintroduce the tennis curiosities widget unless explicitly asked.
-- Ranking should be tabular and include simulation-style columns in this order: position, player, rating, matches, W-L, win %, **Games Δ** (game differential; do not label it “Saldo”), Elo Δ, net activity delta (`participationBonus - inactivityPenalty`), and streak. Do not include a “Último jogo” column on the main ranking table unless explicitly requested.
+- Ranking should be tabular and include simulation-style columns in this order: position, player, rating, **Perf** (pure performance rating = initial rating + cumulative Elo Δ, excluding participation bonus and inactivity penalties), matches, W-L, win %, **Games Δ** (game differential; do not label it “Saldo”), Elo Δ, net activity delta (`participationBonus - inactivityPenalty`), and streak. Every ranking table column should be sortable ascending/descending via its header. Do not include a “Último jogo” column on the main ranking table unless explicitly requested.
 - Match result cards should be clickable and expand calculation details, including participation bonus and per-player before/after deltas.
 - Homepage ticker result pills should be compact two-line items: first line date + format, second line winner/loser/score. Use structural wrappers such as `.slim-meta` and `.slim-main` so tests and responsive CSS can verify the line split.
 - User-facing best-of-3 labels should be simplified: both `best_of_3_super` and `best_of_3_full` display as “melhor de 3” even though K/activity logic still distinguishes them internally.
@@ -87,7 +87,7 @@ The production ranking now uses a doubles Elo model plus zero-sum activity redis
 - [ ] `npm run build` passes.
 - [ ] Static assets copied to `/var/www/rankingpcc/`.
 - [ ] Production browser snapshot shows latest PCC results and ranking table columns.
-- [ ] DOM inspection confirms ranking table headers exactly match the requested order and removed columns are absent.
+- [ ] DOM inspection confirms ranking table headers exactly match the requested order, including `Perf`, removed columns are absent, and header buttons sort text/numeric columns ascending/descending.
 - [ ] DOM inspection confirms ticker items have `.slim-meta` for date/format and `.slim-main` for teams/score.
 - [ ] A match card expands to calculation details including participation bonus.
 - [ ] Git commit created after verification.
