@@ -70,7 +70,7 @@ Keep the shortlist tight (max 3 ideas) and concise; avoid filler explanations.
 - Do not confuse generic AI novelty with durable demand.
 - If live verification is limited, say so clearly and keep confidence calibrated.
 
-## Brazil-specific lens
+### Brazil-specific lens
 When the target market is Brazil, explicitly check:
 - Portuguese output quality and tone
 - Pix/boleto/card payment behavior
@@ -79,6 +79,21 @@ When the target market is Brazil, explicitly check:
 - local regulatory or data handling constraints
 - whether a strong Brazilian incumbent already owns the category
 - whether the smallest viable version is a single-upload -> single-outcome workflow (clip, dub, photo/listing) rather than a broad platform
+
+### Brazil incumbent sweep
+Before keeping a US winner, do a quick local-incumbent sanity check for the category. If Brazil already has several visible native tools, exclude the idea unless there is a clear wedge (better WhatsApp workflow, stronger PT-BR localization, materially simpler workflow, or a distribution advantage).
+
+Categories that are often crowded in Brazil and need a sharper wedge to survive:
+- WhatsApp/voice receptionist and lead qualification
+- PT-BR meeting transcription / notes / follow-up
+- Ad creative generation for performance teams and agencies
+- Product-photo / listing optimization for marketplaces
+- AI website builders
+- Help desk / customer support AI
+- Review-generation / reputation tools
+
+### Proof gathering in practice
+Prefer official landing pages, pricing pages, customer pages, case studies, and funding announcements. If the homepage snippet is thin, use the rendered page text or search-result snippet from the official site before discarding a candidate; traction claims are often surfaced there rather than in compact summaries.
 
 ### High-signal Brazil rebuild archetypes
 When you need a fast shortlist, prioritize categories that already have a clear US leader and a narrow Brazil-first MVP:
@@ -98,3 +113,4 @@ When you need a fast shortlist, prioritize categories that already have a clear 
 See `references/brazil-market-shortlist.md` for a concise example of the Brazil rebuild filtering criteria and the kinds of finalists/exclusions that passed this session's review.
 See `references/brazil-ai-passive-income-digest.md` for session notes on proof signals, Brazil-fit filters, and the shortlist pattern that worked here.
 See `references/brazil-ai-passive-income-candidates.md` for a compact session note on the three strongest Brazil-first AI rebuild archetypes that repeatedly surfaced here.
+See `references/brazil-local-incumbent-sweep.md` for a compact checklist of categories that are often already crowded in Brazil and the MVP bias that tends to work.
