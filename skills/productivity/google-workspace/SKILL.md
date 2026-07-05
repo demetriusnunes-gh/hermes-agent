@@ -31,6 +31,7 @@ Gmail, Calendar, Drive, Contacts, Sheets, and Docs — through Hermes-managed OA
 
 - `scripts/setup.py` — OAuth2 setup (run once to authorize)
 - `scripts/google_api.py` — compatibility wrapper CLI. It prefers `gws` for operations when available, while preserving Hermes' existing JSON output contract.
+- `references/google-tasks-direct-api-fallback.md` — direct Google Tasks API fallback when the bridge wrapper rejects task updates.
 
 ## First-Time Setup
 
@@ -171,6 +172,7 @@ Should print `AUTHENTICATED`. Setup is complete — token refreshes automaticall
 - Use the raw on-disk JSON for the state file when you need strict parsing; the line-numbered file reader is for inspection, not machine parsing.
 - When reading a JSON state file through Hermes file utilities, prefer a direct disk read in the worker/terminal if you need strict JSON parsing; the line-numbered file reader is for inspection, not parsing.
 - If `gws` is installed, `google_api.py` points it at the same `~/.hermes/google_token.json` credentials file. Users do not need to run a separate `gws auth login` flow.
+- For Google Tasks maintenance, if the bridge wrapper reports `Missing task ID` on `tasks update`, fall back to the direct REST API PATCH flow documented in `references/google-tasks-direct-api-fallback.md`.
 - To revoke: `$GSETUP --revoke`
 
 ## Usage
