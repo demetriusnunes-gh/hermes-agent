@@ -7,6 +7,8 @@ Session-specific reminder for recurring cron jobs that ask to "commit and push r
 - The nested repo at `/root/.hermes/hermes-agent` can be clean while the outer `/root/.hermes` tree still contains durable, publishable changes or root-level noise.
 - A publish check should inspect the outer root and nested repos separately before returning `[SILENT]`.
 - For the outer root, stage by allowlist rather than `git add -A` so runtime artifacts stay out of the commit.
+- If the outer root contains an untracked binary or build artifact, verify its ownership before staging; treat it as suspicious until you confirm it belongs to the intended publish target.
+- In recurring jobs, inspect every nested repo that may be in scope for the same publish request (for example `hermes-agent` and `tinker-atropos`) before declaring silence.
 
 ## Minimal decision sequence
 
