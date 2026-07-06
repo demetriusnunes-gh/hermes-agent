@@ -108,6 +108,14 @@ Types: `feat`, `fix`, `refactor`, `docs`, `test`, `ci`, `chore`, `perf`
 git push -u origin HEAD
 ```
 
+If `gh auth status` works but `git fetch`/`git push` over HTTPS fails with `fatal: could not read Username for 'https://github.com': No such device or address`, wire Git to the authenticated GitHub CLI credential helper first:
+
+```bash
+export HOME=/root  # on this VPS, HOME may be unset in terminal sessions
+gh auth setup-git
+git push -u origin HEAD
+```
+
 ### Create the PR
 
 **With gh:**
