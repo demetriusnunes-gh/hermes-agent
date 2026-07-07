@@ -1,18 +1,38 @@
-# Roger Hermes /root/.hermes publish note
+# `/root/.hermes` publish checklist
 
-Session-specific reminder for recurring cron jobs that ask to "commit and push roger hermes code under /root/.hermes".
+Use this checklist for recurring cron jobs that need to publish the outer Hermes home or verify that nothing publishable changed.
 
-## What this session showed
+## What to inspect
 
-- The nested repo at `/root/.hermes/hermes-agent` can be clean while the outer `/root/.hermes` tree still contains durable, publishable changes or root-level noise.
-- A publish check should inspect the outer root and nested repos separately before returning `[SILENT]`.
-- For the outer root, stage by allowlist rather than `git add -A` so runtime artifacts stay out of the commit.
-- If the outer root contains an untracked binary or build artifact, verify its ownership before staging; treat it as suspicious until you confirm it belongs to the intended publish target.
-- In recurring jobs, inspect every nested repo that may be in scope for the same publish request (for example `hermes-agent` and `tinker-atropos`) before declaring silence.
+1. Check the outer root first.
+   - `git status --porcelain=v2 --ignore-submodules=none`
+   - Summarize untracked files by top-level directory when the tree is noisy.
+2. Check any nested repos separately.
+   - `git -C <nested> rev-parse --show-toplevel`
+   - `git -C <nested> status --porcelain --ignore-submodules=none`
+3. Verify the intended remote/branch explicitly.
+   - `git remote -v`
+   - `git ls-remote <remote> refs/heads/<branch>`
+   - `git rev-list --left-right --count <remote>/<branch>...HEAD`
+4. Stage only the intended durable files.
+   - Prefer allowlist staging in noisy roots.
+   - Keep runtime caches, auth material, session databases, and lockfiles out unless explicitly requested.
+5. Push with an explicit refspec.
+   - `git push <remote> HEAD:<branch>`
+6. Confirm the remote tip matches the commit you meant to publish.
+   - `git rev-parse HEAD`
+   - `git ls-remote <remote> refs/heads/<branch>`
 
-## Minimal decision sequence
+## Useful noise triage
 
-1. Check outer root status, remotes, and branch.
-2. Check nested repos like `/root/.hermes/hermes-agent` separately.
-3. If the outer root is the actual target, stage only durable files/directories and push with an explicit refspec.
-4. Verify remote branch tips after push.
+If the outer root is full of generated or runtime paths, group the untracked set before deciding whether anything needs publishing:
+
+```bash
+git ls-files --others --exclude-standard | cut -d/ -f1 | sort | uniq -c | sort -nr
+```
+
+That makes it easier to spot the few durable paths that deserve review.
+
+## Reminder
+
+A clean nested repo does not imply the outer root is clean. Check both layers before returning `[SILENT]`.

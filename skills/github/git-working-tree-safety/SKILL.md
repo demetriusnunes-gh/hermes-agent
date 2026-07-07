@@ -29,7 +29,7 @@ Use this skill when you need to commit and push changes from a checkout that may
    ```bash
    git status --porcelain --ignore-submodules=none
    ```
-   In a noisy runtime root like `/root/.hermes`, also summarize the top-level shape with `git status --porcelain=v2` so you can distinguish durable source changes from ambient runtime artifacts.
+   In a noisy runtime root like `/root/.hermes`, also summarize untracked paths by top-level directory first so you can distinguish durable source changes from ambient runtime artifacts. If the untracked set is huge, prefer a coarse count/grouping pass before any staging decision.
 2. If the checkout may contain a nested repo, gitlink, or parent tracking pointer, inspect both layers before deciding where the real change lives.
    ```bash
    git ls-files -s <path>
