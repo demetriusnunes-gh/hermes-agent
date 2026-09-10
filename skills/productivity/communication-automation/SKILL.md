@@ -76,6 +76,7 @@ Use this subsection when scanning Gmail or Calendar for new actionable items.
 - Treat a malformed or unreadable suppression file as fail-closed: report a concise state/auth-style error rather than scanning from an empty state and risking duplicate alerts.
 - Freeze the exact post-dedup candidate list, persist that list's IDs/hashes, and render the user-facing report directly from it. Do not run a second committing scan merely to verify output; verify state membership or use a non-mutating dry run instead.
 - See `references/monitoring-workflow.md` for the concrete scan recipe.
+- For Google Workspace-specific search/re-fetch, relevance, and one-commit state handling, see `references/google-workspace-monitoring.md`.
 - Rewrite state snapshots cleanly if the on-disk file is malformed or stale.
 
 ## Outbound delivery pattern: WhatsApp reminders and sends

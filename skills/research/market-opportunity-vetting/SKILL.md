@@ -93,7 +93,11 @@ Categories that are often crowded in Brazil and need a sharper wedge to survive:
 - Review-generation / reputation tools
 
 ### Proof gathering in practice
-Prefer official landing pages, pricing pages, customer pages, case studies, and funding announcements. If the homepage snippet is thin, use the rendered page text or search-result snippet from the official site before discarding a candidate; traction claims are often surfaced there rather than in compact summaries.
+Prefer official landing pages, pricing pages, customer pages, case studies, and funding announcements. If the homepage snippet is thin, use the rendered page text or search-result snippet from the official site before discarding the candidate; traction claims are often surfaced there rather than in compact summaries.
+
+When the configured search provider is unavailable, do not silently switch to unsupported assumptions: use an accessible search-engine results page or navigate directly to official product pages, then inspect rendered DOM text for traction claims. Record the exact claim and source URL. Treat search-result absence as weak evidence, not proof that no local competitor exists; phrase incumbent conclusions as “no obvious dominant leader found in this sweep” unless a broader local-market check supports stronger language.
+
+For recurring research runs, separate the evidence into three confidence levels: (1) verified official traction, (2) corroborated third-party or customer evidence, and (3) provisional market-gap inference. Do not present level 3 as a fact.
 
 ### High-signal Brazil rebuild archetypes
 When you need a fast shortlist, prioritize categories that already have a clear US leader and a narrow Brazil-first MVP:
@@ -114,3 +118,4 @@ See `references/brazil-market-shortlist.md` for a concise example of the Brazil 
 See `references/brazil-ai-passive-income-digest.md` for session notes on proof signals, Brazil-fit filters, and the shortlist pattern that worked here.
 See `references/brazil-ai-passive-income-candidates.md` for a compact session note on the three strongest Brazil-first AI rebuild archetypes that repeatedly surfaced here.
 See `references/brazil-local-incumbent-sweep.md` for a compact checklist of categories that are often already crowded in Brazil and the MVP bias that tends to work.
+See `references/research-access-and-evidence.md` for browser fallback, evidence-confidence labels, and Brazil incumbent-sweep handling when search access is limited.
