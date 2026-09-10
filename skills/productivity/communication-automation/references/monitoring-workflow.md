@@ -43,4 +43,21 @@ High-confidence items include:
 - school, family, or other clearly actionable personal calendar events
 - government/public-agency notices
 
-Be conservative with newsletters, promotions, digests, and generic calendar notifications.
+## Backend fallback and commit boundary
+
+If `setup.py --check` succeeds but the wrapper's optional `gws` backend returns an OAuth or invalid-credentials error, retry through the bundled Python backend before reporting auth failure. Use the Hermes virtualenv interpreter and a minimal `PATH` that excludes Hermes' Node bin directory, for example:
+
+```bash
+PATH=/usr/local/sbin:/usr/sbin:/usr/bin:/sbin:/bin \
+  /root/.hermes/hermes-agent/venv/bin/python \
+  /root/.hermes/skills/productivity/google-workspace/scripts/google_api.py \
+  gmail search "in:inbox newer_than:1d" --max 100
+```
+
+Keep scan evaluation dry until relevance and deduplication are complete. Then perform one atomic state write. Build the final notification text from the exact persisted post-dedup list; do not hand-rewrite it afterward. To verify, inspect state membership or run a non-mutating repeat, not a second committing scan.
+
+If the state file is missing, initialize it. If it exists but fails strict JSON parsing, fail closed and report the state error concisely—never treat an empty state as permission to alert.
+
+## Google notification exclusions
+
+Calendar agenda digests, event invitations, and routine birthday/no-event reminders are usually duplicate representations of Calendar data. Suppress them as Gmail alerts and surface only the underlying Calendar event when it independently passes relevance and deduplication. Apply hard newsletter/media/promotional exclusions before broad keyword matching.

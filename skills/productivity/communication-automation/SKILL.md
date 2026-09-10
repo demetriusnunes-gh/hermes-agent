@@ -72,6 +72,9 @@ Use this subsection when scanning Gmail or Calendar for new actionable items.
 - Normalize legacy hash prefixes before comparing suppression entries.
 - For Google Workspace cron scans, prefer the CLI wrapper for deterministic JSON and re-fetch only the final candidate set.
 - Keep the suppression/state update in the same run as the final filtering step.
+- If the optional `gws` backend reports OAuth/invalid-credentials errors after auth succeeds, retry the same wrapper with a minimal system `PATH` and the Hermes virtualenv Python to force the bundled Google API backend before declaring auth failure.
+- Treat a malformed or unreadable suppression file as fail-closed: report a concise state/auth-style error rather than scanning from an empty state and risking duplicate alerts.
+- Freeze the exact post-dedup candidate list, persist that list's IDs/hashes, and render the user-facing report directly from it. Do not run a second committing scan merely to verify output; verify state membership or use a non-mutating dry run instead.
 - See `references/monitoring-workflow.md` for the concrete scan recipe.
 - Rewrite state snapshots cleanly if the on-disk file is malformed or stale.
 
