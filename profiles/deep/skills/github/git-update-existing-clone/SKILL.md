@@ -98,6 +98,7 @@ git diff --cached -- path/to/file
 - Do not drop the remaining stash entry until you confirm the resolved file content is correct.
 - Check the actual unmerged file content, not just `git status`.
 - If preserving local customizations, prefer a minimal merge that keeps upstream structure and only reintroduces the intentional local lines.
+- When this task targets Hermes Agent's own live checkout from inside a gateway/cron-run Hermes process, terminal safety may block `git pull`, `git merge`, `git switch`, or similar worktree rewrites because they can mix module versions in the running process. Respect that guard: fetch/read-only inspection is safe, but perform the actual checkout rewrite from an external shell or an explicitly delayed maintenance script that updates and restarts Hermes outside the active response path; report the blocker honestly if you cannot verify the update in the current run.
 
 ## Post-update runtime check for deployed services
 

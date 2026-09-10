@@ -701,9 +701,11 @@ VIRTUAL_ENV=$(pwd)/venv uv pip install -e ".[all]"
 ```
 
 Notes:
-- The venv uses a `uv`-managed Python that has no `pip` module installed. Always use `uv pip install --python ./venv/bin/python3` or set `VIRTUAL_ENV` env var
-- `requirements.txt` is a convenience file; the canonical deps are in `pyproject.toml`. Always reinstall with `-e ".[all]"` after pulling
-- If `git pull` fails on local modifications, `git stash --include-untracked` before pulling, then `git stash pop` after
+- The venv often uses a `uv`-managed Python; prefer `uv pip install --python ./venv/bin/python3` or set `VIRTUAL_ENV` env var when it works.
+- On the Hostinger VPS, `uv pip install -e .` / `uv pip install -e ".[all]"` has timed out silently during Hermes self-updates even though pip is available in the venv. In that case, use `./venv/bin/python3 -m pip install --no-deps -e .` to refresh package metadata, then `./venv/bin/python3 -m pip install -e .` to install base dependencies; verify with `./venv/bin/python3 -m pip check`.
+- `requirements.txt` is a convenience file; the canonical deps are in `pyproject.toml`. Reinstall after pulling.
+- If `git pull` fails on local modifications, `git stash --include-untracked` before pulling, then `git stash pop` after.
+- If `hermes --version` still reports stale behind counts after updating, remove profile update-check caches such as `$HERMES_HOME/.update_check` and rerun with a bounded timeout (`timeout 25s hermes --version`).
 
 Check update status anytime:
 ```bash
