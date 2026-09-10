@@ -1,26 +1,26 @@
-# Rock N Fifty RSVP
+# Rock N Fifty — Confirmação de presença
 
-Standalone RSVP site for Demetrius's 50th birthday. It uses only Python's standard library and stores submissions in `data/rsvp.sqlite3`.
+Site independente para confirmação de presença no aniversário de 50 anos do Demetrius. Usa apenas a biblioteca padrão do Python e armazena as respostas em `data/rsvp.sqlite3`.
 
-## Run locally
+## Executar localmente
 
 ```bash
 python3 app.py
 ```
 
-Open <http://127.0.0.1:8797>.
+Abra <http://127.0.0.1:8797>.
 
-## Data
+## Dados
 
-The `rsvps` table stores:
+A tabela `rsvps` armazena:
 
-- name
-- optional email
-- attending / not attending
-- guest count
-- optional message
-- submission timestamp
+- nome
+- WhatsApp opcional
+- presença ou ausência
+- número de pessoas
+- mensagem opcional
+- data e hora do envio
 
-## Production host
+## Hospedagem em produção
 
-The site is designed to sit behind Caddy at `rsvp.demetriusnunes.com`, proxying to `127.0.0.1:8797`. Before the public URL can work, add an `A`/`AAAA` DNS record for `rsvp.demetriusnunes.com` pointing to this server. Caddy can then issue the HTTPS certificate automatically.
+O site foi configurado para funcionar atrás do Caddy em `rsvp.demetriusnunes.com`, encaminhando para `127.0.0.1:8797`.

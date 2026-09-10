@@ -15,7 +15,7 @@ h1 span { display:block; font-size:.76em; color:var(--yellow); text-shadow:3px 3
 .tagline { font-weight:700; letter-spacing:2px; text-transform:uppercase; font-size:clamp(13px,2vw,18px); margin:20px auto 0; color:var(--muted); }
 .electric-line { height:12px; max-width:620px; margin:22px auto 0; background:var(--yellow); clip-path:polygon(0 48%,8% 48%,11% 0,14% 100%,20% 48%,37% 48%,40% 10%,43% 100%,47% 48%,70% 48%,73% 0,76% 100%,80% 48%,100% 48%,100% 65%,82% 65%,76% 100%,72% 65%,45% 65%,41% 100%,37% 65%,15% 65%,12% 100%,8% 65%,0 65%); filter:drop-shadow(0 0 7px #ffe66d); }
 .sticker { position:absolute; right:5%; top:0; background:var(--red); color:#fff; border:3px solid var(--yellow); padding:10px 13px; font-weight:700; letter-spacing:1px; font-size:14px; transform:rotate(9deg); box-shadow:4px 4px 0 #4b124d; }
-.details { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:12px 0 26px; }
+.details { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; max-width:620px; margin:12px auto 26px; }
 .details > div { text-align:center; border-top:2px solid var(--pink); border-bottom:2px solid var(--purple); padding:16px 10px; background:#160d26aa; }
 .details strong { display:block; color:#fff; font-size:20px; letter-spacing:1px; margin:5px 0; }
 .details small { color:var(--muted); font-size:13px; }

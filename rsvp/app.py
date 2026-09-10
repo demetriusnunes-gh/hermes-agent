@@ -19,7 +19,7 @@ def init_db():
             CREATE TABLE IF NOT EXISTS rsvps (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT NOT NULL,
-                email TEXT,
+                whatsapp TEXT,
                 attending INTEGER NOT NULL CHECK (attending IN (0, 1)),
                 guests INTEGER NOT NULL DEFAULT 0 CHECK (guests >= 0 AND guests <= 20),
                 message TEXT,
@@ -27,26 +27,29 @@ def init_db():
             )
             """
         )
+        columns = {row[1] for row in conn.execute("PRAGMA table_info(rsvps)")}
+        if "whatsapp" not in columns:
+            conn.execute("ALTER TABLE rsvps ADD COLUMN whatsapp TEXT")
 
 
 def save_rsvp(form):
     name = form.get("name", [""])[0].strip()
-    email = form.get("email", [""])[0].strip()
+    whatsapp = form.get("whatsapp", [""])[0].strip()
     attending = form.get("attending", [""])[0]
     guests_raw = form.get("guests", ["0"])[0]
     message = form.get("message", [""])[0].strip()
 
     if not name or attending not in {"yes", "no"}:
-        return False, "Please add your name and choose whether you are coming."
+        return False, "Informe seu nome e escolha se você estará presente."
     try:
         guests = max(0, min(20, int(guests_raw or 0))) if attending == "yes" else 0
     except ValueError:
-        return False, "Please enter a valid number of guests."
+        return False, "Informe um número válido de pessoas."
 
     with sqlite3.connect(DB_PATH) as conn:
         conn.execute(
-            "INSERT INTO rsvps (name, email, attending, guests, message) VALUES (?, ?, ?, ?, ?)",
-            (name, email, 1 if attending == "yes" else 0, guests, message),
+            "INSERT INTO rsvps (name, whatsapp, attending, guests, message) VALUES (?, ?, ?, ?, ?)",
+            (name, whatsapp, 1 if attending == "yes" else 0, guests, message),
         )
     return True, ""
 
@@ -57,12 +60,12 @@ def render_page(message="", error=False):
         notice = f'<div class="notice {"error" if error else "success"}" role="status">{html.escape(message)}</div>'
 
     return f'''<!doctype html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Rock N Fifty — Demetrius turns 50</title>
-  <meta name="description" content="RSVP for Demetrius's Rock N Fifty 50th birthday party.">
+  <title>Rock N Fifty — Demetrius faz 50 anos</title>
+  <meta name="description" content="Confirme sua presença no Rock N Fifty, a festa de 50 anos do Demetrius.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Permanent+Marker&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
@@ -72,37 +75,34 @@ def render_page(message="", error=False):
   <div class="noise"></div>
   <main class="poster">
     <header class="hero">
-      <div class="sticker">THE BIG 5-0</div>
-      <p class="eyebrow">A birthday bash for the ages</p>
+      <p class="eyebrow">Uma festa de aniversário inesquecível</p>
       <h1><span>Rock N</span> Fifty</h1>
-      <p class="subtitle">Demetrius is turning 50</p>
+      <p class="subtitle">Demetrius faz 50 anos</p>
       <div class="electric-line"></div>
-      <p class="tagline">Loud guitars. Big hair. One unforgettable night.</p>
+      <p class="tagline">Guitarras altas. Calças de couro. Uma noite inesquecível.</p>
     </header>
 
-    <section class="details" aria-label="Event details">
-      <div><span class="detail-label">When</span><strong>DATE COMING SOON</strong><small>Save the night — details dropping soon</small></div>
-      <div><span class="detail-label">Where</span><strong>LOCATION COMING SOON</strong><small>Venue details dropping soon</small></div>
-      <div><span class="detail-label">Dress code</span><strong>HAIR METAL</strong><small>Leather, denim &amp; maximum volume</small></div>
+    <section class="details" aria-label="Detalhes do evento">
+      <div><span class="detail-label">Quando</span><strong>SÁBADO · 3 DE OUTUBRO DE 2026 · 17H–22H</strong></div>
+      <div><span class="detail-label">Onde</span><strong>RUA PRESIDENTE CARLOS DE CAMPOS, 115</strong><small>Playground</small></div>
     </section>
 
     <section class="rsvp-card" id="rsvp">
-      <div class="card-heading"><span class="spark">✦</span><div><p class="eyebrow">Join the encore</p><h2>Are you in?</h2></div><span class="spark">✦</span></div>
+      <div class="card-heading"><span class="spark">✦</span><div><p class="eyebrow">Junte-se ao bis</p><h2>Você vem?</h2></div><span class="spark">✦</span></div>
       {notice}
       <form method="post" action="/rsvp">
-        <label>Your name <span>*</span><input name="name" required maxlength="100" placeholder="Rock star name"></label>
-        <label>Email <small>(optional)</small><input name="email" type="email" maxlength="180" placeholder="so we can send updates"></label>
-        <fieldset><legend>Will you be there?</legend><div class="choices">
-          <label class="choice"><input type="radio" name="attending" value="yes" required><span>HELL YEAH<br><small>I'm coming!</small></span></label>
-          <label class="choice no"><input type="radio" name="attending" value="no"><span>CAN'T MAKE IT<br><small>Rock on from afar</small></span></label>
+        <label>Seu nome <span>*</span><input name="name" required maxlength="100" placeholder="Nome de estrela do rock"></label>
+        <label>WhatsApp <small>(opcional)</small><input name="whatsapp" type="tel" maxlength="30" placeholder="para receber as novidades"></label>
+        <fieldset><legend>Você estará lá?</legend><div class="choices">
+          <label class="choice"><input type="radio" name="attending" value="yes" required><span>COM CERTEZA<br><small>Eu vou!</small></span></label>
+          <label class="choice no"><input type="radio" name="attending" value="no"><span>NÃO VOU CONSEGUIR<br><small>Vou torcer de longe</small></span></label>
         </div></fieldset>
-        <label>How many people are you bringing? <small>(including you)</small><input name="guests" type="number" min="1" max="20" value="1" required></label>
-        <label>Dedication <small>(optional)</small><textarea name="message" rows="3" maxlength="500" placeholder="Leave a birthday message for Demetrius..."></textarea></label>
-        <button type="submit">Lock in my RSVP <span>→</span></button>
+        <label>Quantas pessoas você levará? <small>(incluindo você)</small><input name="guests" type="number" min="1" max="20" value="1" required></label>
+        <label>Recado <small>(opcional)</small><textarea name="message" rows="3" maxlength="500" placeholder="Deixe uma mensagem de aniversário para o Demetrius..."></textarea></label>
+        <button type="submit">Confirmar minha presença <span>→</span></button>
       </form>
     </section>
 
-    <footer><span>★</span> Come for the music. Stay for the memories. <span>★</span></footer>
   </main>
   <script>
     const radios = document.querySelectorAll('input[name="attending"]');
@@ -146,7 +146,7 @@ class Handler(BaseHTTPRequestHandler):
         length = int(self.headers.get("Content-Length", 0))
         body = self.rfile.read(length).decode("utf-8")
         ok, message = save_rsvp(parse_qs(body))
-        self.send_html(render_page("You're on the guest list — see you at Rock N Fifty!" if ok else message, not ok), 200 if ok else 400)
+        self.send_html(render_page("Você está na lista — nos vemos no Rock N Fifty!" if ok else message, not ok), 200 if ok else 400)
 
     def send_html(self, body, status=200):
         payload = body.encode("utf-8")
