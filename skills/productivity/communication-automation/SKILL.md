@@ -93,8 +93,9 @@ Use this subsection when sending a WhatsApp message, scheduling a reminder, or v
 3. Convert local times to UTC before creating cron schedules.
 4. Send plain-text messages unless the bridge explicitly supports richer formatting.
 5. Verify success from the API response and, if needed, bridge logs.
+6. If the bridge health check reports `disconnected`, inspect the bridge process/session state before sending. A stale PID or a bridge that exits with `Logged out` means the WhatsApp account must be re-paired before delivery can succeed; do not claim delivery and do not retry blindly.
 
-### Message style
+## Message style
 
 - short
 - plain text
@@ -155,6 +156,7 @@ Use this subsection for cron-generated morning briefings, especially when the us
 ## Verification checklist
 
 - Authentication or bridge health checked first
+- WhatsApp bridge process/session state checked when health is disconnected
 - Relevant items filtered conservatively
 - Deduplication applied before output
 - State updated only after final candidate selection
