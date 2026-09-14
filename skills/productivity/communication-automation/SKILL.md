@@ -85,6 +85,8 @@ Use this subsection when sending a WhatsApp message, scheduling a reminder, or v
 
 - See `references/whatsapp-target-resolution.md` for exact WhatsApp target resolution and bridge fallback details.
 - See `references/whatsapp-send-verification.md` for a minimal health-check + send + response-verification recipe and short recurring reminder phrasing.
+- For CLI/scheduled delivery, run `hermes send --list whatsapp` before sending. If a stored WhatsApp LID is known but the CLI reports that it cannot resolve the target, do not guess a phone number or claim delivery; use the bridge's raw `chatId` fallback only after a successful health check, otherwise report the delivery failure concisely.
+- A scheduler job can be marked `ok` even when `last_delivery_error` is populated, so verify the delivery backend response independently rather than trusting the job status alone.
 
 ### Workflow
 
