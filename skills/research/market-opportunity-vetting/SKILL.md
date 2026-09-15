@@ -99,6 +99,14 @@ When the configured search provider is unavailable, diagnose the failure once, t
 
 For recurring research runs, separate the evidence into three confidence levels: (1) verified official traction, (2) corroborated third-party or customer evidence, and (3) provisional market-gap inference. Do not present level 3 as a fact.
 
+### Run discipline when evidence is thin
+- If a search backend is unavailable, diagnose it once, switch to browser/direct official pages, and do not keep retrying the same failed provider or parallelizing identical failures.
+- Treat search-result absence as weak evidence. Noisy or irrelevant local results should produce a calibrated statement such as “no obvious dominant local leader found in this sweep,” never “no competitors exist.”
+- A globally available product is not automatically a Brazil opportunity. Separate the underlying product’s availability from the local service wedge; the finalist must explain why a PT-BR, WhatsApp, Pix/card/boleto, vertical, or managed-service layer creates room despite global access.
+- Do not pad the shortlist to three. If only one or two candidates meet the proof, Brazil-fit, and rebuildability gates, return fewer.
+- If current independent traction or revenue cannot be verified, label the claim as official self-reported monetization/adoption and lower confidence—or exclude the candidate rather than implying stronger proof.
+- Include source URLs beside the exact proof claim, and distinguish official traction from the analyst’s provisional gap inference in the final wording.
+
 ### High-signal Brazil rebuild archetypes
 When you need a fast shortlist, prioritize categories that already have a clear US leader and a narrow Brazil-first MVP:
 - WhatsApp / voice receptionist for SMB lead capture and booking
