@@ -51,6 +51,13 @@ When possible, triangulate traction using multiple sources rather than relying o
 ### Proof extraction tip
 Many modern landing pages hide the strongest traction claim in rendered DOM or page source rather than the compact browser snapshot. If the homepage snapshot is inconclusive, inspect the live page text/source before discarding the candidate. Prefer official-site wording over third-party roundup claims.
 
+## Earning-proof discipline
+A paid pricing page proves that a product has a monetization path, not independently verified revenue. Treat evidence in this order:
+1. verified official traction: named customers, usage/user counts, downloads, or published scale;
+2. corroborated earning signal: reputable reporting on revenue/funding/growth, or multiple recognizable customer references;
+3. official self-reported monetization: paid tiers, enterprise plans, API billing, or business pricing.
+If only level 3 is available, say so explicitly and lower confidence; do not write “earning” or imply audited revenue. Put the exact source URL beside the claim.
+
 ## Output shape
 When asked for a shortlist, answer in a compact table or bullets with:
 - idea name
@@ -92,6 +99,9 @@ Categories that are often crowded in Brazil and need a sharper wedge to survive:
 - Help desk / customer support AI
 - Review-generation / reputation tools
 
+### Browser fallback sequence
+When search configuration is unavailable: diagnose the failure once; use an accessible search results page only to discover candidates; then open the candidate’s official homepage, pricing, customer, and about pages directly. Inspect rendered accessibility text/DOM because compact snapshots often omit traction claims. Record the exact wording and URL while researching. For local incumbents, run a separate category query and preserve the calibrated conclusion “no obvious dominant leader found in this sweep” when results are noisy or incomplete.
+
 ### Proof gathering in practice
 Prefer official landing pages, pricing pages, customer pages, case studies, and funding announcements. If the homepage snippet is thin, use the rendered page text or search-result snippet from the official site before discarding the candidate; traction claims are often surfaced there rather than in compact summaries.
 
@@ -127,3 +137,4 @@ See `references/brazil-ai-passive-income-digest.md` for session notes on proof s
 See `references/brazil-ai-passive-income-candidates.md` for a compact session note on the three strongest Brazil-first AI rebuild archetypes that repeatedly surfaced here.
 See `references/brazil-local-incumbent-sweep.md` for a compact checklist of categories that are often already crowded in Brazil and the MVP bias that tends to work.
 See `references/research-access-and-evidence.md` for browser fallback, evidence-confidence labels, and Brazil incumbent-sweep handling when search access is limited.
+See `references/rendered-dom-proof-patterns.md` for exact traction/pricing extraction and calibration rules from rendered official pages.
