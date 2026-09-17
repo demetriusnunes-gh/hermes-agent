@@ -105,6 +105,16 @@ When search configuration is unavailable: diagnose the failure once; use an acce
 ### Proof gathering in practice
 Prefer official landing pages, pricing pages, customer pages, case studies, and funding announcements. If the homepage snippet is thin, use the rendered page text or search-result snippet from the official site before discarding the candidate; traction claims are often surfaced there rather than in compact summaries.
 
+### Commercial proof and recurring-service framing
+For opportunity digests, distinguish clearly between:
+- **official traction:** named customers, user/business counts, reviews, or published usage;
+- **monetization path:** visible paid tiers, API billing, or business pricing;
+- **verified earnings:** independently reported revenue, ARR, or growth.
+
+Do not turn a pricing page into a revenue claim. If verified earnings are unavailable, say that the service is commercially validated by traction plus paid plans, and label revenue as unverified. When the user asks for “passive income,” prefer a semi-automated, productized recurring service and state that it is not fully passive.
+
+For scheduled digests, include the research date, keep the final list to only candidates that pass all gates, and make the final recommendation one sentence naming the best rebuild bet and its decisive wedge.
+
 When the configured search provider is unavailable, diagnose the failure once, then switch to an accessible search-engine results page (for example, Bing) and direct official product pages rather than repeatedly retrying the same provider. Do not spend the research budget issuing the same failed provider call in parallel. Inspect the rendered DOM/accessibility text on official pages for traction claims, and record the exact claim plus source URL. Prefer official homepages, pricing pages, product pages, and customer pages that expose claims in rendered text; search snippets are leads, not final evidence. Use a separate local-incumbent query for each finalist category; search-result absence is weak evidence, not proof that no competitor exists. Phrase conclusions as “no obvious dominant leader found in this sweep” unless a broader local-market check supports stronger language. Distinguish official traction from provisional gap inference in the final output.
 
 For recurring research runs, separate the evidence into three confidence levels: (1) verified official traction, (2) corroborated third-party or customer evidence, and (3) provisional market-gap inference. Do not present level 3 as a fact.
@@ -138,3 +148,4 @@ See `references/brazil-ai-passive-income-candidates.md` for a compact session no
 See `references/brazil-local-incumbent-sweep.md` for a compact checklist of categories that are often already crowded in Brazil and the MVP bias that tends to work.
 See `references/research-access-and-evidence.md` for browser fallback, evidence-confidence labels, and Brazil incumbent-sweep handling when search access is limited.
 See `references/rendered-dom-proof-patterns.md` for exact traction/pricing extraction and calibration rules from rendered official pages.
+See `references/brazil-semi-automated-video-services.md` for the recurring-service evidence pattern and source claims captured from the latest Brazil video-opportunity sweep.
