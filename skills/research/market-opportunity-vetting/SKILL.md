@@ -149,3 +149,4 @@ See `references/brazil-local-incumbent-sweep.md` for a compact checklist of cate
 See `references/research-access-and-evidence.md` for browser fallback, evidence-confidence labels, and Brazil incumbent-sweep handling when search access is limited.
 See `references/rendered-dom-proof-patterns.md` for exact traction/pricing extraction and calibration rules from rendered official pages.
 See `references/brazil-semi-automated-video-services.md` for the recurring-service evidence pattern and source claims captured from the latest Brazil video-opportunity sweep.
+See `references/session-2026-09-22-brazil-video-opportunities.md` for rendered official-page evidence, source URLs, and calibration notes from the 2026-09-22 sweep.
