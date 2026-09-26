@@ -134,12 +134,25 @@ When you need a fast shortlist, prioritize categories that already have a clear 
 - Ad creative generation for performance marketing teams and agencies
 - Product-photo / listing optimization for marketplaces and e-commerce sellers
 
-## Proof shortcuts
+### Proof shortcuts
 
 - creator/user scale claims on the product homepage
 - download counts
 - business/customer counts
 - customer-logo pages or named case studies
+
+### Recurring-service opportunity runs
+
+For “passive income” digests, rank a productized managed service above a raw SaaS clone when the service can be reduced to one predictable input and one deliverable. State the automation boundary explicitly: these are semi-automated recurring services, not fully passive income. A strong Brazil-first shape is:
+
+- one upload or URL in;
+- one PT-BR output bundle out;
+- human QA only for language, names, brand terms, and compliance-sensitive claims;
+- monthly packaging with Pix/card/boleto and WhatsApp delivery.
+
+When official pages expose conflicting scale claims (for example, different customer totals on a homepage and customer page), preserve the exact claim with its source URL rather than averaging or presenting a synthesized number. Treat paid pricing as monetization-path evidence only; named customers and usage counts support traction, but neither proves audited revenue.
+
+If the search backend is unavailable, do one diagnostic attempt, then use the browser fallback. Avoid parallel retries of the same failed provider. Broad Bing queries can return irrelevant country/topic results; use them only for candidate discovery, then verify traction and pricing on the official homepage, customer/case-study page, and pricing page. For local incumbent checks, phrase noisy absence as “no obvious dominant local leader found in this sweep,” and label it provisional rather than factual.
 
 ## Reference material
 See `references/brazil-market-shortlist.md` for a concise example of the Brazil rebuild filtering criteria and the kinds of finalists/exclusions that passed this session's review.
@@ -150,3 +163,4 @@ See `references/research-access-and-evidence.md` for browser fallback, evidence-
 See `references/rendered-dom-proof-patterns.md` for exact traction/pricing extraction and calibration rules from rendered official pages.
 See `references/brazil-semi-automated-video-services.md` for the recurring-service evidence pattern and source claims captured from the latest Brazil video-opportunity sweep.
 See `references/session-2026-09-22-brazil-video-opportunities.md` for rendered official-page evidence, source URLs, and calibration notes from the 2026-09-22 sweep.
+See `references/session-2026-09-26-brazil-video-opportunities.md` for the latest OpusClip/HeyGen proof claims, pricing, browser-fallback notes, and Brazil-fit calibration.
