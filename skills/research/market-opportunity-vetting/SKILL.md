@@ -164,3 +164,4 @@ See `references/rendered-dom-proof-patterns.md` for exact traction/pricing extra
 See `references/brazil-semi-automated-video-services.md` for the recurring-service evidence pattern and source claims captured from the latest Brazil video-opportunity sweep.
 See `references/session-2026-09-22-brazil-video-opportunities.md` for rendered official-page evidence, source URLs, and calibration notes from the 2026-09-22 sweep.
 See `references/session-2026-09-26-brazil-video-opportunities.md` for the latest OpusClip/HeyGen proof claims, pricing, browser-fallback notes, and Brazil-fit calibration.
+See `references/session-2026-09-27-provider-fallback-and-evidence.md` for the latest direct-page DOM extraction pattern, official OpusClip/Fireflies/Grammarly proof claims, and calibrated Brazil-gap wording.
