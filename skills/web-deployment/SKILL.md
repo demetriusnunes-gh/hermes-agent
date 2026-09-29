@@ -56,7 +56,7 @@ Separate delivery into four independently verifiable layers:
 6. Inspect the rendered page at desktop and mobile widths when visual quality matters; check focus, selected states, and usability.
 7. Define a persistent service (systemd, container, or the host's established process manager) before calling the app hosted.
 8. Add the smallest reverse-proxy route for the exact hostname. Validate before reloading; preserve existing sites and do not guess at a conflicting port.
-9. If using Cloudflare Tunnel, treat DNS routing and tunnel ingress as separate operations. Configure the exact public hostname and point it directly to the tested app listener unless the proxy path has been verified; avoid redirect loops.
+9. If using Cloudflare Tunnel, treat DNS routing and tunnel ingress as separate operations. `cloudflared tunnel route dns <tunnel> <hostname>` creates only the DNS CNAME; it does not add a remotely managed public-hostname/ingress rule. Configure the exact public hostname and point it directly to the tested app listener unless the proxy path has been verified; avoid redirect loops. After adding DNS, test the public hostname: a Cloudflare 404 usually means DNS reached the tunnel but the tunnel ingress has no matching hostname. Remote ingress changes require the tunnel dashboard or an authenticated Cloudflare API path with tunnel-edit permission; a tunnel runtime token alone is insufficient.
 10. Check authoritative DNS before public HTTPS. If DNS is absent, provide the exact record needed and mark public deployment blocked.
 11. If DNS is pending but host access exists, finish service, proxy validation, and local host-routed checks; leave certificate acquisition pending.
 12. Verify in order: backend health, host-routed request, tunnel ingress/origin if applicable, authoritative DNS, public HTTP/HTTPS, and one real public form submission. Distinguish backend/proxy 404s from tunnel-ingress 404s.
@@ -90,5 +90,22 @@ Separate delivery into four independently verifiable layers:
 ## Verification
 
 For static files, confirm the destination exists, the server can read it, and the public URL returns the expected status and content type. For applications, confirm syntax checks, page/form markers, valid and invalid submissions, database cleanup, active service state after restart, exact-host proxy routing, DNS resolution, public HTTPS, and an end-to-end submission. Report completed layers and the single concrete external action still required when deployment is blocked.
+
+## Updating an Existing Static Web App
+
+When improving a deployed static app rather than creating a new one:
+
+1. Inspect the actual document root and active Caddy route before editing; do not assume the current working directory is the deployed site.
+2. Preserve the existing application flow. For visual asset upgrades, prefer local vendored assets over runtime third-party dependencies so the site remains usable offline and on constrained clients.
+3. Keep public assets in a dedicated subdirectory and use stable relative URLs. Do not leave backup copies, temporary files, source maps, or editor artifacts inside the web root.
+4. For client-side changes, run a syntax check on the extracted inline/module JavaScript when possible, then verify the public HTML contains the new code and old renderer is gone.
+5. Test every newly published asset through the public hostname, including status and content type. Use a cache-busting query string when validating HTML changes, especially behind a CDN.
+6. If a visual change is hard to reach through the live app state, verify the rendering path statically and inspect the live page for its public shell; do not invent a successful visual inspection.
+
+### Reference implementation detail
+
+For Lichess-like boards that currently use Unicode glyphs, the Cburnett SVG set can be vendored under `pieces/cburnett/` with filenames `wK.svg` through `wP.svg` and `bK.svg` through `bP.svg`. Render `<img>` elements using a mapping from FEN piece letters to `w|b` plus the uppercase piece letter, and apply `object-fit: contain`, a touch-friendly size, and `pointer-events: none`. Update promotion controls too. This is a reusable example, not a requirement for every chess UI.
+
+See `references/application-deployment-checklist.md` for the end-to-end checklist.
 
 See `references/static-file-checklist.md` and `references/application-deployment-checklist.md` for compact checklists and handoff language.
