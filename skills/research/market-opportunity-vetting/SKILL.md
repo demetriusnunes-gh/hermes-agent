@@ -100,7 +100,7 @@ Categories that are often crowded in Brazil and need a sharper wedge to survive:
 - Review-generation / reputation tools
 
 ### Browser fallback sequence
-When search configuration is unavailable: diagnose the failure once; use an accessible search results page only to discover candidates; then open the candidate’s official homepage, pricing, customer, and about pages directly. Inspect rendered accessibility text/DOM because compact snapshots often omit traction claims. Record the exact wording and URL while researching. For local incumbents, run a separate category query and preserve the calibrated conclusion “no obvious dominant leader found in this sweep” when results are noisy or incomplete.
+When search configuration is unavailable: diagnose the failure once; do not retry the same failed provider in parallel. Use an accessible search results page only to discover candidates; then open the candidate’s official homepage, pricing, customer, and about pages directly. Inspect rendered accessibility text/DOM because compact snapshots often omit traction claims; when needed, read `document.body.innerText` through the browser console. Record the exact wording and URL while researching. Broad Portuguese/local queries may return irrelevant generic results, so treat search-result absence as weak evidence. For local incumbents, run a separate category query and preserve the calibrated conclusion “no obvious dominant leader found in this sweep” when results are noisy or incomplete.
 
 ### Proof gathering in practice
 Prefer official landing pages, pricing pages, customer pages, case studies, and funding announcements. If the homepage snippet is thin, use the rendered page text or search-result snippet from the official site before discarding the candidate; traction claims are often surfaced there rather than in compact summaries.
@@ -165,3 +165,4 @@ See `references/brazil-semi-automated-video-services.md` for the recurring-servi
 See `references/session-2026-09-22-brazil-video-opportunities.md` for rendered official-page evidence, source URLs, and calibration notes from the 2026-09-22 sweep.
 See `references/session-2026-09-26-brazil-video-opportunities.md` for the latest OpusClip/HeyGen proof claims, pricing, browser-fallback notes, and Brazil-fit calibration.
 See `references/session-2026-09-27-provider-fallback-and-evidence.md` for the latest direct-page DOM extraction pattern, official OpusClip/Fireflies/Grammarly proof claims, and calibrated Brazil-gap wording.
+See `references/session-2026-09-30-brazil-video-opportunities.md` for the latest fallback workflow, rendered official proof claims for OpusClip/HeyGen/Synthesia, and Brazil managed-service wedges.
