@@ -154,6 +154,12 @@ When official pages expose conflicting scale claims (for example, different cust
 
 If the search backend is unavailable, do one diagnostic attempt, then use the browser fallback. Avoid parallel retries of the same failed provider. Broad Bing queries can return irrelevant country/topic results; use them only for candidate discovery, then verify traction and pricing on the official homepage, customer/case-study page, and pricing page. For local incumbent checks, phrase noisy absence as “no obvious dominant local leader found in this sweep,” and label it provisional rather than factual.
 
+## Operational lessons for scheduled Brazil digests
+- Include the research date in every scheduled digest and state the confidence level of each claim: official traction, corroborated evidence, or provisional market-gap inference.
+- When the search backend is unavailable, make one diagnostic attempt, then use browser search only for discovery and verify candidates sequentially on direct official pages. The browser is stateful; do not parallelize multiple navigations when you need to inspect each result, because later navigations can overwrite the page being inspected.
+- Use `document.body.innerText` or the full rendered accessibility snapshot to capture hidden official claims, and record the exact wording plus URL before drafting.
+- For “passive income,” rank a productized managed service above a raw SaaS clone: define one input, one deliverable, the human-QA boundary, and the recurring billing/delivery channel. A globally available product only qualifies when the Brazil wedge is explicit (PT-BR quality, WhatsApp delivery, Pix/card/boleto, vertical specialization, or local turnaround).
+
 ## Reference material
 See `references/brazil-market-shortlist.md` for a concise example of the Brazil rebuild filtering criteria and the kinds of finalists/exclusions that passed this session's review.
 See `references/brazil-ai-passive-income-digest.md` for session notes on proof signals, Brazil-fit filters, and the shortlist pattern that worked here.
@@ -166,3 +172,4 @@ See `references/session-2026-09-22-brazil-video-opportunities.md` for rendered o
 See `references/session-2026-09-26-brazil-video-opportunities.md` for the latest OpusClip/HeyGen proof claims, pricing, browser-fallback notes, and Brazil-fit calibration.
 See `references/session-2026-09-27-provider-fallback-and-evidence.md` for the latest direct-page DOM extraction pattern, official OpusClip/Fireflies/Grammarly proof claims, and calibrated Brazil-gap wording.
 See `references/session-2026-09-30-brazil-video-opportunities.md` for the latest fallback workflow, rendered official proof claims for OpusClip/HeyGen/Synthesia, and Brazil managed-service wedges.
+See `references/session-2026-10-01-brazil-video-opportunities.md` for the current browser-state extraction lesson, official OpusClip/HeyGen/Synthesia claims, and calibrated Brazil-fit conclusions.
