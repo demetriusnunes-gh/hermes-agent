@@ -95,7 +95,7 @@ Use this subsection when sending a WhatsApp message, scheduling a reminder, or v
 3. Convert local times to UTC before creating cron schedules.
 4. Send plain-text messages unless the bridge explicitly supports richer formatting.
 5. Verify success from the API response and, if needed, bridge logs.
-6. If the CLI send path times out, do not issue probe messages or retry with placeholder text: the original request may still have reached WhatsApp. Check bridge health, then use the resolved raw `chatId` with the bridge `POST /send` endpoint and verify its `success: true` response and message ID. Only send the intended message once through the fallback path after accounting for whether the timed-out request may have been accepted.
+6. If the CLI send path times out, treat delivery as indeterminate—not as a failed send. Do not immediately retry or issue probe/placeholder messages: the original request may still be in flight and a retry can duplicate it. Check bridge health and inspect the bridge's recent state/logs; account for the bridge's own send timeout (which may exceed the CLI timeout). Only use the resolved raw `chatId` with the bridge `POST /send` fallback when there is evidence the original request was not accepted, then verify `success: true` and a message ID. If acceptance cannot be determined safely, report delivery as unconfirmed rather than claiming success.
 7. If the bridge health check reports `disconnected`, inspect the bridge process/session state before sending. A stale PID or a bridge that exits with `Logged out` means the WhatsApp account must be re-paired before delivery can succeed; do not claim delivery and do not retry blindly.
 
 ## Message style
