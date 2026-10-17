@@ -93,6 +93,9 @@ git diff --cached -- path/to/file
 
 ## Pitfalls
 
+- For a large fast-forward, use `git merge --ff-only --no-stat origin/main` to avoid flooding tool output with thousands of file changes; verify the resulting commit and clean status separately.
+- Explicit maintenance instructions to stash local edits and leave a clean official-main checkout override the generic autostash/reapply workflow above. Keep the named stash unapplied, back up divergent HEAD before switching, and report both preservation handles. Compare CLI version and installed package metadata because they can disagree; refresh stale metadata before normal dependency installation when requested.
+
 - `git pull --rebase --autostash` can leave you on the latest upstream commit even when the stash re-apply fails.
 - Do not assume a failed autostash means the pull failed.
 - Do not drop the remaining stash entry until you confirm the resolved file content is correct.
