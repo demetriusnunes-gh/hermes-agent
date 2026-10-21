@@ -142,10 +142,18 @@ Use this subsection for cron-generated morning briefings, especially when the us
 - Avoid URLs unless a story cannot be identified otherwise.
 - Do not add explanation, caveats, or category subtitles unless explicitly requested.
 
+### Fallback and confidence rules
+
+- Establish the current date/time with the system clock before selecting the digest window or formatting the header.
+- If the configured web-search provider is unavailable, diagnose it once, then use a browser-accessible news index/search page as the live-source fallback; do not silently substitute memory or stale results.
+- Treat search-engine results as candidates: prefer items with a named high-signal source, explicit recency, and a clear material impact. If a local or company-specific search produces only weak, stale, or irrelevant results, omit that category rather than filling the quota.
+- A missing DoorDash/DASH result is a reason to omit the fourth line, not to infer a stock move or company update.
+
 ### Verification hints
 
 - Check that the final output matches the required line count before returning.
 - Verify that any silence decision is based on the absence of materially relevant items, not on a tool failure.
+- Confirm the header is date-only (no explanatory title), each story is one short line, and optional categories are omitted when confidence is low.
 - See `references/news-digesting.md` for a compact source-and-query recipe.
 
 ## Pitfalls
