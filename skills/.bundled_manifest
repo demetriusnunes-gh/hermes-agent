@@ -24,7 +24,7 @@ competitor-news-monitor:3a0452873c3c1e6dc0f7391bdb9c5b99
 computer-use:f5430c74aa3644b50234fb9737b70444
 debugging-hermes-tui-commands:b093ceac961144fb3e72e57b12a5d354
 design-md:91a8976ef5d37db2451721db9c2b93da
-document-to-action-items:3045920d711057cc6bc818fa2370e2c9
+document-to-action-items:7bb2c30062d373d5c3ef9b8f2958cec6
 dogfood:2992c4a2c35e13fbec54229b1b56e8e7
 dspy:5e0770e2563d11d9d4cc040681277c1c
 email-inbox-triage:e1a93e160552107366dd009159e5fa1a
@@ -68,8 +68,8 @@ manim-video:ba59ac7b68745ea1898ef28dcc84d08c
 maps:bd34cac38e29563a1cac4c900fd32bfc
 market-opportunity-vetting:5f588b5325ad2a7bc08104d2b68ca1c1
 mcporter:a1736a8c1837ea3a9b157b759af675d7
-meeting-action-items:4f0a15c7ae32595b16358d1e10f60403
-microsoft-office:79722f47f58ed9650d5e33e6ccae8c00
+meeting-action-items:64b9fc27471b089911636417373f7173
+microsoft-office:8d17d6daabe8266729ae8967ef897a53
 minecraft-modpack-server:3cc682f8aef5f86d3580601ba28f9ba3
 modal-serverless-gpu:957d93b8e4bf44fb229a0466df169f36
 nano-pdf:7ad841b6a7879ac1ad74579c0e8d6f97
@@ -116,7 +116,7 @@ touchdesigner-mcp:0664ded9138795d5518def4d16037650
 unsloth:91065bf8278abe5b353ec59505fb4b76
 web-deployment:b8d00bde22003917bec0a6d8670de30a
 webhook-subscriptions:783bdd39b8a4fe54ef6482bc03846ed4
-weekly-review-planning:5c8b6b42dd004e269df5a67dfdc8e30f
+weekly-review-planning:747ec918655fef81e087e166c3e88570
 weights-and-biases:91fd048a0b693f6d74a4639ea08bbd1d
 whisper:64e55fcb7a56ecea586422aec3f150d2
 writing-plans:5b72a4318524fd7ffb37fd43e51e3954
