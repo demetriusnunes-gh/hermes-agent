@@ -53,6 +53,14 @@ The production ranking now uses pure doubles Elo only:
 - User-facing best-of-3 labels should be simplified: both `best_of_3_super` and `best_of_3_full` display as “melhor de 3” even though K weighting still distinguishes them internally.
 - Admin edit/delete controls should only appear on the full `/resultados` match cards, not in the homepage ticker or player result modal.
 
+## Registering Match Results
+
+- Use the production SQLite API at `http://127.0.0.1:8793/api/rankingpcc`; list `/players` and `/matches` before importing. Print only player IDs/names, not profiles containing large base64 photos.
+- Authenticate through POST `/auth/login` using service credentials loaded programmatically from `/etc/rankingpcc-api.env`; never print credentials or tokens. POST `/matches` accepts explicit `id`, `teamA`, `teamB`, `scoreText`, `parsed`, `playedAt`, and `createdAt`.
+- Resolve names to existing player IDs, inspect today's results for prior imports, and back up SQLite with its backup API before bulk writes. Parse scores using the actual `src/ranking.js` `parseScore` export.
+- For date-only results follow the UI's noon BRT convention (`T15:00:00.000Z`). Preserve the reported sequence with distinct real `createdAt` timestamps, because Elo replays tied event dates by creation order. Give a final its own ID even if teams and score repeat a qualifying match.
+- Read back every inserted ID and compare teams, score, parsed format, and both timestamps. Verify the count increase, unchanged historical rows, and chronological ordering; exercise `calculateRanking` on the resulting data. Public-domain checks may return 403 from the VPS, so distinguish that limitation from successful readback through the production local API.
+
 ## Standard Workflow
 
 1. Inspect git status before changes.
