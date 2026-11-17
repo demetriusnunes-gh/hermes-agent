@@ -59,7 +59,16 @@ The production ranking now uses pure doubles Elo only:
 - Authenticate through POST `/auth/login` using service credentials loaded programmatically from `/etc/rankingpcc-api.env`; never print credentials or tokens. POST `/matches` accepts explicit `id`, `teamA`, `teamB`, `scoreText`, `parsed`, `playedAt`, and `createdAt`.
 - Resolve names to existing player IDs, inspect today's results for prior imports, and back up SQLite with its backup API before bulk writes. Parse scores using the actual `src/ranking.js` `parseScore` export.
 - For date-only results follow the UI's noon BRT convention (`T15:00:00.000Z`). Preserve the reported sequence with distinct real `createdAt` timestamps, because Elo replays tied event dates by creation order. Give a final its own ID even if teams and score repeat a qualifying match.
-- Read back every inserted ID and compare teams, score, parsed format, and both timestamps. Verify the count increase, unchanged historical rows, and chronological ordering; exercise `calculateRanking` on the resulting data. Public-domain checks may return 403 from the VPS, so distinguish that limitation from successful readback through the production local API.
+- Read back every inserted ID and compare teams, score, parsed format, and both timestamps. Verify the count increase, unchanged historical rows, and chronological ordering; exercise `calculateRanking` on the resulting data. Distinguish production API readback from browser verification; report only the verification actually performed.
+
+## Historical Ranking Simulations
+
+- Treat simulation requests as read-only; do not change production rules or UI unless explicitly requested.
+- Separate Elo history, the period in which peak positions count, individual eligibility, and minimum field size. A request for best positions since a cutoff does not reset Elo: retain earlier games unless the user explicitly asks to calculate Elo from only the later results.
+- Apply eligibility at each historical snapshot, not using today's match totals. For the official rule use at least 20 games; for a no-minimum simulation include players after their first game and list zero-game players as unranked. Treat scenario changes as simulation parameters, not new standing production rules.
+- Reuse the app's actual ranking implementation and tie-breakers. Include the opening snapshot at a reporting cutoff, then evaluate after every match; positions can improve because opponents played.
+- Report in concise Portuguese bullets: player, best ordinal position, first date within the period. State the scenario once, explain cutoff-date carryovers when present, and say the site was not changed. Do not confuse highest position with highest Elo.
+- Follow [historical ranking replay](references/historical-ranking-replay.md) for the replay procedure and verification checks.
 
 ## Standard Workflow
 
